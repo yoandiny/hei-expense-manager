@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import Logo from '../../assets/logo.png'
+import { Link } from 'react-router-dom';
 
 const Signup = () => {
     const [signupForm, setSignupForm] = useState({
@@ -21,6 +22,7 @@ const Signup = () => {
         <input type="password" id="password" name="password" className="border-2 p-2 mb-4" /><br />
         <label htmlFor="repeatPassword" className='mb-2'>Répétez votre mot de passe :</label>
         <input type="password" id="repeatPassword" name="repeatPassword" className="border-2 p-2 mb-4" /><br />
+        <p>Vous avez deja un compte ? <Link to="/login" className="text-blue-500">Connectez-vous</Link></p>
         <input type="submit" value="S'inscrire" className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" />
       </form>
     </div>
