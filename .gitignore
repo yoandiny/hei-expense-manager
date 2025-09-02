@@ -1,0 +1,8 @@
+# IntelliJ
+.idea/
+*.iml
+
+# Environments
+*.env
+
+node_modules
