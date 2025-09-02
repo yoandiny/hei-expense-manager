@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { getCategories, createCategory, updateCategory, deleteCategory } from '../controllers/categoryController.ts';
+import { getCategories, createCategory, updateCategory, deleteCategory } from '../controllers/categoryController';
 
 const router = Router();
 
