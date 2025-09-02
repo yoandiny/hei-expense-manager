@@ -3,6 +3,7 @@ import './App.css'
 import Signup from './pages/auth/Signup'
 import Login from './pages/auth/Login'
 import Dashboard from './pages/dashboard/Dashboard'
+import Navbar from './components/layout/Navbar'
 
 function App() {
  
@@ -10,10 +11,14 @@ function App() {
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<Signup />}>
+        <Route>
+           <Route path="/signup" element={<Signup />}/>
+           <Route path="/login" element={<Login />}/>
+        </Route>
+        
+        <Route path="/" element={<Navbar />}>
         <Route index element={<Dashboard />} />
-        <Route path="/" element={<Signup />}/>
-        <Route path="/" element={<Login />}/>
+       
 
         </Route>
 
