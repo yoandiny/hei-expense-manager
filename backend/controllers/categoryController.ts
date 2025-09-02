@@ -1,118 +1,91 @@
 import { Request, Response } from 'express';
-import { prisma } from '../../generated/prisma';
+import { PrismaClient } from '@prisma/client';
 
-export const getCategories = (req: Request, res: Response) => {
+const prisma = new PrismaClient();
+
+export const getCategories = async (req: Request, res: Response) => {
     const userId = 1;
-    prisma.category.findMany({
-        where: {
-            OR: [
-                { userId: userId },
-                { userId: null },
-            ],
-        },
-    })
-        .then(categories => {
-            res.status(200).json(categories);
-        })
-        .catch(error => {
-            res.status(500).json({ error: 'Erreur serveur' });
+    try {
+        const categories = await prisma.category.findMany({
+            where: {
+                OR: [
+                    { userId: userId },
+                    { userId: null }, // catégories globales
+                ],
+            },
         });
-};
-
-
-export const createCategory = (req: Request, res: Response) => {
-    const { name } = req.body;
-    if (!name) {
-        return res.status(400).json({ error: 'Le nom de la catégorie est requis' });
+        res.status(200).json(categories);
+    } catch (error) {
+        res.status(500).json({ error: 'Erreur serveur' });
     }
-    const userId = 1;
-    prisma.category.create({
-        data: {
-            name,
-            userId: userId,
-            isDefault: false,
-        },
-    })
-        .then(category => {
-            res.status(201).json(category);
-        })
-        .catch(error => {
-            res.status(500).json({ error: 'Erreur serveur' });
-        });
 };
 
+export const createCategory = async (req: Request, res: Response) => {
+    const { name } = req.body;
+    if (!name) return res.status(400).json({ error: 'Le nom de la catégorie est requis' });
 
-export const updateCategory = (req: Request, res: Response) => {
+    const userId = 1;
+    try {
+        const category = await prisma.category.create({
+            data: {
+                name,
+                userId,
+                isDefault: false,
+            },
+        });
+        res.status(201).json(category);
+    } catch (error) {
+        res.status(500).json({ error: 'Erreur serveur' });
+    }
+};
+
+export const updateCategory = async (req: Request, res: Response) => {
     const { id } = req.params;
     const { name } = req.body;
     const userId = 1;
 
-    if (!name) {
-        return res.status(400).json({ error: 'Le nom de la catégorie est requis' });
-    }
+    if (!name) return res.status(400).json({ error: 'Le nom de la catégorie est requis' });
 
-    prisma.category.findFirst({
-        where: {
-            id: parseInt(id),
-            userId: userId,
-        },
-    })
-        .then(category => {
-            if (!category) {
-                return res.status(404).json({ error: 'Catégorie non trouvée ou non autorisée' });
-            }
-            if (category.isDefault) {
-                return res.status(403).json({ error: 'Impossible de modifier une catégorie par défaut' });
-            }
-            return prisma.category.update({
-                where: { id: parseInt(id) },
-                data: { name },
-            })
-                .then(updatedCategory => {
-                    res.status(200).json(updatedCategory);
-                });
-        })
-        .catch(error => {
-            res.status(500).json({ error: 'Erreur serveur' });
+    try {
+        const category = await prisma.category.findFirst({
+            where: { id: parseInt(id), userId },
         });
+
+        if (!category) return res.status(404).json({ error: 'Catégorie non trouvée ou non autorisée' });
+        if (category.isDefault) return res.status(403).json({ error: 'Impossible de modifier une catégorie par défaut' });
+
+        const updatedCategory = await prisma.category.update({
+            where: { id: parseInt(id) },
+            data: { name },
+        });
+
+        res.status(200).json(updatedCategory);
+    } catch (error) {
+        res.status(500).json({ error: 'Erreur serveur' });
+    }
 };
 
-export const deleteCategory = (req: Request, res: Response) => {
+export const deleteCategory = async (req: Request, res: Response) => {
     const { id } = req.params;
     const userId = 1;
 
-    prisma.category.findFirst({
-        where: {
-            id: parseInt(id),
-            userId: userId,
-        },
-    })
-        .then(category => {
-            if (!category) {
-                return res.status(404).json({ error: 'Catégorie non trouvée ou non autorisée' });
-            }
-            if (category.isDefault) {
-                return res.status(403).json({ error: 'Impossible de supprimer une catégorie par défaut' });
-            }
-            return prisma.expense.count({
-                where: {
-                    categoryId: parseInt(id),
-                },
-            })
-                .then(expenseCount => {
-                    if (expenseCount > 0) {
-                        return res.status(400).json({ error: 'Impossible de supprimer une catégorie associée à des dépenses' });
-                    }
-                    // Supprimer la catégorie
-                    return prisma.category.delete({
-                        where: { id: parseInt(id) },
-                    })
-                        .then(() => {
-                            res.status(204).send(); // Succès, pas de contenu
-                        });
-                });
-        })
-        .catch(error => {
-            res.status(500).json({ error: 'Erreur serveur' });
+    try {
+        const category = await prisma.category.findFirst({
+            where: { id: parseInt(id), userId },
         });
+
+        if (!category) return res.status(404).json({ error: 'Catégorie non trouvée ou non autorisée' });
+        if (category.isDefault) return res.status(403).json({ error: 'Impossible de supprimer une catégorie par défaut' });
+
+        const expenseCount = await prisma.expense.count({
+            where: { categoryId: parseInt(id) },
+        });
+
+        if (expenseCount > 0) return res.status(400).json({ error: 'Impossible de supprimer une catégorie associée à des dépenses' });
+
+        await prisma.category.delete({ where: { id: parseInt(id) } });
+        res.status(204).send();
+    } catch (error) {
+        res.status(500).json({ error: 'Erreur serveur' });
+    }
 };
