@@ -8,18 +8,7 @@ function App() {
  
 
   return (
-    <Router>
-      <Routes>
-        <Route path="/" element={<Signup />}>
-        <Route index element={<Dashboard />} />
-        <Route path="/" element={<Signup />}/>
-        <Route path="/" element={<Login />}/>
 
-        </Route>
-
-      </Routes>
-      
-    </Router>
   )
 }
 
