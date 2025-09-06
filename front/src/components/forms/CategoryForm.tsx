@@ -10,7 +10,7 @@ interface Category {
 }
 
 interface CategoryFormProps {
-    category?: Category;
+    category: Category | null; // Changé de category?: Category à category: Category | null
     onSubmit: () => void;
     onCancel: () => void;
 }
@@ -22,6 +22,8 @@ const CategoryForm: React.FC<CategoryFormProps> = ({ category, onSubmit, onCance
     useEffect(() => {
         if (category) {
             setName(category.name);
+        } else {
+            setName('');
         }
     }, [category]);
 
