@@ -34,8 +34,12 @@ const CategoryForm: React.FC<CategoryFormProps> = ({ category, onSubmit, onCance
             }
             setError(null);
             onSubmit();
-        } catch (error: any) {
-            setError(error.message);
+        } catch (error: unknown) {
+            if (error instanceof Error) {
+                setError(error.message);
+            } else {
+                setError('Une erreur inconnue est survenue');
+            }
         }
     };
 
