@@ -39,6 +39,7 @@ model Expense {
   userId   Int
   user     User        @relation(fields: [userId], references: [id])
   categoryId Int
+  receipts    Receipt[]
   category Category    @relation(fields: [categoryId], references: [id])
 }
 
@@ -58,6 +59,15 @@ model Income {
   // Relation avec User
   userId Int
   user   User @relation(fields: [userId], references: [id])
+}
+
+model Receipt {
+  id        Int      @id @default(autoincrement())
+  url       String   // chemin/URL du fichier stocké
+  createdAt DateTime @default(now())
+
+  expenseId Int
+  expense   Expense  @relation(fields: [expenseId], references: [id])
 }
 
 model Category {
