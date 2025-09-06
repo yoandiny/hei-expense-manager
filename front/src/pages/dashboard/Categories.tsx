@@ -1,7 +1,3 @@
-import { useEffect, useState } from 'react';
-import { getCategories, deleteCategory } from '../../services/ccategoryService.ts';
-import CategoryForm from '../../components/forms/CategoryForm';
-
 interface Category {
     id: number;
     name: string;
@@ -10,103 +6,50 @@ interface Category {
     createdAt: string;
 }
 
-const Categories: React.FC = () => {
-    const [categories, setCategories] = useState<Category[]>([]);
-    const [error, setError] = useState<string | null>(null);
-    const [editingCategory, setEditingCategory] = useState<Category | null>(null);
-    const [showForm, setShowForm] = useState(false);
-
-    useEffect(() => {
-        const fetchCategories = async () => {
-            try {
-                const data = await getCategories();
-                setCategories(data);
-                setError(null);
-            } catch (error: any) {
-                setError(error.message);
-            }
-        };
-        fetchCategories();
-    }, []);
-
-    const handleDeleteCategory = async (id: number) => {
-        try {
-            await deleteCategory(id);
-            setCategories(categories.filter(cat => cat.id !== id));
-            setError(null);
-        } catch (error: any) {
-            setError(error.message);
-        }
-    };
-
-    const handleFormSubmit = () => {
-        setShowForm(false);
-        setEditingCategory(null);
-        const fetchCategories = async () => {
-            try {
-                const data = await getCategories();
-                setCategories(data);
-                setError(null);
-            } catch (error: any) {
-                setError(error.message);
-            }
-        };
-        fetchCategories();
-    };
-
-    const handleEditCategory = (category: Category) => {
-        setEditingCategory(category);
-        setShowForm(true);
-    };
-
-    const handleCancel = () => {
-        setShowForm(false);
-        setEditingCategory(null);
-        setError(null);
-    };
-
-    return (
-        <div className="max-w-4xl mx-auto p-4">
-            <h2 className="text-2xl font-bold mb-4">Gestion des Catégories</h2>
-            {error && <p className="text-red-500 mb-4">{error}</p>}
-            <button
-                onClick={() => setShowForm(true)}
-                className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 mb-4"
-            >
-                Nouvelle catégorie
-            </button>
-            {showForm && (
-                <CategoryForm
-                    category={editingCategory}
-                    onSubmit={handleFormSubmit}
-                    onCancel={handleCancel}
-                />
-            )}
-            <ul className="space-y-2">
-                {categories.map(category => (
-                    <li key={category.id} className="flex items-center justify-between p-2 bg-gray-100 rounded">
-                        <span className="text-lg">{category.name}</span>
-                        {!category.isDefault && (
-                            <div className="space-x-2">
-                                <button
-                                    onClick={() => handleEditCategory(category)}
-                                    className="bg-yellow-500 text-white px-3 py-1 rounded hover:bg-yellow-600"
-                                >
-                                    Modifier
-                                </button>
-                                <button
-                                    onClick={() => handleDeleteCategory(category.id)}
-                                    className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600"
-                                >
-                                    Supprimer
-                                </button>
-                            </div>
-                        )}
-                    </li>
-                ))}
-            </ul>
-        </div>
-    );
+export const getCategories = async (): Promise<Category[]> => {
+    const response = await fetch('http://localhost:3000/api/categories');
+    if (!response.ok) {
+        throw new Error('Erreur lors de la récupération des catégories');
+    }
+    return response.json();
 };
 
-export default Categories;
+export const createCategory = async (name: string): Promise<Category> => {
+    if (!name) throw new Error('Le nom de la catégorie est requis');
+    const response = await fetch('http://localhost:3000/api/categories', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name }),
+    });
+    if (!response.ok) {
+        if (response.status === 400) throw new Error('Le nom de la catégorie est requis');
+        throw new Error('Erreur lors de la création');
+    }
+    return response.json();
+};
+
+export const updateCategory = async (id: number, name: string): Promise<Category> => {
+    if (!name) throw new Error('Le nom de la catégorie est requis');
+    const response = await fetch(`http://localhost:3000/api/categories/${id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name }),
+    });
+    if (!response.ok) {
+        if (response.status === 403) throw new Error('Impossible de modifier une catégorie par défaut');
+        if (response.status === 404) throw new Error('Catégorie non trouvée ou non autorisée');
+        throw new Error('Erreur lors de la mise à jour');
+    }
+    return response.json();
+};
+
+export const deleteCategory = async (id: number): Promise<void> => {
+    const response = await fetch(`http://localhost:3000/api/categories/${id}`, {
+        method: 'DELETE',
+    });
+    if (!response.ok) {
+        if (response.status === 400) throw new Error('Impossible de supprimer une catégorie associée à des dépenses');
+        if (response.status === 404) throw new Error('Catégorie non trouvée ou non autorisée');
+        throw new Error('Erreur lors de la suppression');
+    }
+};
