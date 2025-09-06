@@ -1,26 +1,18 @@
-import {BrowserRouter as Router, Route, Routes} from 'react-router-dom'
-import './App.css'
-import Signup from './pages/auth/Signup'
-import Login from './pages/auth/Login'
-import Dashboard from './pages/dashboard/Dashboard'
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import Categories from './pages/dashboard/Categories';
 
-function App() {
- 
+const App: React.FC = () => {
+    return (
+        <Router>
+            <div className="min-h-screen bg-gray-50">
+                <h1 className="text-3xl font-bold text-center mt-4 mb-6">Personal Expense Tracker</h1>
+                <Routes>
+                    <Route path="/categories" element={<Categories />} />
+                    <Route path="/" element={<Categories />} />
+                </Routes>
+            </div>
+        </Router>
+    );
+};
 
-  return (
-    <Router>
-      <Routes>
-        <Route path="/" element={<Signup />}>
-        <Route index element={<Dashboard />} />
-        <Route path="/" element={<Signup />}/>
-        <Route path="/" element={<Login />}/>
-
-        </Route>
-
-      </Routes>
-      
-    </Router>
-  )
-}
-
-export default App
+export default App;
