@@ -1,5 +1,4 @@
-import jwt from "jsonwebtoken"
-import * as dotenv from "dotenv";
+import * as jwt from "jsonwebtoken"
 
 export function signToken(userId: string): string{
     return jwt.sign({userId}, process.env.JWT_SECRET, {expiresIn: "1d"});
