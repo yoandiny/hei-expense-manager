@@ -1,7 +1,7 @@
 import express from "express";
 import * as dotenv from "dotenv";
-import { PrismaClient } from '../generated/prisma'
-import authRoutes from "../routes/auth";
+import { PrismaClient } from '../generated/prisma/client.js'
+import authRoutes from "./routes/auth.js"
 
 dotenv.config();
 
