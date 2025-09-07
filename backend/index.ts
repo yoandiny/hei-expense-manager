@@ -1,9 +1,11 @@
 import 'dotenv/config';
 import express from 'express';
+import cors from 'cors';
 import categoryRoutes from './routes/categories';
 import summaryRoutes from './routes/summary';
 
 const app = express();
+app.use(cors());
 app.use(express.json());
 app.use('/api/categories', categoryRoutes);
 app.use('/api/summary', summaryRoutes);

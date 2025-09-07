@@ -7,7 +7,7 @@ interface Category {
 }
 
 export const getCategories = async (): Promise<Category[]> => {
-    const response = await fetch('http://localhost:3000/api/categories');
+    const response = await fetch('/api/categories');
     if (!response.ok) {
         throw new Error('Erreur lors de la récupération des catégories');
     }
@@ -16,21 +16,22 @@ export const getCategories = async (): Promise<Category[]> => {
 
 export const createCategory = async (name: string): Promise<Category> => {
     if (!name) throw new Error('Le nom de la catégorie est requis');
-    const response = await fetch('http://localhost:3000/api/categories', {
+    const response = await fetch('/api/categories', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ name }),
     });
     if (!response.ok) {
-        if (response.status === 400) throw new Error('Le nom de la catégorie est requis');
-        throw new Error('Erreur lors de la création');
+        const errorData = await response.json().catch(() => null);
+        throw new Error(errorData?.error || 'Erreur lors de la création');
     }
     return response.json();
 };
 
+
 export const updateCategory = async (id: number, name: string): Promise<Category> => {
     if (!name) throw new Error('Le nom de la catégorie est requis');
-    const response = await fetch(`http://localhost:3000/api/categories/${id}`, {
+    const response = await fetch(`/api/categories/${id}`, { // URL relative
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ name }),
@@ -44,7 +45,7 @@ export const updateCategory = async (id: number, name: string): Promise<Category
 };
 
 export const deleteCategory = async (id: number): Promise<void> => {
-    const response = await fetch(`http://localhost:3000/api/categories/${id}`, {
+    const response = await fetch(`/api/categories/${id}`, { // URL relative
         method: 'DELETE',
     });
     if (!response.ok) {

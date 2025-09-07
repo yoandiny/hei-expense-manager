@@ -1,7 +1,5 @@
 import { Request, Response } from 'express';
-import { PrismaClient } from '@prisma/client';
-
-const prisma = new PrismaClient();
+import prisma from '../PrismaClient';
 
 export const getCategories = async (req: Request, res: Response) => {
     const userId = 1;
@@ -21,21 +19,18 @@ export const getCategories = async (req: Request, res: Response) => {
 };
 
 export const createCategory = async (req: Request, res: Response) => {
-    const { name } = req.body;
-    if (!name) return res.status(400).json({ error: 'Le nom de la catégorie est requis' });
-
-    const userId = 1;
     try {
+        const { name, userId } = req.body;
+        if (!name) {
+            return res.status(400).json({ error: 'Le nom de la catégorie est requis' });
+        }
         const category = await prisma.category.create({
-            data: {
-                name,
-                userId,
-                isDefault: false,
-            },
+            data: { name, userId, isDefault: false },
         });
         res.status(201).json(category);
     } catch (error) {
-        res.status(500).json({ error: 'Erreur serveur' });
+        console.error('Erreur dans createCategory:', error);
+        res.status(500).json({ error: 'Erreur lors de la création de la catégorie' });
     }
 };
 
@@ -48,7 +43,13 @@ export const updateCategory = async (req: Request, res: Response) => {
 
     try {
         const category = await prisma.category.findFirst({
-            where: { id: parseInt(id), userId },
+            where: {
+                id: parseInt(id),
+                OR: [
+                    { userId: userId },
+                    { userId: null }, // inclut les catégories globales
+                ],
+            },
         });
 
         if (!category) return res.status(404).json({ error: 'Catégorie non trouvée ou non autorisée' });
@@ -61,6 +62,7 @@ export const updateCategory = async (req: Request, res: Response) => {
 
         res.status(200).json(updatedCategory);
     } catch (error) {
+        console.error('Erreur dans updateCategory:', error);
         res.status(500).json({ error: 'Erreur serveur' });
     }
 };
@@ -71,7 +73,13 @@ export const deleteCategory = async (req: Request, res: Response) => {
 
     try {
         const category = await prisma.category.findFirst({
-            where: { id: parseInt(id), userId },
+            where: {
+                id: parseInt(id),
+                OR: [
+                    { userId: userId },
+                    { userId: null }, // inclut les catégories globales
+                ],
+            },
         });
 
         if (!category) return res.status(404).json({ error: 'Catégorie non trouvée ou non autorisée' });
@@ -86,6 +94,8 @@ export const deleteCategory = async (req: Request, res: Response) => {
         await prisma.category.delete({ where: { id: parseInt(id) } });
         res.status(204).send();
     } catch (error) {
+        console.error('Erreur dans deleteCategory:', error);
         res.status(500).json({ error: 'Erreur serveur' });
     }
 };
+
