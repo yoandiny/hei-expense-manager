@@ -1,5 +1,5 @@
 import {Request, Response, NextFunction} from 'express';
-import {verifyToken} from "../utils/jwt";
+import {verifyToken, JwtPayload} from "../utils/jwt.js";
 
 export function authMiddleware(req: Request, res: Response, next: NextFunction){
     try{
@@ -10,7 +10,7 @@ export function authMiddleware(req: Request, res: Response, next: NextFunction){
         }
 
         const token = header.split(" ")[1];
-        const payload = verifyToken(token)
+        const payload: JwtPayload = verifyToken(token)
 
         (req as any).user = payload.userId;
 
