@@ -1,14 +1,12 @@
 import {Request, Response} from "express";
-import bcrypt from "bcrypt";
-import prisma from "../PrismaClient";
-import {hashPassword} from "../utils/password";
-import {signToken} from "../utils/jwt";
-import {email} from "zod";
+import prisma from "../PrismaClient.js";
+import {hashPassword} from "../utils/password.js";
+import {signToken} from "../utils/jwt.js";
 
 export async function signup(req: Request, res: Response){
     const { email, password } = req.body;
 
-    const existing = await prisma.users.findUnique({where: {email}})
+    const existing = await prisma.user.findUnique({where: {email}})
     if(existing) return res.status(400).json({message: "User already exists"})
 
     const hashed = await hashPassword(password);
@@ -34,7 +32,9 @@ export async function login(req: Request, res: Response){
 export async function me(req: Request, res: Response){
     const userId = (req as any).user;
 
-    const user = await prisma.user.findUnique({where: {email}})
+    const user = await prisma.user.findUnique({
+        where: {id: userId}
+    })
     if(!user) return res.status(400).json({message: "User not found"})
 
     res.json({id: user.id, email: user.email})
