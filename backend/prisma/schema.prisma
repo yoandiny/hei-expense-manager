@@ -20,7 +20,7 @@ model User {
   password  String
   expenses  Expense[]
   incomes   Income[]
-  categories Category[] 
+  categories Category[]
   createdAt DateTime  @default(now())
 }
 
