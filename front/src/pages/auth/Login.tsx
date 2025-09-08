@@ -1,10 +1,12 @@
 import React from 'react'
 import { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import Logo from '../../assets/logo.png'
 import { toast, ToastContainer } from 'react-toastify';
+import axios from 'axios';
 
 export default function Login() {
+  const navigate = useNavigate();
   const [loginForm, setLoginForm] = useState<{email: string, password: string}>({
     'email': '',
     'password': ''
@@ -18,13 +20,31 @@ export default function Login() {
     }));
   };
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async(e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-    if(loginForm.email && loginForm.password){
-      console.log(loginForm)
+    try {
+      if(loginForm.email && loginForm.password){
+        const res = await axios.post(`${import.meta.env.VITE_API_URL}`, loginForm, {withCredentials: true});
+        if(res.status === 200){
+          toast.success("Connexion réussie" , {position: "top-center" , autoClose: 2000} );
+          setLoginForm({
+            'email': '',
+            'password': ''
+          });
+
+          navigate('/dashboard');
+
+          
+        }
+      
     }else{
       toast.error("Veuillez remplir tous les champs" , {position: "top-center" , autoClose: 2000} )
 
+    }
+      
+    } catch (error) {
+      console.error(error);
+      
     }
   }
 
