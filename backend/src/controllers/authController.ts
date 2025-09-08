@@ -1,7 +1,7 @@
 import {Request, Response} from "express";
-import prisma from "../PrismaClient.js";
-import {comparePassword, hashPassword} from "../utils/password.js";
-import {signToken} from "../utils/jwt.js"
+import prisma from "../PrismaClient";
+import {comparePassword, hashPassword} from "../utils/password";
+import {signToken} from "../utils/jwt"
 
 export async function signup(req: Request, res: Response){
     const { email, password } = req.body;

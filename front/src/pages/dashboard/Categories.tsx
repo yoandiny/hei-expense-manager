@@ -23,11 +23,7 @@ const Categories: React.FC = () => {
                 setCategories(data);
                 setError(null);
             } catch (error: unknown) {
-                if (error instanceof Error) {
-                    setError(error.message);
-                } else {
-                    setError('Une erreur inconnue est survenue');
-                }
+                setError(error instanceof Error ? error.message : 'Une erreur inconnue est survenue');
             }
         };
         fetchCategories();
@@ -39,11 +35,7 @@ const Categories: React.FC = () => {
             setCategories(categories.filter(cat => cat.id !== id));
             setError(null);
         } catch (error: unknown) {
-            if (error instanceof Error) {
-                setError(error.message);
-            } else {
-                setError('Une erreur inconnue est survenue');
-            }
+            setError(error instanceof Error ? error.message : 'Une erreur inconnue est survenue');
         }
     };
 
@@ -56,11 +48,7 @@ const Categories: React.FC = () => {
                 setCategories(data);
                 setError(null);
             } catch (error: unknown) {
-                if (error instanceof Error) {
-                    setError(error.message);
-                } else {
-                    setError('Une erreur inconnue est survenue');
-                }
+                setError(error instanceof Error ? error.message : 'Une erreur inconnue est survenue');
             }
         };
         fetchCategories();
@@ -78,14 +66,16 @@ const Categories: React.FC = () => {
     };
 
     return (
-        <div className="container mx-auto p-4">
-            <h2 className="text-3xl font-bold text-gray-800 mb-6 text-center">Gestion des Catégories</h2>
+        <div className="p-6 bg-white rounded-lg shadow-lg w-full max-w-2xl text-center">
+            <h2 className="text-3xl font-bold text-gray-800 mb-6">Gestion des Catégories</h2>
+
             {error && (
-                <p className="text-red-500 bg-red-50 border border-red-200 rounded p-3 mb-6 text-center">
+                <p className="text-red-700 bg-red-50 border border-red-200 rounded p-3 mb-6">
                     {error}
                 </p>
             )}
-            <div className="mb-6 text-center">
+
+            <div className="mb-6">
                 <button
                     onClick={() => setShowForm(true)}
                     className="bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700 transition font-semibold"
@@ -93,6 +83,7 @@ const Categories: React.FC = () => {
                     Nouvelle catégorie
                 </button>
             </div>
+
             {showForm && (
                 <CategoryForm
                     category={editingCategory}
@@ -100,23 +91,29 @@ const Categories: React.FC = () => {
                     onCancel={handleCancel}
                 />
             )}
-            <div className="bg-white rounded-lg shadow-lg overflow-x-auto">
-                <table className="min-w-full table-auto">
+
+            <div className="bg-white rounded-lg shadow-lg overflow-x-auto mt-6">
+                <table className="min-w-full table-auto text-center">
                     <thead>
-                    <tr className="bg-gray-100 text-gray-600 uppercase text-sm">
-                        <th className="py-3 px-6 text-left">Nom</th>
-                        <th className="py-3 px-6 text-left">Date de création</th>
-                        <th className="py-3 px-6 text-center">Actions</th>
+                    <tr className="bg-gray-200 text-gray-700 uppercase text-sm">
+                        <th className="py-3 px-6 text-left text-gray-800">Nom</th>
+                        <th className="py-3 px-6 text-left text-gray-800">Date de création</th>
+                        <th className="py-3 px-6 text-gray-800">Actions</th>
                     </tr>
                     </thead>
                     <tbody>
-                    {categories.map(category => (
-                        <tr key={category.id} className="border-b hover:bg-gray-50 transition">
-                            <td className="py-4 px-6">{category.name}</td>
-                            <td className="py-4 px-6">
+                    {categories.map((category, index) => (
+                        <tr
+                            key={category.id}
+                            className={`border-b transition ${
+                                index % 2 === 0 ? 'bg-gray-50' : 'bg-white'
+                            } hover:bg-gray-100`}
+                        >
+                            <td className="py-4 px-6 text-left text-gray-800">{category.name}</td>
+                            <td className="py-4 px-6 text-left text-gray-800">
                                 {new Date(category.createdAt).toLocaleDateString('fr-FR')}
                             </td>
-                            <td className="py-4 px-6 text-center">
+                            <td className="py-4 px-6">
                                 {!category.isDefault && (
                                     <div className="flex justify-center space-x-3">
                                         <button

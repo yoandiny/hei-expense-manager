@@ -25,37 +25,46 @@ const Summary: React.FC = () => {
         fetchSummary();
     }, []);
 
-    if (error) return <div className="text-red-500 text-center">{error}</div>;
-    if (!summary) return <div className="text-gray-500 text-center">Chargement...</div>;
+    if (error)
+        return (
+            <div className="text-red-600 bg-red-50 border border-red-200 rounded p-4 text-center max-w-xl mx-auto mt-8">
+                {error}
+            </div>
+        );
+    if (!summary)
+        return (
+            <div className="text-gray-600 text-center mt-8">Chargement du récapitulatif...</div>
+        );
 
     return (
-        <div className="max-w-5xl mx-auto p-6">
+        <div className="p-6 bg-white rounded-lg shadow-lg w-full max-w-2xl text-center">
             <h2 className="text-3xl font-bold text-gray-800 mb-6 text-center">Récapitulatif Financier</h2>
             <div className="bg-white rounded-lg shadow-lg p-6">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-                    <div className="bg-blue-50 p-4 rounded-lg">
-                        <h3 className="text-lg font-semibold text-blue-800">Total des dépenses</h3>
-                        <p className="text-2xl font-bold text-blue-600">{summary.totalExpenses.toFixed(2)} €</p>
+                    <div className="bg-blue-100 text-blue-800 p-6 rounded-lg text-center">
+                        <h3 className="text-lg font-semibold mb-2">Total des dépenses</h3>
+                        <p className="text-2xl font-bold">{summary.totalExpenses.toFixed(2)} €</p>
                     </div>
-                    <div className="bg-green-50 p-4 rounded-lg">
-                        <h3 className="text-lg font-semibold text-green-800">Nombre de catégories</h3>
-                        <p className="text-2xl font-bold text-green-600">{summary.categoryCount}</p>
+                    <div className="bg-green-100 text-green-800 p-6 rounded-lg text-center">
+                        <h3 className="text-lg font-semibold mb-2">Nombre de catégories</h3>
+                        <p className="text-2xl font-bold">{summary.categoryCount}</p>
                     </div>
                 </div>
-                <h3 className="text-xl font-semibold text-gray-800 mb-4">Dépenses par catégorie</h3>
+
+                <h3 className="text-xl font-semibold text-gray-800 mb-4 text-center">Dépenses par catégorie</h3>
                 <div className="overflow-x-auto">
-                    <table className="min-w-full table-auto">
+                    <table className="min-w-full table-auto text-center">
                         <thead>
-                        <tr className="bg-gray-100 text-gray-600 uppercase text-sm">
-                            <th className="py-3 px-6 text-left">Catégorie</th>
-                            <th className="py-3 px-6 text-right">Total (€)</th>
+                        <tr className="bg-gray-200 text-gray-700 uppercase text-sm">
+                            <th className="py-3 px-6">Catégorie</th>
+                            <th className="py-3 px-6">Total (€)</th>
                         </tr>
                         </thead>
                         <tbody>
                         {summary.expensesByCategory.map(cat => (
                             <tr key={cat.categoryId} className="border-b hover:bg-gray-50 transition">
                                 <td className="py-4 px-6">{cat.categoryName}</td>
-                                <td className="py-4 px-6 text-right">{cat.total.toFixed(2)} €</td>
+                                <td className="py-4 px-6">{cat.total.toFixed(2)} €</td>
                             </tr>
                         ))}
                         </tbody>
