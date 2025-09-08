@@ -7,6 +7,8 @@ import authRoutes from "./routes/auth.js"
 import userRoutes from "./routes/user.js"
 import categoryRoutes from "./routes/categories";
 import summaryRoutes from "./routes/summary";
+import expenseRoutes from "./routes/expenses";
+
 
 dotenv.config();
 const app = express()
@@ -19,6 +21,8 @@ app.use("/api/auth", authRoutes)
 app.use("/api/user", userRoutes)
 app.use('/api/categories', categoryRoutes);
 app.use('/api/summary', summaryRoutes);
+app.use("/api/expenses", expenseRoutes);
+
 
 
 app.get("/", (req, res) => {

@@ -20,7 +20,7 @@
   },
   "scripts": {
     "start": "ts-node index.ts",
-    "dev": "ts-node-dev --respawn --clear index.ts",
+    "dev": "ts-node-dev --respawn --clear ./src/index.ts",
     "build": "tsc"
   }
 }
