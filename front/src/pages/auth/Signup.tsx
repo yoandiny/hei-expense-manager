@@ -1,11 +1,12 @@
 import { useState } from 'react'
 import Logo from '../../assets/logo.png'
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import {toast, ToastContainer} from 'react-toastify'
+import axios from 'axios';
 
 const Signup = () => {
-    const [signupForm, setSignupForm] = useState<{username: string, email: string, password: string, confirmationPassword: string}>({
-        'username': "",
+  const navigate = useNavigate();
+    const [signupForm, setSignupForm] = useState<{ email: string, password: string, confirmationPassword: string}>({
         'email': '',
         'password': '',
         'confirmationPassword' :''
@@ -20,13 +21,42 @@ const Signup = () => {
 };
 
 
-    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
       e.preventDefault()
-      if(signupForm.username && signupForm.email && signupForm.password && signupForm.confirmationPassword){
-        console.log(signupForm)
+      try {
+        if( signupForm.email && signupForm.password && signupForm.confirmationPassword){
+          if(signupForm.password === signupForm.confirmationPassword){
+            const form = {
+              "email": signupForm.email,
+              "password": signupForm.password
+            }
+            const res = await axios.post(`${import.meta.env.VITE_API_URL}/auth/signup`, form);
+            if(res.status === 200){
+              toast.success("Inscription réussie" , {position: "top-center" , autoClose: 2000} );
+              setSignupForm({
+                'email': '',
+                'password': '',
+                'confirmationPassword' :''
+              });
+              navigate('/login');
+
+            }else{
+              throw new Error("Erreur lors de l'inscription");
+            }
+
+          }else{
+            toast.error("Les mots de passe ne correspondent pas" , {position: "top-center" , autoClose: 2000} )
+          }
+        
       } else {
         
         toast.error("Veuillez remplir tous les champs" , {position: "top-center" , autoClose: 2000} )
+      }
+        
+      } catch (error) {
+        console.error(error);
+        toast.error("Une erreur est survenue" , {position: "top-center" , autoClose: 2000} )
+        
       }
     }
   return (
@@ -34,8 +64,6 @@ const Signup = () => {
         <img className='w-1/4 items-center' src={Logo} alt="" />
       <h1 className="text-4xl font-bold mb-10">Inscription</h1>
       <form onSubmit={handleSubmit} className="flex flex-col w-1/2">
-        <label htmlFor="name" className="mb-2">Nom d'utilisateur :</label>
-        <input type="text" id="name" onChange={handleChange} name="username" className="border-2 p-2 mb-4" /><br />
         <label htmlFor="email" className="mb-2">Email :</label>
         <input type="email" id="email" onChange={handleChange} name="email" className="border-2 p-2 mb-4" /><br />
         <label htmlFor="password" className="mb-2">Mot de passe :</label>
