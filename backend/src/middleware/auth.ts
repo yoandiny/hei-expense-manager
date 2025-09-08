@@ -10,11 +10,9 @@ export function authMiddleware(req: Request, res: Response, next: NextFunction){
         }
 
         const token = header.split(" ")[1];
-        // @ts-ignore
         const payload: JwtPayload = verifyToken(token)
 
-        // @ts-ignore
-        (req as any).user = payload.userId;
+            (req as any).user = payload.userId;
 
         next();
     } catch (error){
