@@ -46,7 +46,7 @@ const CategoryForm: React.FC<CategoryFormProps> = ({ category, onSubmit, onCance
     };
 
     return (
-        <div className="w-full h-100">
+        <div className="w-full bg-white p-6 rounded-lg shadow-lg">
             <h3 className="text-xl font-semibold text-gray-800 mb-4">
                 {category?.id ? 'Modifier la catégorie' : 'Nouvelle catégorie'}
             </h3>
@@ -61,8 +61,9 @@ const CategoryForm: React.FC<CategoryFormProps> = ({ category, onSubmit, onCance
                     value={name}
                     onChange={e => setName(e.target.value)}
                     placeholder="Nom de la catégorie"
-                    className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
+                    className="w-full p-3 border border-gray-300 rounded-lg text-black focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
                 />
+
                 <div className="flex justify-end space-x-3">
                     <button
                         onClick={handleSubmit}
