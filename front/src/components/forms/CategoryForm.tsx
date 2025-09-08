@@ -10,7 +10,7 @@ interface Category {
 }
 
 interface CategoryFormProps {
-    category: Category | null; // Changé de category?: Category à category: Category | null
+    category: Category | null;
     onSubmit: () => void;
     onCancel: () => void;
 }
@@ -46,29 +46,37 @@ const CategoryForm: React.FC<CategoryFormProps> = ({ category, onSubmit, onCance
     };
 
     return (
-        <div className="p-4 bg-white rounded shadow">
-            <h3 className="text-lg font-semibold mb-2">{category?.id ? 'Modifier la catégorie' : 'Nouvelle catégorie'}</h3>
-            {error && <p className="text-red-500 mb-2">{error}</p>}
-            <input
-                type="text"
-                value={name}
-                onChange={e => setName(e.target.value)}
-                placeholder="Nom de la catégorie"
-                className="border p-2 rounded w-full mb-2"
-            />
-            <div className="flex space-x-2">
-                <button
-                    onClick={handleSubmit}
-                    className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
-                >
-                    {category?.id ? 'Enregistrer' : 'Ajouter'}
-                </button>
-                <button
-                    onClick={onCancel}
-                    className="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600"
-                >
-                    Annuler
-                </button>
+        <div className="w-full h-100">
+            <h3 className="text-xl font-semibold text-gray-800 mb-4">
+                {category?.id ? 'Modifier la catégorie' : 'Nouvelle catégorie'}
+            </h3>
+            {error && (
+                <p className="text-red-500 bg-red-50 border border-red-200 rounded p-2 mb-4">
+                    {error}
+                </p>
+            )}
+            <div className="space-y-4">
+                <input
+                    type="text"
+                    value={name}
+                    onChange={e => setName(e.target.value)}
+                    placeholder="Nom de la catégorie"
+                    className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
+                />
+                <div className="flex justify-end space-x-3">
+                    <button
+                        onClick={handleSubmit}
+                        className="bg-blue-600 text-white px-5 py-2 rounded-lg hover:bg-blue-700 transition"
+                    >
+                        {category?.id ? 'Enregistrer' : 'Ajouter'}
+                    </button>
+                    <button
+                        onClick={onCancel}
+                        className="bg-gray-600 text-white px-5 py-2 rounded-lg hover:bg-gray-700 transition"
+                    >
+                        Annuler
+                    </button>
+                </div>
             </div>
         </div>
     );
