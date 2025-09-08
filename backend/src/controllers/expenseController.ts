@@ -1,12 +1,17 @@
 import { PrismaClient } from "@prisma/client";
+import {Request, Response} from "express"
 
 const prisma = new PrismaClient();
 
-export const createExpense = async (req: any, res: any) => {
+/**
+ * 📌 Créer une dépense
+ */
+export const createExpense = async (req: Request, res: Response) => {
   try {
     const { amount, type, date, categoryId, description, startDate, endDate } = req.body;
-    const userId = 1; // Temporaire : userId fixé à 1 pour tester sans authentification
+    const userId = (req as any).user.id;
 
+    // Validation logique
     if (type === "One-time" && !date) {
       return res.status(400).json({ error: "Date est obligatoire pour une dépense ponctuelle" });
     }
@@ -29,19 +34,22 @@ export const createExpense = async (req: any, res: any) => {
     });
 
     res.status(201).json(expense);
-  } catch (error: any) {
+  } catch (error) {
     console.error(error);
-    res.status(500).json({ error: `Erreur lors de la création de la dépense: ${error.message}` });
+    res.status(500).json({ error: "Erreur lors de la création de la dépense" });
   }
 };
 
-export const getExpenses = async (req: any, res: any) => {
+/**
+ * 📌 Récupérer toutes les dépenses de l’utilisateur connecté
+ */
+export const getExpenses = async (req: Request, res: Response) => {
   try {
-    const userId = req.user.id;
+    const userId =(req as any).user.id;
 
     const expenses = await prisma.expense.findMany({
       where: { userId },
-      include: { category: true},
+      include: { category: true },// receipts: true
     });
 
     res.json(expenses);
@@ -51,14 +59,17 @@ export const getExpenses = async (req: any, res: any) => {
   }
 };
 
-export const getExpenseById = async (req: any, res: any) => {
+/**
+ * 📌 Récupérer une dépense par ID
+ */
+export const getExpenseById = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
-    const userId = req.user.id;
+    const userId = (req as any).user.id
 
     const expense = await prisma.expense.findFirst({
       where: { id: parseInt(id), userId },
-      include: { category: true},
+      include: { category: true },//, receipts: true
     });
 
     if (!expense) {
@@ -72,17 +83,23 @@ export const getExpenseById = async (req: any, res: any) => {
   }
 };
 
-export const updateExpense = async (req: any, res: any) => {
+/**
+ * 📌 Mettre à jour une dépense
+ * Gère la conversion One-time ↔ Recurring
+ */
+export const updateExpense = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
     const { amount, type, date, categoryId, description, startDate, endDate } = req.body;
-    const userId = req.user.id;
+    const userId = (req as any).user.id;
 
+    // Vérifier que la dépense existe et appartient à l’utilisateur
     const existing = await prisma.expense.findFirst({ where: { id: parseInt(id), userId } });
     if (!existing) {
       return res.status(404).json({ error: "Dépense non trouvée" });
     }
 
+    // Conversion logique
     let updateData: any = {
       amount: amount ? parseFloat(amount) : existing.amount,
       categoryId: categoryId ? parseInt(categoryId) : existing.categoryId,
@@ -116,10 +133,13 @@ export const updateExpense = async (req: any, res: any) => {
   }
 };
 
-export const deleteExpense = async (req: any, res: any) => {
+/**
+ * 📌 Supprimer une dépense
+ */
+export const deleteExpense = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
-    const userId = req.user.id;
+    const userId = (req as any).user.id;
 
     const existing = await prisma.expense.findFirst({ where: { id: parseInt(id), userId } });
     if (!existing) {
