@@ -2,10 +2,10 @@ import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
-export const createExpense = async (req, res) => {
+export const createExpense = async (req: any, res: any) => {
   try {
     const { amount, type, date, categoryId, description, startDate, endDate } = req.body;
-    const userId = req.user.id;
+    const userId = 1; // Temporaire : userId fixé à 1 pour tester sans authentification
 
     if (type === "One-time" && !date) {
       return res.status(400).json({ error: "Date est obligatoire pour une dépense ponctuelle" });
@@ -29,19 +29,19 @@ export const createExpense = async (req, res) => {
     });
 
     res.status(201).json(expense);
-  } catch (error) {
+  } catch (error: any) {
     console.error(error);
-    res.status(500).json({ error: "Erreur lors de la création de la dépense" });
+    res.status(500).json({ error: `Erreur lors de la création de la dépense: ${error.message}` });
   }
 };
 
-export const getExpenses = async (req, res) => {
+export const getExpenses = async (req: any, res: any) => {
   try {
     const userId = req.user.id;
 
     const expenses = await prisma.expense.findMany({
       where: { userId },
-      include: { category: true, receipts: true },
+      include: { category: true},
     });
 
     res.json(expenses);
@@ -51,14 +51,14 @@ export const getExpenses = async (req, res) => {
   }
 };
 
-export const getExpenseById = async (req, res) => {
+export const getExpenseById = async (req: any, res: any) => {
   try {
     const { id } = req.params;
     const userId = req.user.id;
 
     const expense = await prisma.expense.findFirst({
       where: { id: parseInt(id), userId },
-      include: { category: true, receipts: true },
+      include: { category: true},
     });
 
     if (!expense) {
@@ -72,7 +72,7 @@ export const getExpenseById = async (req, res) => {
   }
 };
 
-export const updateExpense = async (req, res) => {
+export const updateExpense = async (req: any, res: any) => {
   try {
     const { id } = req.params;
     const { amount, type, date, categoryId, description, startDate, endDate } = req.body;
@@ -116,7 +116,7 @@ export const updateExpense = async (req, res) => {
   }
 };
 
-export const deleteExpense = async (req, res) => {
+export const deleteExpense = async (req: any, res: any) => {
   try {
     const { id } = req.params;
     const userId = req.user.id;

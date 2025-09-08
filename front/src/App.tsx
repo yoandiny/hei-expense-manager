@@ -1,25 +1,17 @@
 import {BrowserRouter as Router, Route, Routes} from 'react-router-dom'
 import './App.css'
-import Signup from './pages/auth/Signup'
-import Login from './pages/auth/Login'
-import Dashboard from './pages/dashboard/Dashboard'
+import React from "react";
+import ExpenseForm from "./components/forms/ExpenseForm";
+
 
 function App() {
  
 
   return (
-    <Router>
-      <Routes>
-        <Route path="/" element={<Signup />}>
-        <Route index element={<Dashboard />} />
-        <Route path="/" element={<Signup />}/>
-        <Route path="/" element={<Login />}/>
-
-        </Route>
-
-      </Routes>
-      
-    </Router>
+    <div style={{ padding: "2rem" }}>
+      <h1>💸 Ajouter une dépense</h1>
+      <ExpenseForm />
+    </div>
   )
 }
 
