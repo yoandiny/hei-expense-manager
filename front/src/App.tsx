@@ -1,15 +1,14 @@
-import {BrowserRouter as Router, Route, Routes} from 'react-router-dom'
 import './App.css'
-import Signup from './pages/auth/Signup'
-import Login from './pages/auth/Login'
-import Dashboard from './pages/dashboard/Dashboard'
+import Category from "./pages/dashboard/Categories";
+import Summary from "./pages/dashboard/Dashboard";
 
 function App() {
- 
-
-  return (
-
-  )
+    return (
+        <div className="min-h-screen flex flex-col justify-center items-center bg-gray-100 p-6 gap-12">
+                <Summary />
+                <Category />
+        </div>
+    )
 }
 
-export default App
+export default App;

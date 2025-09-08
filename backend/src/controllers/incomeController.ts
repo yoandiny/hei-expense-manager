@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import prisma from "../prismaClient";
+import prisma from "../PrismaClient";
 
 export const createIncome = async (req: Request, res: Response) => {
   try {
@@ -15,7 +15,7 @@ export const createIncome = async (req: Request, res: Response) => {
         date: new Date(date),
         source,
         description,
-        userId: req.user.id,
+        userId: (req as any).user.id,
       },
     });
 
@@ -30,7 +30,7 @@ export const createIncome = async (req: Request, res: Response) => {
 export const getIncomes = async (req: Request, res: Response) => {
   try {
     const incomes = await prisma.income.findMany({
-      where: { userId: req.user.id },
+      where: { userId: (req as any).user.id},
       orderBy: { date: "desc" },
     });
 
@@ -46,7 +46,7 @@ export const getIncomeById = async (req: Request, res: Response) => {
     const { id } = req.params;
 
     const income = await prisma.income.findFirst({
-      where: { id: Number(id), userId: req.user.id },
+      where: { id: Number(id), userId: (req as any).user.id},
     });
 
     if (!income) {
@@ -67,7 +67,7 @@ export const updateIncome = async (req: Request, res: Response) => {
     const { amount, date, source, description } = req.body;
 
     const income = await prisma.income.updateMany({
-      where: { id: Number(id), userId: req.user.id },
+      where: { id: Number(id), userId: (req as any).user.id},
       data: { amount, date: date ? new Date(date) : undefined, source, description },
     });
 
@@ -88,7 +88,7 @@ export const deleteIncome = async (req: Request, res: Response) => {
     const { id } = req.params;
 
     const income = await prisma.income.deleteMany({
-      where: { id: Number(id), userId: req.user.id },
+      where: { id: Number(id), userId: (req as any).user.id},
     });
 
     if (income.count === 0) {
