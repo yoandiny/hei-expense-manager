@@ -1,9 +1,10 @@
 import { Router } from 'express';
-import { getSummary } from '../controllers/summaryController';
+import { getSummary, getMonthlySummary, getBudgetAlerts } from '../controllers/summaryController';
 
 const router = Router();
 
-// Obtenir un résumé des dépenses et revenus
 router.get('/', getSummary);
+router.get('/monthly', getMonthlySummary);
+router.get('/alerts', getBudgetAlerts);
 
 export default router;

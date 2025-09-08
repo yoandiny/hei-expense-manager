@@ -6,7 +6,6 @@
 
 generator client {
   provider = "prisma-client-js"
-  output   = "../generated/prisma"
 }
 
 datasource db {
@@ -15,31 +14,31 @@ datasource db {
 }
 
 model User {
-  id        Int       @id @default(autoincrement())
-  email     String    @unique
-  password  String
-  expenses  Expense[]
-  incomes   Income[]
+  id         Int        @id @default(autoincrement())
+  email      String     @unique
+  password   String
+  expenses   Expense[]
+  incomes    Income[]
   categories Category[]
-  createdAt DateTime  @default(now())
+  createdAt  DateTime   @default(now())
 }
 
 model Expense {
-  id          Int       @id @default(autoincrement())
+  id          Int         @id @default(autoincrement())
   amount      Float
-  description String?   // optionnel
+  description String? // optionnel
   type        ExpenseType @default(ONE_TIME)
   date        DateTime? // utilisé si One-time
   startDate   DateTime? // utilisé si Recurring
   endDate     DateTime? // optionnel pour Recurring
-  receiptUrl  String?   // chemin/fichier uploadé
-  createdAt   DateTime  @default(now())
+  receiptUrl  String? // chemin/fichier uploadé
+  createdAt   DateTime    @default(now())
 
   // Relations
-  userId   Int
-  user     User        @relation(fields: [userId], references: [id])
+  userId     Int
+  user       User     @relation(fields: [userId], references: [id])
   categoryId Int
-  category Category    @relation(fields: [categoryId], references: [id])
+  category   Category @relation(fields: [categoryId], references: [id])
 }
 
 enum ExpenseType {
@@ -48,12 +47,12 @@ enum ExpenseType {
 }
 
 model Income {
-  id          Int       @id @default(autoincrement())
+  id          Int      @id @default(autoincrement())
   amount      Float
   date        DateTime
   source      String
-  description String?   // optionnel
-  createdAt   DateTime  @default(now())
+  description String? // optionnel
+  createdAt   DateTime @default(now())
 
   // Relation avec User
   userId Int
@@ -61,13 +60,13 @@ model Income {
 }
 
 model Category {
-  id        Int       @id @default(autoincrement())
+  id        Int      @id @default(autoincrement())
   name      String
-  isDefault Boolean   @default(false) // pour savoir si c’est une catégorie système
-  createdAt DateTime  @default(now())
+  isDefault Boolean  @default(false) // pour savoir si c’est une catégorie système
+  createdAt DateTime @default(now())
 
   // Relations
-  userId   Int?       // null = catégorie par défaut globale
-  user     User?      @relation(fields: [userId], references: [id])
+  userId   Int? // null = catégorie par défaut globale
+  user     User?     @relation(fields: [userId], references: [id])
   expenses Expense[]
 }
