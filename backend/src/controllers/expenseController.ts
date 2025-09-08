@@ -12,24 +12,24 @@ export const createExpense = async (req: Request, res: Response) => {
     const userId = (req as any).user.id;
 
     // Validation logique
-    if (type === "One-time" && !date) {
+    if (type === "ONE_TIME" && !date) {
       return res.status(400).json({ error: "Date est obligatoire pour une dépense ponctuelle" });
     }
 
-    if (type === "Recurring" && !startDate) {
+    if (type === "RECURRING" && !startDate) {
       return res.status(400).json({ error: "StartDate est obligatoire pour une dépense récurrente" });
     }
 
     const expense = await prisma.expense.create({
       data: {
         amount: parseFloat(amount),
-        type,
-        date: type === "One-time" ? new Date(date) : null,
+        type, // "ONE_TIME" ou "RECURRING"
+        date: type === "ONE_TIME" ? new Date(date) : null,
         categoryId: parseInt(categoryId),
         description,
-        startDate: type === "Recurring" ? new Date(startDate) : null,
+        startDate: type === "RECURRING" ? new Date(startDate) : null,
         endDate: endDate ? new Date(endDate) : null,
-        userId,
+        userId: 1,
       },
     });
 

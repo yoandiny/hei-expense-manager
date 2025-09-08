@@ -27,6 +27,7 @@ model Expense {
   endDate     DateTime?
   receiptUrl  String?
   createdAt   DateTime    @default(now())
+  
   userId      Int
   categoryId  Int
   category    Category    @relation(fields: [categoryId], references: [id])
