@@ -18,5 +18,4 @@ export function authMiddleware(req: Request, res: Response, next: NextFunction){
     } catch (error){
         res.status(401).json({message: "Invalid Token"})
     }
-
 }
