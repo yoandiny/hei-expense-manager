@@ -3,8 +3,8 @@ import cors from "cors";
 import dotenv from "dotenv";
 import { PrismaClient } from "@prisma/client";
 
-import authRoutes from "./routes/auth.js"
-import userRoutes from "./routes/user.js"
+import authRoutes from "./routes/auth"
+import userRoutes from "./routes/user"
 import categoryRoutes from "./routes/categories";
 import summaryRoutes from "./routes/summary";
 import expenseRoutes from "./routes/expenses";

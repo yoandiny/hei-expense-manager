@@ -8,18 +8,18 @@ import {
   deleteExpense,
 } from "../controllers/expenseController";
 
-//import { authenticate } from "../middleware/auth";
+import { authMiddleware } from "../middleware/auth";
 
 const router = express.Router();
 
-router.post("/", createExpense);
+router.post("/",authMiddleware, createExpense);
 
-router.get("/", getExpenses);
+router.get("/",authMiddleware, getExpenses);
 
-router.get("/:id", getExpenseById);
+router.get("/:id",authMiddleware, getExpenseById);
 
-router.put("/:id", updateExpense);
+router.put("/:id",authMiddleware, updateExpense);
 
-router.delete("/:id", deleteExpense);
+router.delete("/:id",authMiddleware, deleteExpense);
 
 export default router;
