@@ -4,9 +4,10 @@ import type { CreateExpenseDTO, ExpenseTypeUI } from "../../services/expenseServ
 
 type ExpenseFormProps = {
   onSuccess?: () => void;
+  onCancel?: () => void; // Ajout de la prop onCancel
 };
 
-const ExpenseForm: React.FC<ExpenseFormProps> = ({ onSuccess }) => {
+const ExpenseForm: React.FC<ExpenseFormProps> = ({ onSuccess, onCancel }) => {
   const [amount, setAmount] = useState<number>(0);
   const [date, setDate] = useState<string>("");
   const [categoryId, setCategoryId] = useState<string>("");
@@ -144,13 +145,22 @@ const ExpenseForm: React.FC<ExpenseFormProps> = ({ onSuccess }) => {
         />
       </div>
 
-      <button
-        type="submit"
-        disabled={loading}
-        className="w-full bg-blue-600 text-white rounded-lg py-2 hover:bg-blue-700 disabled:bg-gray-400"
-      >
-        {loading ? "Saving..." : "Save Expense"}
-      </button>
+      <div className="flex space-x-4">
+        <button
+          type="submit"
+          disabled={loading}
+          className="w-full bg-blue-600 text-white rounded-lg py-2 hover:bg-blue-700 disabled:bg-gray-400"
+        >
+          {loading ? "Saving..." : "Save Expense"}
+        </button>
+        <button
+          type="button"
+          onClick={onCancel}
+          className="w-full bg-gray-300 text-gray-800 rounded-lg py-2 hover:bg-gray-400"
+        >
+          Cancel
+        </button>
+      </div>
     </form>
   );
 };
