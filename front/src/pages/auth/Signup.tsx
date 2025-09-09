@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useAuthContext } from "../../context/AuthContext";
 import { signup } from "../../services/authService";
 import { signupSchema } from "../../utils/validators";
+import {ToastContainer, toast} from "react-toastify";
 
 const Signup: React.FC = () => {
     const navigate = useNavigate();
@@ -18,10 +19,12 @@ const Signup: React.FC = () => {
         try {
             signupSchema.parse({ email, password });
             const res = await signup(email, password);
-            setToken(res.data.token); // auto-login
+            setToken(res.data.token);
+             toast.success("Signup successful!");
             navigate("/dashboard");
         } catch (err: any) {
             setError(err.response?.data?.message || "Signup failed");
+            toast.error(err.response?.data?.message || "Signup failed");
         }
     };
 
@@ -73,6 +76,7 @@ const Signup: React.FC = () => {
           </span>
                 </p>
             </div>
+            <ToastContainer position="top-right" autoClose={3000} hideProgressBar />
         </div>
     );
 };
