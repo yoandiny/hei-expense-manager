@@ -12,6 +12,7 @@ import Category from "./pages/dashboard/Categories";
 import type { JSX } from "react";
 import Navbar from './components/layout/Navbar';
 import Expenses from './pages/dashboard/Expenses';
+import NotFound from './pages/NotFound';
 
 const ProtectedRoute = ({ children }: { children: JSX.Element }) => {
     const {token} = useAuthContext();
@@ -42,8 +43,8 @@ function App() {
                        
                     </Route>
 
-                    {/* Redirection par défaut */}
-                    <Route path="*" element={<Navigate to="/login" />} />
+                   
+                    <Route path="*" element={<NotFound />} />
                 </Routes>
             </Router>
         </AuthProvider>
