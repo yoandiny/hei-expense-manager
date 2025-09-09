@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom'
 import { useState } from 'react'
+import Logo from '../../assets/logo.png'
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false)
@@ -12,9 +13,9 @@ export default function Navbar() {
             <div className="flex-shrink-0">
               <Link to="/">
                 <img
-                  className="h-8 w-auto"
-                  src="https://tailwindui.com/img/logos/workflow-mark-indigo-500.svg"
-                  alt="Workflow"
+                  className="h-50 w-50"
+                  src={Logo}
+                  alt="Logo"
                 />
               </Link>
             </div>

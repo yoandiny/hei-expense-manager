@@ -6,4 +6,8 @@
 *.env
 
 node_modules/
+<<<<<<< HEAD
 
+=======
+.gitignore
+>>>>>>> feature/signup
