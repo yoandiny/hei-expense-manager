@@ -6,7 +6,7 @@ export default function Navbar() {
   return (
     <div className='flex flex-col'>
     <div>
-      <nav className="bg-gray-800">
+      <nav className="bg-gray-700">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-23">
           <div className="flex items-center">
@@ -19,40 +19,49 @@ export default function Navbar() {
                 />
               </Link>
             </div>
-            <div className="hidden md:block">
-              
+            <div className=" block">
+              <Link to="/profile" className="text-white hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-2xl font-medium">
+                <i className=' text-2xl bx bxs-user-circle' ></i>
+              </Link>
             </div>
           </div>
-          <div className="hidden md:block">
-          </div>
-          <div className="-mr-2 flex md:hidden">
-           
-          </div>
+          
         </div>
       </div>
     </nav>
     <div className='flex '>
       <nav className='w-100 h-full mr-10'>
-      <div className="bg-gray-100 p-4 h-150 flex flex-col mb-1">
+      <div className="bg-gray-100 p-4 h-150 flex flex-col ">
         <Link
                   to="/dashboard"
-                  className="text-black hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-large"
+                  className="mb-1.5 text-black hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-2xl font-medium"
                 >
+                  <i className='bx bxs-dashboard'></i>
                   Tableau de bord
                 </Link>
 
                 <Link
                   to="/categories"
-                  className="text-black-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-large"
+                  className="mb-1.5 text-black-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-2xl font-medium"
                 >
+                  <i className='bx bxs-category' ></i>
                   Catégories
                 </Link>
 
                 <Link
-                  to="/transactions"
-                  className="text-black-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
+                  to="/incomes"
+                  className="mb-1.5 text-black-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-2xl font-medium"
                 >
-                  Transactions
+                  <i className='bx bxs-wallet' ></i>
+                  Revenus
+                </Link>
+
+                <Link
+                  to="/expenses"
+                  className="mb-1.5 text-black-100 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-2xl font-medium"
+                >
+                  <i className='bx bx-money-withdraw' ></i>
+                  Dépenses
                 </Link>
       </div>
 
