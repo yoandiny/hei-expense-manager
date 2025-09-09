@@ -15,6 +15,7 @@ import Signup from './pages/auth/Signup'
 import Login from './pages/auth/Login'
 import Dashboard from './pages/dashboard/Dashboard'
 import Navbar from './components/layout/Navbar'
+import Categories from './pages/dashboard/Categories'
 
 function App() {
  
@@ -29,6 +30,7 @@ function App() {
         
         <Route path="/" element={<Navbar />}>
         <Route index element={<Dashboard />} />
+        <Route path="/categories" element={<Categories />} />
        
 
         </Route>
