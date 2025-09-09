@@ -11,6 +11,7 @@ import Summary from "./pages/dashboard/Dashboard";
 import Category from "./pages/dashboard/Categories";
 import type { JSX } from "react";
 import Navbar from './components/layout/Navbar';
+import Expenses from './pages/dashboard/Expenses';
 
 const ProtectedRoute = ({ children }: { children: JSX.Element }) => {
     const {token} = useAuthContext();
@@ -37,6 +38,8 @@ function App() {
                     >
                         <Route index element={<Summary />} />
                         <Route path="categories" element={<Category />} />
+                        <Route path="expenses" element={<Expenses />} />
+                       
                     </Route>
 
                     {/* Redirection par défaut */}
