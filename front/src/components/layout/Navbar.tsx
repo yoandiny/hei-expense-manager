@@ -20,11 +20,11 @@ export default function Navbar() {
           
     </nav>
     <div className='flex '>
-      <nav className='w-100 h-full mr-10'>
+      <nav className='w-80 h-full mr-10'>
       <div className="bg-gray-100 p-4 h-150 flex flex-col ">
         <Link
                   to="/dashboard"
-                  className="mb-1.5 text-black hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-2xl font-medium"
+                  className=" mb-1.5 text-black hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-2xl font-medium"
                 >
                   <i className='bx bxs-dashboard'></i>
                   Tableau de bord
