@@ -19,11 +19,6 @@ export const getSummary = async (req: Request, res: Response) => {
             _sum: { amount: true },
         });
 
-        // nombre de catégories utilisées par cet utilisateur
-        const categoryCount = await prisma.category.count({
-            where: { userId },
-        });
-
         // dépenses groupées par catégorie
         const expensesByCategory = await prisma.expense.groupBy({
             by: ['categoryId'],
@@ -43,6 +38,9 @@ export const getSummary = async (req: Request, res: Response) => {
             total: e._sum.amount || 0,
         }));
 
+        // 👉 nombre de catégories réellement utilisées (option 2)
+        const categoryCount = expensesByCategory.length;
+
         res.status(200).json({
             totalExpenses: totalExpenses._sum.amount || 0,
             categoryCount,
@@ -55,7 +53,6 @@ export const getSummary = async (req: Request, res: Response) => {
     }
 };
 
-
 export const getMonthlySummary = async (req: Request, res: Response) => {
     try {
         const userId = 1; // À remplacer par req.user.id
@@ -67,6 +64,7 @@ export const getMonthlySummary = async (req: Request, res: Response) => {
         const expenseFilter: any = { userId, date: { gte: startDate, lte: endDate } };
         const incomeFilter: any = { userId, date: { gte: startDate, lte: endDate } };
 
+        // total dépenses & revenus
         const totalExpenses = await prisma.expense.aggregate({
             where: expenseFilter,
             _sum: { amount: true },
@@ -76,15 +74,27 @@ export const getMonthlySummary = async (req: Request, res: Response) => {
             _sum: { amount: true },
         });
 
+        // dépenses groupées par catégorie pour le mois
+        const expensesByCategory = await prisma.expense.groupBy({
+            by: ['categoryId'],
+            where: expenseFilter,
+            _sum: { amount: true },
+        });
+
+        // 👉 nombre de catégories réellement utilisées dans ce mois
+        const categoryCount = expensesByCategory.length;
+
         res.status(200).json({
             totalExpenses: totalExpenses._sum.amount || 0,
             totalIncomes: totalIncomes._sum.amount || 0,
             balance: (totalIncomes._sum.amount || 0) - (totalExpenses._sum.amount || 0),
+            categoryCount, // ajouté pour cohérence
         });
     } catch (error) {
         res.status(500).json({ error: 'Erreur serveur' });
     }
 };
+
 
 export const getBudgetAlerts = async (req: Request, res: Response) => {
     try {
