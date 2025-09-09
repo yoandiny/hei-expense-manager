@@ -1,3 +1,4 @@
+// categoryService.ts
 interface Category {
     id: number;
     name: string;
@@ -6,8 +7,15 @@ interface Category {
     createdAt: string;
 }
 
+const getAuthHeaders = (): Record<string, string> => {
+    const token = localStorage.getItem('token');
+    return token ? { Authorization: `Bearer ${token}` } : {};
+};
+
 export const getCategories = async (): Promise<Category[]> => {
-    const response = await fetch('/api/categories');
+    const response = await fetch('/api/categories', {
+        headers: getAuthHeaders(),
+    });
     if (!response.ok) {
         throw new Error('Erreur lors de la récupération des catégories');
     }
@@ -18,7 +26,10 @@ export const createCategory = async (name: string): Promise<Category> => {
     if (!name) throw new Error('Le nom de la catégorie est requis');
     const response = await fetch('/api/categories', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+            'Content-Type': 'application/json',
+            ...getAuthHeaders(), // ← Ajout crucial
+        },
         body: JSON.stringify({ name }),
     });
     if (!response.ok) {
@@ -28,12 +39,14 @@ export const createCategory = async (name: string): Promise<Category> => {
     return response.json();
 };
 
-
 export const updateCategory = async (id: number, name: string): Promise<Category> => {
     if (!name) throw new Error('Le nom de la catégorie est requis');
-    const response = await fetch(`/api/categories/${id}`, { // URL relative
+    const response = await fetch(`/api/categories/${id}`, {
         method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+            'Content-Type': 'application/json',
+            ...getAuthHeaders(), // ← Ajout crucial
+        },
         body: JSON.stringify({ name }),
     });
     if (!response.ok) {
@@ -45,8 +58,9 @@ export const updateCategory = async (id: number, name: string): Promise<Category
 };
 
 export const deleteCategory = async (id: number): Promise<void> => {
-    const response = await fetch(`/api/categories/${id}`, { // URL relative
+    const response = await fetch(`/api/categories/${id}`, {
         method: 'DELETE',
+        headers: getAuthHeaders(), // ← Ajout crucial
     });
     if (!response.ok) {
         if (response.status === 400) throw new Error('Impossible de supprimer une catégorie associée à des dépenses');
