@@ -32,10 +32,15 @@ function mapTypeToAPI(type: ExpenseTypeUI): ExpenseTypeAPI {
   return type === "One-time" ? "ONE_TIME" : "RECURRING";
 }
 
-// Récupérer le token d'authentification (à adapter selon votre gestion d'auth)
+// Récupérer le token d'authentification
 const getAuthToken = () => {
-  // Exemple : récupérer un token JWT depuis localStorage
-  return localStorage.getItem("token") || "";
+  // Récupère le token depuis localStorage (ajuste selon ta gestion d'auth)
+  const token = localStorage.getItem("token");
+  if (!token) {
+    console.warn("No token found in localStorage, using dummy token for testing");
+    return "dummy-token"; // Token simulé pour tester, remplace par un vrai token
+  }
+  return token;
 };
 
 // Récupérer toutes les dépenses
@@ -43,13 +48,14 @@ export async function getExpenses(): Promise<Expense[]> {
   const response = await fetch(API_URL, {
     method: "GET",
     headers: {
-      // "Authorization": `Bearer ${getAuthToken()}`,
+      "Content-Type": "application/json",
+      "Authorization": `Bearer ${getAuthToken()}`,
     },
   });
 
   if (!response.ok) {
     const error = await response.json();
-    throw new Error(error.error || "Failed to fetch expenses");
+    throw new Error(error.message || "Failed to fetch expenses");
   }
 
   return response.json();
@@ -66,14 +72,14 @@ export async function createExpense(expense: CreateExpenseDTO): Promise<Expense>
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      // "Authorization": `Bearer ${getAuthToken()}`,
+      "Authorization": `Bearer ${getAuthToken()}`,
     },
     body: JSON.stringify(payload),
   });
 
   if (!response.ok) {
     const error = await response.json();
-    throw new Error(error.error || "Failed to create expense");
+    throw new Error(error.message || "Failed to create expense");
   }
 
   return response.json();
@@ -85,14 +91,14 @@ export async function updateExpense(id: number, expense: Expense): Promise<Expen
     method: "PUT",
     headers: {
       "Content-Type": "application/json",
-      // "Authorization": `Bearer ${getAuthToken()}`,
+      "Authorization": `Bearer ${getAuthToken()}`,
     },
     body: JSON.stringify(expense),
   });
 
   if (!response.ok) {
     const error = await response.json();
-    throw new Error(error.error || "Failed to update expense");
+    throw new Error(error.message || "Failed to update expense");
   }
 
   return response.json();
@@ -103,12 +109,12 @@ export async function deleteExpense(id: number): Promise<void> {
   const response = await fetch(`${API_URL}/${id}`, {
     method: "DELETE",
     headers: {
-      // "Authorization": `Bearer ${getAuthToken()}`,
+      "Authorization": `Bearer ${getAuthToken()}`,
     },
   });
 
   if (!response.ok) {
     const error = await response.json();
-    throw new Error(error.error || "Failed to delete expense");
+    throw new Error(error.message || "Failed to delete expense");
   }
 }

@@ -8,6 +8,7 @@ import userRoutes from "./routes/user"
 import categoryRoutes from "./routes/categories";
 import summaryRoutes from "./routes/summary";
 import expenseRoutes from "./routes/expenses";
+import {errorHandler} from "./middleware/errorHandler";
 
 
 dotenv.config();
@@ -22,6 +23,7 @@ app.use("/api/user", userRoutes)
 app.use('/api/categories', categoryRoutes);
 app.use('/api/summary', summaryRoutes);
 app.use("/api/expenses", expenseRoutes);
+app.use(errorHandler); //doit etre placer ici le dernier apres toutes les routes
 
 
 
