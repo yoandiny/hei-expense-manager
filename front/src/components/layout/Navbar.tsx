@@ -6,28 +6,18 @@ export default function Navbar() {
   return (
     <div className='flex flex-col'>
     <div>
-      <nav className="bg-gray-700">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-23">
-          <div className="flex items-center">
-            <div className="flex-shrink-0">
-              <Link to="/">
-                <img
-                  className="h-30 w-30"
-                  src={Logo}
-                  alt="Logo"
-                />
-              </Link>
-            </div>
-            <div className=" block">
-              <Link to="/profile" className="text-white hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-2xl font-medium">
-                <i className=' text-2xl bx bxs-user-circle' ></i>
-              </Link>
-            </div>
-          </div>
-          
-        </div>
+      <nav className="bg-gray-700 h-26 flex items-center flex-row justify-between ">
+      <span className='items-start ml-3'>
+        <img src={Logo} alt="Logo" className='w-30 h-30' />
+      </span>
+      <div className='items-end mr-3'>
+        <Link to="/profile"
+        className='text-white '
+        >
+           <i className='bx bxs-user-circle text-7xl' ></i>
+          </Link>
       </div>
+          
     </nav>
     <div className='flex '>
       <nav className='w-100 h-full mr-10'>
