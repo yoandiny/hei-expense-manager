@@ -1,4 +1,5 @@
-const API_URL = "http://localhost:3000/api/expenses";
+
+const API_URL = "http://localhost:5000/api/expenses"; // Ajuste à 5000 si nécessaire
 
 // 👇 Mets bien export devant pour qu'ils soient visibles ailleurs
 export type ExpenseTypeUI = "One-time" | "Recurring"; // côté formulaire
@@ -34,52 +35,60 @@ function mapTypeToAPI(type: ExpenseTypeUI): ExpenseTypeAPI {
 
 // Récupérer le token d'authentification
 const getAuthToken = () => {
-  // Récupère le token depuis localStorage (ajuste selon ta gestion d'auth)
   const token = localStorage.getItem("token");
   if (!token) {
-    console.warn("No token found in localStorage, using dummy token for testing");
-    return "dummy-token"; // Token simulé pour tester, remplace par un vrai token
+    console.warn("No token found in localStorage, please log in to get a valid token");
+    return null; // Retourne null pour éviter un 401 silencieux
   }
   return token;
 };
 
 // Récupérer toutes les dépenses
-export async function getExpenses(): Promise<Expense[]> {
-  const response = await fetch(API_URL, {
+export async function getExpenses(token: string): Promise<Expense[]> {
+  const response = await fetch("/api/expenses", {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
-      "Authorization": `Bearer ${getAuthToken()}`,
+      "Authorization": `Bearer ${token}`,
     },
   });
 
   if (!response.ok) {
-    const error = await response.json();
-    throw new Error(error.message || "Failed to fetch expenses");
+    const error = await response.json().catch(() => ({}));
+    throw new Error(error.message || `Failed to fetch expenses (Status: ${response.status})`);
   }
 
   return response.json();
 }
 
+
 // Créer une dépense
 export async function createExpense(expense: CreateExpenseDTO): Promise<Expense> {
+  const token = getAuthToken();
+  if (!token) {
+    throw new Error("No valid token, please log in");
+  }
+
   const payload: Expense = {
     ...expense,
     type: mapTypeToAPI(expense.type),
   };
 
+  console.log("📤 Sending payload:", payload); // Log les données envoyées
   const response = await fetch(API_URL, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      "Authorization": `Bearer ${getAuthToken()}`,
+      "Authorization": `Bearer ${token}`,
     },
     body: JSON.stringify(payload),
   });
 
+  console.log("📥 Response status:", response.status); // Log le statut
   if (!response.ok) {
-    const error = await response.json();
-    throw new Error(error.message || "Failed to create expense");
+    const error = await response.json().catch(() => ({}));
+    console.error("📕 Error response:", error); // Log l'erreur
+    throw new Error(error.message || `Failed to create expense (Status: ${response.status})`);
   }
 
   return response.json();
@@ -87,18 +96,25 @@ export async function createExpense(expense: CreateExpenseDTO): Promise<Expense>
 
 // Mettre à jour une dépense
 export async function updateExpense(id: number, expense: Expense): Promise<Expense> {
+  const token = getAuthToken();
+  if (!token) {
+    throw new Error("No valid token, please log in");
+  }
+
   const response = await fetch(`${API_URL}/${id}`, {
     method: "PUT",
     headers: {
       "Content-Type": "application/json",
-      "Authorization": `Bearer ${getAuthToken()}`,
+      "Authorization": `Bearer ${token}`,
     },
     body: JSON.stringify(expense),
   });
 
+  console.log("📥 Response status:", response.status); // Log le statut
   if (!response.ok) {
-    const error = await response.json();
-    throw new Error(error.message || "Failed to update expense");
+    const error = await response.json().catch(() => ({}));
+    console.error("📕 Error response:", error); // Log l'erreur
+    throw new Error(error.message || `Failed to update expense (Status: ${response.status})`);
   }
 
   return response.json();
@@ -106,15 +122,22 @@ export async function updateExpense(id: number, expense: Expense): Promise<Expen
 
 // Supprimer une dépense
 export async function deleteExpense(id: number): Promise<void> {
+  const token = getAuthToken();
+  if (!token) {
+    throw new Error("No valid token, please log in");
+  }
+
   const response = await fetch(`${API_URL}/${id}`, {
     method: "DELETE",
     headers: {
-      "Authorization": `Bearer ${getAuthToken()}`,
+      "Authorization": `Bearer ${token}`,
     },
   });
 
+  console.log("📥 Response status:", response.status); // Log le statut
   if (!response.ok) {
-    const error = await response.json();
-    throw new Error(error.message || "Failed to delete expense");
+    const error = await response.json().catch(() => ({}));
+    console.error("📕 Error response:", error); // Log l'erreur
+    throw new Error(error.message || `Failed to delete expense (Status: ${response.status})`);
   }
 }

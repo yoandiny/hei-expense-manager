@@ -1,47 +1,53 @@
 import './App.css'
+import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
+import { AuthProvider, useAuthContext } from "./context/AuthContext";
 
- import Category from "./pages/dashboard/Categories";
- import Summary from "./pages/dashboard/Dashboard";
+// Pages Auth
+import Login from "./pages/auth/Login";
+import Signup from "./pages/auth/Signup";
+
+// Pages Dashboard
+import Summary from "./pages/dashboard/Dashboard";
+import Category from "./pages/dashboard/Categories";
+import type {JSX} from "react";
 import Expenses from './pages/dashboard/Expenses';
 
- function App() {
-     return (
-         <div className="min-h-screen flex flex-col justify-center items-center bg-gray-100 p-6 gap-12">
-                 {/* <Summary />
-                 <Category /> */}
-                 <Expenses/>
-         </div>
-     )
- }
-// import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
-// import Signup from './pages/auth/Signup'
-// import Login from './pages/auth/Login'
-// import Dashboard from './pages/dashboard/Dashboard'
-// import Navbar from './components/layout/Navbar'
-// import Categories from './pages/dashboard/Categories'
+// Route protégée
+const ProtectedRoute = ({ children }: { children: JSX.Element }) => {
+    const { token } = useAuthContext();
+    return token ? children : <Navigate to="/login" />;
+};
 
-// function App() {
- 
+function App() {
+    return (
+        <AuthProvider>
+            <Router>
+                <Routes>
+                    {/* Pages publiques */}
+                    <Route path="/login" element={<Login />} />
+                    <Route path="/signup" element={<Signup />} />
 
-//   return (
-//     <Router>
-//       <Routes>
-//         <Route>
-//            <Route path="/signup" element={<Signup />}/>
-//            <Route path="/login" element={<Login />}/>
-//         </Route>
-        
-//         <Route path="/" element={<Navbar />}>
-//         <Route index element={<Dashboard />} />
-//         <Route path="/categories" element={<Categories />} />
-       
+                    {/* Pages protégées */}
+                    <Route
+                        path="/dashboard"
+                        element={
+                            <ProtectedRoute>
+                                <div className="min-h-screen flex flex-col justify-center items-center bg-gray-100 p-6 gap-12">
+                                    <Category />
+                                    <Expenses/>
+                                    {/* <Summary />
+                                     */}
+                                </div>
+                            </ProtectedRoute>
+                        }
+                    />
 
-//         </Route>
-
-//       </Routes>
-      
-//     </Router>
-//   )
-// }
+                    {/* Redirection par défaut */}
+                    <Route path="*" element={<Navigate to="/login" />} />
+                </Routes>
+            </Router>
+        </AuthProvider>
+    );
+}
 
 export default App;

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { getExpenses, deleteExpense } from "../../services/expenseService";
 import ExpenseForm from "../../components/forms/ExpenseForm";
+import { useAuth } from "../../hooks/useAuth";
 
 interface Expense {
   id?: number;
@@ -19,24 +20,28 @@ const Expenses: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [showForm, setShowForm] = useState(false); // État pour afficher/masquer le formulaire
+  const { token } = useAuth();
 
   // Charger les dépenses au montage du composant
-  useEffect(() => {
-    const fetchExpenses = async () => {
-      setLoading(true);
-      try {
-        const data = await getExpenses();
-        setExpenses(data);
-        setError(null);
-      } catch (err: any) {
-        setError(err.message || "Failed to fetch expenses");
-      } finally {
-        setLoading(false);
-      }
-    };
+useEffect(() => {
+  const fetchExpenses = async () => {
+    if (!token) return; // ne rien faire si pas connecté
 
-    fetchExpenses();
-  }, []);
+    setLoading(true);
+    try {
+      const data = await getExpenses(token); // passer le token
+      setExpenses(data);
+      setError(null);
+    } catch (err: any) {
+      setError(err.message || "Failed to fetch expenses");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  fetchExpenses();
+}, [token]);
+
 
   // Supprimer une dépense
   const handleDelete = async (id: number) => {
@@ -52,15 +57,18 @@ const Expenses: React.FC = () => {
   };
 
   // Rafraîchir la liste après ajout et masquer le formulaire
-  const handleExpenseAdded = async () => {
-    try {
-      const data = await getExpenses();
-      setExpenses(data);
-      setShowForm(false); // Masquer le formulaire après ajout
-    } catch (err: any) {
-      setError(err.message || "Failed to refresh expenses");
-    }
-  };
+const handleExpenseAdded = async () => {
+  if (!token) return; // éviter les appels si pas connecté
+
+  try {
+    const data = await getExpenses(token); // ✅ token passé
+    setExpenses(data);
+    setShowForm(false);
+  } catch (err: any) {
+    setError(err.message || "Failed to refresh expenses");
+  }
+};
+
 
   return (
     <div className="container mx-auto p-4 relative">
