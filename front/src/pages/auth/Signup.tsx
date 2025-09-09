@@ -23,7 +23,6 @@ const Signup: React.FC = () => {
              toast.success("Signup successful!");
             navigate("/dashboard");
         } catch (err: any) {
-            setError(err.response?.data?.message || "Signup failed");
             toast.error(err.response?.data?.message || "Signup failed");
         }
     };
