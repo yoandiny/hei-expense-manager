@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { getExpenses, deleteExpense } from "../../services/expenseService";
 import ExpenseForm from "../../components/forms/ExpenseForm";
-import { useAuth } from "../../hooks/useAuth";
+import { formatDate } from "../../utils/formatDate";
 
 interface Expense {
   id?: number;
@@ -19,78 +19,96 @@ const Expenses: React.FC = () => {
   const [expenses, setExpenses] = useState<Expense[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [showForm, setShowForm] = useState(false); // État pour afficher/masquer le formulaire
-  const { token } = useAuth();
+  const [showForm, setShowForm] = useState(false);
+  const [editingExpense, setEditingExpense] = useState<Expense | null>(null);
 
-  // Charger les dépenses au montage du composant
-useEffect(() => {
-  const fetchExpenses = async () => {
-    if (!token) return; // ne rien faire si pas connecté
-
+  const loadExpenses = async () => {
     setLoading(true);
     try {
-      const data = await getExpenses(token); // passer le token
+      const data = await getExpenses();
       setExpenses(data);
       setError(null);
-    } catch (err: any) {
-      setError(err.message || "Failed to fetch expenses");
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        if (err.message === "NO_TOKEN") {
+          localStorage.removeItem("token");
+          window.location.href = "/login";
+          return;
+        }
+
+        if (err.message.includes("401")) {
+          localStorage.removeItem("token");
+          alert("Votre session a expiré. Veuillez vous reconnecter.");
+          window.location.href = "/login";
+          return;
+        }
+
+        setError(err.message);
+      } else {
+        setError("Une erreur inconnue est survenue.");
+      }
     } finally {
       setLoading(false);
     }
   };
 
-  fetchExpenses();
-}, [token]);
+  useEffect(() => {
+    loadExpenses();
+  }, []);
 
+  const handleExpenseAddedOrUpdated = () => {
+    loadExpenses();
+    setShowForm(false);
+    setEditingExpense(null);
+  };
 
-  // Supprimer une dépense
   const handleDelete = async (id: number) => {
     if (!window.confirm("Are you sure you want to delete this expense?")) return;
 
     try {
       await deleteExpense(id);
-      setExpenses(expenses.filter((expense) => expense.id !== id));
+      loadExpenses();
       alert("✅ Expense deleted!");
-    } catch (err: any) {
-      alert("❌ " + (err.message || "Failed to delete expense"));
+    } catch (err: unknown) {
+      let message = "Failed to delete expense.";
+      if (err instanceof Error) message = err.message;
+      alert(`❌ ${message}`);
     }
   };
 
-  // Rafraîchir la liste après ajout et masquer le formulaire
-const handleExpenseAdded = async () => {
-  if (!token) return; // éviter les appels si pas connecté
-
-  try {
-    const data = await getExpenses(token); // ✅ token passé
-    setExpenses(data);
-    setShowForm(false);
-  } catch (err: any) {
-    setError(err.message || "Failed to refresh expenses");
-  }
-};
-
+  const handleEdit = (expense: Expense) => {
+    setEditingExpense(expense);
+    setShowForm(true);
+  };
 
   return (
     <div className="container mx-auto p-4 relative">
-      {/* Overlay sombre lorsque le formulaire est visible */}
       {showForm && (
-        <div className="fixed inset-0 bg-black/50 z-10" />
+        <div className="fixed inset-0 bg-black/50 z-10" onClick={() => setShowForm(false)} />
       )}
 
       <div className={`transition-opacity duration-300 ${showForm ? "opacity-50" : "opacity-100"}`}>
         <div className="flex justify-between items-center mb-6">
           <h1 className="text-2xl font-bold text-gray-800">Expenses</h1>
           <button
-            onClick={() => setShowForm(true)}
+            onClick={() => {
+              setEditingExpense(null);
+              setShowForm(true);
+            }}
             className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700"
           >
             Add Expense
           </button>
         </div>
 
-        {/* Affichage des dépenses */}
-        {loading && <p className="text-gray-600">Loading...</p>}
-        {error && <p className="text-red-500">{error}</p>}
+        {loading && (
+          <div className="flex justify-center items-center py-8">
+            <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-blue-500"></div>
+          </div>
+        )}
+
+        {error && <p className="text-red-500 mb-4">{error}</p>}
+
         {expenses.length === 0 && !loading && !error && (
           <p className="text-gray-600">No expenses found.</p>
         )}
@@ -100,31 +118,32 @@ const handleExpenseAdded = async () => {
             {expenses.map((expense) => (
               <div
                 key={expense.id}
-                className="bg-white p-4 rounded-lg shadow-md flex justify-between items-center"
+                className="bg-white p-4 rounded-lg shadow-md flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4"
               >
                 <div>
                   <p className="text-lg font-semibold">
-                    {expense.type === "ONE_TIME" ? "One-time" : "Recurring"} - ${expense.amount}
+                    {expense.type === "ONE_TIME" ? "One-time" : "Recurring"} — $
+                    {expense.amount.toFixed(2)}
                   </p>
                   <p className="text-sm text-gray-600">
-                    Date: {expense.date ? new Date(expense.date).toLocaleDateString() : "N/A"}
+                    Date: {formatDate(expense.date || expense.startDate)}
                   </p>
                   {expense.description && (
-                    <p className="text-sm text-gray-600">
+                    <p className="text-sm text-gray-600 mt-1">
                       Description: {expense.description}
                     </p>
                   )}
                 </div>
-                <div className="space-x-2">
+                <div className="flex space-x-2">
                   <button
-                    className="bg-yellow-500 text-white px-3 py-1 rounded hover:bg-yellow-600"
-                    onClick={() => alert("Edit functionality not implemented yet")}
+                    className="bg-yellow-500 text-white px-3 py-1 rounded text-sm hover:bg-yellow-600 transition"
+                    onClick={() => handleEdit(expense)}
                   >
                     Edit
                   </button>
                   <button
-                    className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600"
-                    onClick={() => handleDelete(expense.id!)}
+                    className="bg-red-500 text-white px-3 py-1 rounded text-sm hover:bg-red-600 transition"
+                    onClick={() => expense.id && handleDelete(expense.id)}
                   >
                     Delete
                   </button>
@@ -135,13 +154,22 @@ const handleExpenseAdded = async () => {
         )}
       </div>
 
-      {/* Formulaire affiché conditionnellement au-dessus de l'overlay */}
       {showForm && (
-        <div className="fixed inset-0 flex items-center justify-center z-20">
-          <div className="max-w-md w-full">
+        <div
+          className="fixed inset-0 flex items-center justify-center z-20"
+          onClick={(e) => e.stopPropagation()}
+        >
+          <div
+            className="bg-white p-6 rounded-lg shadow-xl max-w-md w-full mx-4"
+            onClick={(e) => e.stopPropagation()}
+          >
             <ExpenseForm
-              onSuccess={handleExpenseAdded}
-              onCancel={() => setShowForm(false)}
+              onSuccess={handleExpenseAddedOrUpdated}
+              onCancel={() => {
+                setShowForm(false);
+                setEditingExpense(null);
+              }}
+              initialData={editingExpense}
             />
           </div>
         </div>
@@ -150,4 +178,5 @@ const handleExpenseAdded = async () => {
   );
 };
 
+// ✅ ✅ ✅ N'OUBLIE PAS CETTE LIGNE — INDISPENSABLE ✅ ✅ ✅
 export default Expenses;
