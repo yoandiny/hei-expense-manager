@@ -1,82 +1,80 @@
-import { useState } from 'react'
-import Logo from '../../assets/logo.png'
-import { Link, useNavigate } from 'react-router-dom';
-import {toast, ToastContainer} from 'react-toastify'
-import axios from 'axios';
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useAuthContext } from "../../context/AuthContext";
+import { signup } from "../../services/authService";
+import { signupSchema } from "../../utils/validators";
 
-const Signup = () => {
-  const navigate = useNavigate();
-    const [signupForm, setSignupForm] = useState<{ email: string, password: string, confirmationPassword: string}>({
-        'email': '',
-        'password': '',
-        'confirmationPassword' :''
-    });
+const Signup: React.FC = () => {
+    const navigate = useNavigate();
+    const { login: setToken } = useAuthContext();
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+    const [error, setError] = useState("");
 
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-  const { name, value } = e.target;
-  setSignupForm(prev => ({
-    ...prev,
-    [name]: value
-  }));
+    const handleSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
+        setError("");
+
+        try {
+            signupSchema.parse({ email, password });
+            const res = await signup(email, password);
+            setToken(res.data.token); // auto-login
+            navigate("/dashboard");
+        } catch (err: any) {
+            setError(err.response?.data?.message || "Signup failed");
+        }
+    };
+
+    return (
+        <div className="min-h-screen flex items-center justify-center bg-green-50">
+            <div className="w-full max-w-md bg-white rounded-xl shadow-lg p-8 space-y-6">
+                <h2 className="text-3xl font-bold text-green-700 text-center">Sign Up</h2>
+
+                {error && <div className="text-red-500 text-sm text-center">{error}</div>}
+
+                <form className="space-y-4" onSubmit={handleSubmit}>
+                    <div>
+                        <label className="block text-green-700 font-semibold mb-1">Email</label>
+                        <input
+                            type="email"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                            className="w-full px-4 py-2 border border-green-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-400"
+                            placeholder="you@example.com"
+                        />
+                    </div>
+
+                    <div>
+                        <label className="block text-green-700 font-semibold mb-1">Password</label>
+                        <input
+                            type="password"
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                            className="w-full px-4 py-2 border border-green-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-400"
+                            placeholder="Your password"
+                        />
+                    </div>
+
+                    <button
+                        type="submit"
+                        className="w-full py-2 bg-yellow-400 text-green-900 font-bold rounded-lg hover:bg-yellow-500 transition-colors"
+                    >
+                        Sign Up
+                    </button>
+                </form>
+
+                <p className="text-center text-sm text-green-700">
+                    Already have an account?{" "}
+                    <span
+                        className="text-yellow-500 cursor-pointer hover:underline"
+                        onClick={() => navigate("/login")}
+                    >
+            Login
+          </span>
+                </p>
+            </div>
+        </div>
+    );
 };
 
-
-    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-      e.preventDefault()
-      try {
-        if( signupForm.email && signupForm.password && signupForm.confirmationPassword){
-          if(signupForm.password === signupForm.confirmationPassword){
-            const form = {
-              "email": signupForm.email,
-              "password": signupForm.password
-            }
-            const res = await axios.post(`${import.meta.env.VITE_API_URL}/auth/signup`, form);
-            if(res.status === 200){
-              toast.success("Inscription réussie" , {position: "top-center" , autoClose: 2000} );
-              setSignupForm({
-                'email': '',
-                'password': '',
-                'confirmationPassword' :''
-              });
-              navigate('/login');
-
-            }else{
-              throw new Error("Erreur lors de l'inscription");
-            }
-
-          }else{
-            toast.error("Les mots de passe ne correspondent pas" , {position: "top-center" , autoClose: 2000} )
-          }
-        
-      } else {
-        
-        toast.error("Veuillez remplir tous les champs" , {position: "top-center" , autoClose: 2000} )
-      }
-        
-      } catch (error) {
-        console.error(error);
-        toast.error("Une erreur est survenue" , {position: "top-center" , autoClose: 2000} )
-        
-      }
-    }
-  return (
-    <div className="flex flex-col items-center mt-1">
-        <img className='w-1/7 items-center' src={Logo} alt="" />
-      <h1 className="text-4xl font-bold mb-10">Inscription</h1>
-      <form onSubmit={handleSubmit} className="flex flex-col w-1/2 items-center shadow-2xl rounded-2xl">
-        <label htmlFor="email" className="mb-2">Email :</label>
-        <input type="email" id="email" onChange={handleChange} name="email" className="border-2 p-2 mb-4 w-100 " /><br />
-        <label htmlFor="password" className="mb-2">Mot de passe :</label>
-        <input type="password" id="password" onChange={handleChange} name="password" className="border-2 p-2 mb-4 w-100" /><br />
-        <label htmlFor="repeatPassword" className='mb-2'>Répétez votre mot de passe :</label>
-        <input type="password" id="repeatPassword" onChange={handleChange} name="confirmationPassword" className="w-100 border-2 p-2 mb-4" /><br />
-        <p>Vous avez deja un compte ? <Link to="/login" className="text-blue-500">Connectez-vous</Link></p>
-        <input type="submit" value="S'inscrire"  className=" mb-1 cursor-pointer bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" />
-      </form>
-      <ToastContainer />
-    </div>
-  )
-}
-
-export default Signup
-
+export default Signup;
