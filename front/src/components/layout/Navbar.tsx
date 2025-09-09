@@ -1,126 +1,69 @@
-import { Link } from 'react-router-dom'
-import { useState } from 'react'
+import { Link, Outlet } from 'react-router-dom'
 import Logo from '../../assets/logo.png'
 
 export default function Navbar() {
-  const [isOpen, setIsOpen] = useState(false)
 
   return (
-    <nav className="bg-gray-800">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16">
-          <div className="flex items-center">
-            <div className="flex-shrink-0">
-              <Link to="/">
-                <img
-                  className="h-50 w-50"
-                  src={Logo}
-                  alt="Logo"
-                />
-              </Link>
-            </div>
-            <div className="hidden md:block">
-              <div className="ml-10 flex items-baseline space-x-4">
-                <Link
+    <div className='flex flex-col'>
+    <div>
+      <nav className="bg-gray-700 h-26 flex items-center flex-row justify-between ">
+      <span className='items-start ml-3'>
+        <img src={Logo} alt="Logo" className='w-30 h-30' />
+      </span>
+      <div className='items-end mr-3'>
+        <Link to="/profile"
+        className='text-white '
+        >
+           <i className='bx bxs-user-circle text-7xl' ></i>
+          </Link>
+      </div>
+          
+    </nav>
+    <div className='flex '>
+      <nav className='w-80 h-full mr-10'>
+      <div className="bg-gray-100 p-4 h-150 flex flex-col ">
+        <Link
                   to="/dashboard"
-                  className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
+                  className=" mb-1.5 text-black hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-2xl font-medium"
                 >
+                  <i className='bx bxs-dashboard'></i>
                   Tableau de bord
                 </Link>
 
                 <Link
                   to="/categories"
-                  className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
+                  className="mb-1.5 text-black-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-2xl font-medium"
                 >
+                  <i className='bx bxs-category' ></i>
                   Catégories
                 </Link>
 
                 <Link
-                  to="/transactions"
-                  className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
+                  to="/incomes"
+                  className="mb-1.5 text-black-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-2xl font-medium"
                 >
-                  Transactions
+                  <i className='bx bxs-wallet' ></i>
+                  Revenus
                 </Link>
-              </div>
-            </div>
-          </div>
-          <div className="hidden md:block">
-            <div className="ml-4 flex items-center md:ml-6">
-              <button
-                className="bg-gray-800 p-1 rounded-full text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white"
-                aria-haspopup="true"
-                onClick={() => setIsOpen(!isOpen)}
-              >
-                <span className="sr-only">Open main menu</span>
-                <svg
-                  className="h-6 w-6"
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                  aria-hidden="true"
+
+                <Link
+                  to="/expenses"
+                  className="mb-1.5 text-black-100 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-2xl font-medium"
                 >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    d="M4 6h16M4 12h16M4 18h16"
-                  />
-                </svg>
-              </button>
-            </div>
-          </div>
-          <div className="-mr-2 flex md:hidden">
-            <button
-              className="bg-gray-800 p-2 rounded-md text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white"
-              aria-haspopup="true"
-              onClick={() => setIsOpen(!isOpen)}
-            >
-              <span className="sr-only">Open main menu</span>
-              <svg
-                className="h-6 w-6"
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-                aria-hidden="true"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="M4 6h16M4 12h16M4 18h16"
-                />
-              </svg>
-            </button>
-          </div>
-        </div>
+                  <i className='bx bx-money-withdraw' ></i>
+                  Dépenses
+                </Link>
       </div>
 
-      <div className={isOpen ? 'block' : 'hidden'}>
-        <div className="px-2 pt-2 pb-3 space-y-1">
-          <Link
-            to="/dashboard"
-            className="block px-3 py-2 rounded-md text-base font-medium text-white bg-gray-900"
-          >
-            Tableau de bord
-          </Link>
+      </nav>
+      <main>
+      <Outlet />
+    </main>
+    </div>
+    
 
-          <Link
-            to="/categories"
-            className="block px-3 py-2 rounded-md text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white"
-          >
-            Catégories
-          </Link>
-
-          <Link
-            to="/transactions"
-            className="block px-3 py-2 rounded-md text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white"
-          >
-            Transactions
-          </Link>
-        </div>
-      </div>
-    </nav>
+    </div>
+    
+    </div>
   )
 }

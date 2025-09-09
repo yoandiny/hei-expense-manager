@@ -10,7 +10,7 @@ import Signup from "./pages/auth/Signup";
 import Summary from "./pages/dashboard/Dashboard";
 import Category from "./pages/dashboard/Categories";
 import type {JSX} from "react";
-import Expenses from './pages/dashboard/Expenses';
+import Navbar from './components/layout/Navbar';
 
 // Route protégée
 const ProtectedRoute = ({ children }: { children: JSX.Element }) => {
@@ -28,19 +28,13 @@ function App() {
                     <Route path="/signup" element={<Signup />} />
 
                     {/* Pages protégées */}
-                    <Route
-                        path="/dashboard"
-                        element={
-                            <ProtectedRoute>
-                                <div className="min-h-screen flex flex-col justify-center items-center bg-gray-100 p-6 gap-12">
-                                    <Category />
-                                    <Expenses/>
-                                    {/* <Summary />
-                                     */}
-                                </div>
-                            </ProtectedRoute>
-                        }
-                    />
+                    <Route path='/dashboard'element={<Navbar />} >
+                        
+                            <Route index element={<ProtectedRoute><Summary /></ProtectedRoute>} />
+                            <Route path="categories" element={<ProtectedRoute><Category /></ProtectedRoute>} />
+                        
+
+                    </Route>
 
                     {/* Redirection par défaut */}
                     <Route path="*" element={<Navigate to="/login" />} />
