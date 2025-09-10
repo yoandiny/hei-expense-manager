@@ -1,18 +1,32 @@
 import { Link, Outlet } from 'react-router-dom'
 import Logo from '../../assets/logo.png'
+import { useAuth } from '../../hooks/useAuth';
+import { useNavigate } from "react-router-dom";
 
 export default function Navbar() {
+    const {logout} = useAuth();
+    const navigate = useNavigate();
+    const handleLogout = () => {
+        logout();
+        navigate("/login");
+    }
+
     return (
         <div className='flex flex-col'>
             <div>
                 <nav className="bg-gray-700 h-26 flex items-center flex-row justify-between ">
           <span className='items-start ml-3'>
-            <img src={Logo} alt="Logo" className='w-30 h-30' />
+            <img src={Logo} alt="Logo" className='w-30 h-30 cursor-pointer' />
           </span>
                     <div className='items-end mr-3'>
-                        <Link to="/profile" className='text-white'>
-                            <i className='bx bxs-user-circle text-7xl'></i>
+                        <section className='flex gap-4 align-middle'>
+                            <Link to="/profile" className='text-white'>
+                            <i className='bx bxs-user-circle text-7xl hover:text-gray-400'></i>
                         </Link>
+                        <button className='text-white hover:text-gray-400' onClick={()=>{handleLogout()}}>
+                            <i className='text-5xl cursor-pointer bx bx-log-out'></i>
+                        </button>
+                        </section>
                     </div>
                 </nav>
 
