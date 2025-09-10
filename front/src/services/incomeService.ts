@@ -1,4 +1,3 @@
-// 👇 Types
 export interface IncomeInput {
   amount: number;
   date: string;
@@ -15,7 +14,6 @@ export interface IncomeResponse {
   userId: number;
 }
 
-// 🔐 Identique à expenseService — robuste et éprouvé
 const getAuthHeaders = (): Record<string, string> => {
   const token = localStorage.getItem("token");
   if (!token) {
@@ -27,7 +25,6 @@ const getAuthHeaders = (): Record<string, string> => {
   };
 };
 
-// 📥 Récupérer tous les revenus
 export async function getIncomes(): Promise<IncomeResponse[]> {
   const response = await fetch("/api/incomes", {
     method: "GET",
@@ -44,7 +41,6 @@ export async function getIncomes(): Promise<IncomeResponse[]> {
   return response.json();
 }
 
-// ➕ Créer un revenu
 export async function createIncome(incomeData: IncomeInput): Promise<IncomeResponse> {
   const response = await fetch("/api/incomes", {
     method: "POST",
@@ -62,7 +58,6 @@ export async function createIncome(incomeData: IncomeInput): Promise<IncomeRespo
   return response.json();
 }
 
-// ✏️ Mettre à jour un revenu
 export async function updateIncome(
   id: number,
   incomeData: Partial<IncomeInput>
@@ -83,7 +78,6 @@ export async function updateIncome(
   return response.json();
 }
 
-// ❌ Supprimer un revenu
 export async function deleteIncome(id: number): Promise<void> {
   const response = await fetch(`/api/incomes/${id}`, {
     method: "DELETE",

@@ -24,11 +24,9 @@ const ExpenseForm: React.FC<ExpenseFormProps> = ({ onSuccess, onCancel, initialD
   const [loading, setLoading] = useState(false);
   const [isEditMode, setIsEditMode] = useState<boolean>(!!initialData?.id);
 
-  // ✅ États pour les catégories
   const [categories, setCategories] = useState<{ id: number; name: string }[]>([]);
   const [loadingCategories, setLoadingCategories] = useState(true);
 
-  // ✅ Charger les catégories au montage
   useEffect(() => {
     const loadCategories = async () => {
       try {
@@ -45,7 +43,6 @@ const ExpenseForm: React.FC<ExpenseFormProps> = ({ onSuccess, onCancel, initialD
     loadCategories();
   }, []);
 
-  // ✅ Synchroniser avec initialData
   useEffect(() => {
     if (initialData) {
       setAmount(initialData.amount);
@@ -208,7 +205,6 @@ const ExpenseForm: React.FC<ExpenseFormProps> = ({ onSuccess, onCancel, initialD
         </>
       )}
 
-      {/* ✅ Select avec noms des catégories */}
       <div>
         <label className="block text-sm font-medium">Category</label>
         {loadingCategories ? (

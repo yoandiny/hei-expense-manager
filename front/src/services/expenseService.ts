@@ -1,4 +1,3 @@
-// 👇 Types inchangés
 export type ExpenseTypeUI = "One-time" | "Recurring";
 export type ExpenseTypeAPI = "ONE_TIME" | "RECURRING";
 
@@ -24,12 +23,10 @@ export type CreateExpenseDTO = {
   description?: string;
 };
 
-// 🧹 UI → API mapper
 function mapTypeToAPI(type: ExpenseTypeUI): ExpenseTypeAPI {
   return type === "One-time" ? "ONE_TIME" : "RECURRING";
 }
 
-// 🔐 Identique à categoryService.ts — robuste et éprouvé
 const getAuthHeaders = (): Record<string, string> => {
   const token = localStorage.getItem("token");
   if (!token) {
@@ -41,7 +38,6 @@ const getAuthHeaders = (): Record<string, string> => {
   };
 };
 
-// 📥 Récupérer toutes les dépenses — ✅ URL RELATIVE
 export async function getExpenses(): Promise<Expense[]> {
   const response = await fetch("/api/expenses", {
     headers: getAuthHeaders(),
@@ -57,7 +53,6 @@ export async function getExpenses(): Promise<Expense[]> {
   return response.json();
 }
 
-// ➕ Créer une dépense — ✅ URL RELATIVE
 export async function createExpense(expense: CreateExpenseDTO): Promise<Expense> {
   const payload: Expense = {
     ...expense,
@@ -80,7 +75,6 @@ export async function createExpense(expense: CreateExpenseDTO): Promise<Expense>
   return response.json();
 }
 
-// ✏️ Mettre à jour une dépense — ✅ URL RELATIVE
 export async function updateExpense(
   id: number,
   expense: Partial<Expense>
@@ -101,7 +95,6 @@ export async function updateExpense(
   return response.json();
 }
 
-// ❌ Supprimer une dépense — ✅ URL RELATIVE
 export async function deleteExpense(id: number): Promise<void> {
   const response = await fetch(`/api/expenses/${id}`, {
     method: "DELETE",
