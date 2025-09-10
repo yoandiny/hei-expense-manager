@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { getIncomes, deleteIncome } from "../../services/incomeService";
 import IncomeForm from "../../components/forms/IncomeForm";
+import { formatDate } from "../../utils/formatDate";
 
 interface Income {
   id: number;
@@ -15,71 +16,94 @@ const Incomes: React.FC = () => {
   const [incomes, setIncomes] = useState<Income[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [showForm, setShowForm] = useState(false); // État pour afficher/masquer le formulaire
+  const [showForm, setShowForm] = useState(false);
+  const [editingIncome, setEditingIncome] = useState<Income | null>(null);
 
-  // Charger les revenus au montage du composant
-  useEffect(() => {
-    const fetchIncomes = async () => {
-      setLoading(true);
-      try {
-        const data = await getIncomes();
-        setIncomes(data);
-        setError(null);
-      } catch (err: any) {
-        setError(err.message || "Failed to fetch incomes");
-      } finally {
-        setLoading(false);
+  const loadIncomes = async () => {
+    setLoading(true);
+    try {
+      const data = await getIncomes();
+      setIncomes(data);
+      setError(null);
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        if (err.message === "NO_TOKEN") {
+          localStorage.removeItem("token");
+          window.location.href = "/login";
+          return;
+        }
+        if (err.message.includes("401")) {
+          localStorage.removeItem("token");
+          alert("Votre session a expiré. Veuillez vous reconnecter.");
+          window.location.href = "/login";
+          return;
+        }
+        setError(err.message);
+      } else {
+        setError("Une erreur inconnue est survenue.");
       }
-    };
+    } finally {
+      setLoading(false);
+    }
+  };
 
-    fetchIncomes();
+  useEffect(() => {
+    loadIncomes();
   }, []);
 
-  // Supprimer un revenu
+  const handleIncomeAddedOrUpdated = () => {
+    loadIncomes();
+    setShowForm(false);
+    setEditingIncome(null);
+  };
+
   const handleDelete = async (id: number) => {
     if (!window.confirm("Are you sure you want to delete this income?")) return;
 
     try {
       await deleteIncome(id);
-      setIncomes(incomes.filter((income) => income.id !== id));
+      loadIncomes();
       alert("✅ Income deleted!");
-    } catch (err: any) {
-      alert("❌ " + (err.message || "Failed to delete income"));
+    } catch (err: unknown) {
+      let message = "Failed to delete income.";
+      if (err instanceof Error) message = err.message;
+      alert(`❌ ${message}`);
     }
   };
 
-  // Rafraîchir la liste après ajout et masquer le formulaire
-  const handleIncomeAdded = async () => {
-    try {
-      const data = await getIncomes();
-      setIncomes(data);
-      setShowForm(false); // Masquer le formulaire après ajout
-    } catch (err: any) {
-      setError(err.message || "Failed to refresh incomes");
-    }
+  const handleEdit = (income: Income) => {
+    setEditingIncome(income);
+    setShowForm(true);
   };
 
   return (
     <div className="container mx-auto p-4 relative">
-      {/* Overlay sombre lorsque le formulaire est visible */}
       {showForm && (
-        <div className="fixed inset-0 bg-black/20 z-10" />
+        <div className="fixed inset-0 bg-black/50 z-10" onClick={() => setShowForm(false)} />
       )}
 
       <div className={`transition-opacity duration-300 ${showForm ? "opacity-50" : "opacity-100"}`}>
         <div className="flex justify-between items-center mb-6">
           <h1 className="text-2xl font-bold text-gray-800">Incomes</h1>
           <button
-            onClick={() => setShowForm(true)}
+            onClick={() => {
+              setEditingIncome(null);
+              setShowForm(true);
+            }}
             className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700"
           >
             Add Income
           </button>
         </div>
 
-        {/* Affichage des revenus */}
-        {loading && <p className="text-gray-600">Loading...</p>}
-        {error && <p className="text-red-500">{error}</p>}
+        {loading && (
+          <div className="flex justify-center items-center py-8">
+            <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-blue-500"></div>
+          </div>
+        )}
+
+        {error && <p className="text-red-500 mb-4">{error}</p>}
+
         {incomes.length === 0 && !loading && !error && (
           <p className="text-gray-600">No incomes found.</p>
         )}
@@ -89,30 +113,30 @@ const Incomes: React.FC = () => {
             {incomes.map((income) => (
               <div
                 key={income.id}
-                className="bg-white p-4 rounded-lg shadow-md flex justify-between items-center"
+                className="bg-white p-4 rounded-lg shadow-md flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4"
               >
                 <div>
                   <p className="text-lg font-semibold">
-                    {income.source} - ${income.amount}
+                    {income.source} — {income.amount.toFixed(2).replace('.', ',')} €
                   </p>
                   <p className="text-sm text-gray-600">
-                    Date: {new Date(income.date).toLocaleDateString()}
+                    Date: {formatDate(income.date)}
                   </p>
                   {income.description && (
-                    <p className="text-sm text-gray-600">
+                    <p className="text-sm text-gray-600 mt-1">
                       Description: {income.description}
                     </p>
                   )}
                 </div>
-                <div className="space-x-2">
+                <div className="flex space-x-2">
                   <button
-                    className="bg-yellow-500 text-white px-3 py-1 rounded hover:bg-yellow-600"
-                    onClick={() => alert("Edit functionality not implemented yet")}
+                    className="bg-yellow-500 text-white px-3 py-1 rounded text-sm hover:bg-yellow-600 transition"
+                    onClick={() => handleEdit(income)}
                   >
                     Edit
                   </button>
                   <button
-                    className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600"
+                    className="bg-red-500 text-white px-3 py-1 rounded text-sm hover:bg-red-600 transition"
                     onClick={() => handleDelete(income.id)}
                   >
                     Delete
@@ -124,13 +148,22 @@ const Incomes: React.FC = () => {
         )}
       </div>
 
-      {/* Formulaire affiché conditionnellement au-dessus de l'overlay */}
       {showForm && (
-        <div className="fixed inset-0 flex items-center justify-center z-20">
-          <div className="max-w-md w-full">
+        <div
+          className="fixed inset-0 flex items-center justify-center z-20"
+          onClick={(e) => e.stopPropagation()}
+        >
+          <div
+            className="bg-white p-6 rounded-lg shadow-xl max-w-md w-full mx-4"
+            onClick={(e) => e.stopPropagation()}
+          >
             <IncomeForm
-              onSuccess={handleIncomeAdded}
-              onCancel={() => setShowForm(false)}
+              onSuccess={handleIncomeAddedOrUpdated}
+              onCancel={() => {
+                setShowForm(false);
+                setEditingIncome(null);
+              }}
+              initialData={editingIncome}
             />
           </div>
         </div>

@@ -122,8 +122,8 @@ const Expenses: React.FC = () => {
               >
                 <div>
                   <p className="text-lg font-semibold">
-                    {expense.type === "ONE_TIME" ? "One-time" : "Recurring"} — $
-                    {expense.amount.toFixed(2)}
+                    {expense.type === "ONE_TIME" ? "One-time" : "Recurring"} — 
+                    {expense.amount.toFixed(2).replace('.', ',')} €
                   </p>
                   {/* ✅ Affichage amélioré pour les dépenses récurrentes */}
                   <p className="text-sm text-gray-600">
