@@ -30,14 +30,15 @@ function App() {
 
                     {/* Pages protégées */}
                     <Route
-                        path="/"
+                        path='/'
                         element={
                             <ProtectedRoute>
                                 <Navbar />
                             </ProtectedRoute>
                         }
                     >
-                        <Route index path='dashboard' element={<Summary />} />
+                        <Route index element={<Summary />} />
+                        <Route path="dashboard" element={<Summary />} />
                         <Route path="categories" element={<Category />} />
                         <Route path="expenses" element={<Expenses />} />
                        
