@@ -77,77 +77,78 @@ const IncomeForm: React.FC<IncomeFormProps> = ({ onSuccess, onCancel, initialDat
   };
 
   return (
-    <form
-      onSubmit={handleSubmit}
-      className="max-w-md mx-auto bg-white p-6 rounded-2xl shadow-md space-y-4"
-    >
-      <h2 className="text-xl font-bold text-gray-800">
-        {isEditMode ? "Edit Income" : "Add Income"}
-      </h2>
+      <form
+          onSubmit={handleSubmit}
+          className="max-w-md mx-auto bg-white p-6 rounded-2xl shadow-lg space-y-5"
+      >
+          <h2 className="text-2xl font-bold text-green-700 text-center mb-4">
+              {isEditMode ? "Edit Income" : "Add Income"}
+          </h2>
 
-      <div>
-        <label className="block text-sm font-medium">Amount</label>
-        <input
-          type="number"
-          value={amount || ""}
-          onChange={(e) => setAmount(e.target.value ? parseFloat(e.target.value) : 0)}
-          className="w-full border rounded-lg px-3 py-2"
-          required
-          min="0.01"
-          step="0.01"
-        />
-      </div>
+          <div>
+              <label className="block text-sm font-semibold text-green-700 mb-1">Amount</label>
+              <input
+                  type="number"
+                  value={amount || ""}
+                  onChange={(e) => setAmount(e.target.value ? parseFloat(e.target.value) : 0)}
+                  className="w-full border border-green-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-yellow-400 transition"
+                  required
+                  min="0.01"
+                  step="0.01"
+              />
+          </div>
 
-      <div>
-        <label className="block text-sm font-medium">Date</label>
-        <input
-          type="date"
-          value={date}
-          onChange={(e) => setDate(e.target.value)}
-          className="w-full border rounded-lg px-3 py-2"
-          required
-        />
-      </div>
+          <div>
+              <label className="block text-sm font-semibold text-green-700 mb-1">Date</label>
+              <input
+                  type="date"
+                  value={date}
+                  onChange={(e) => setDate(e.target.value)}
+                  className="w-full border border-green-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-yellow-400 transition"
+                  required
+              />
+          </div>
 
-      <div>
-        <label className="block text-sm font-medium">Source</label>
-        <input
-          type="text"
-          value={source}
-          onChange={(e) => setSource(e.target.value)}
-          className="w-full border rounded-lg px-3 py-2"
-          placeholder="e.g., Salary, Freelance"
-          required
-        />
-      </div>
+          <div>
+              <label className="block text-sm font-semibold text-green-700 mb-1">Source</label>
+              <input
+                  type="text"
+                  value={source}
+                  onChange={(e) => setSource(e.target.value)}
+                  className="w-full border border-green-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-yellow-400 transition"
+                  placeholder="e.g., Salary, Freelance"
+                  required
+              />
+          </div>
 
-      <div>
-        <label className="block text-sm font-medium">Description</label>
-        <textarea
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
-          className="w-full border rounded-lg px-3 py-2"
-          placeholder="Optional"
-        />
-      </div>
+          <div>
+              <label className="block text-sm font-semibold text-green-700 mb-1">Description</label>
+              <textarea
+                  value={description}
+                  onChange={(e) => setDescription(e.target.value)}
+                  className="w-full border border-green-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-yellow-400 transition"
+                  placeholder="Optional"
+              />
+          </div>
 
-      <div className="flex space-x-4">
-        <button
-          type="submit"
-          disabled={loading}
-          className="w-full bg-blue-600 text-white rounded-lg py-2 hover:bg-blue-700 disabled:bg-gray-400"
-        >
-          {loading ? "Saving..." : isEditMode ? "Update Income" : "Save Income"}
-        </button>
-        <button
-          type="button"
-          onClick={onCancel}
-          className="w-full bg-gray-300 text-gray-800 rounded-lg py-2 hover:bg-gray-400"
-        >
-          Cancel
-        </button>
-      </div>
-    </form>
+          <div className="flex gap-4">
+              <button
+                  type="submit"
+                  disabled={loading}
+                  className="w-full bg-yellow-400 text-green-900 font-bold py-2 rounded-lg hover:bg-yellow-500 transition shadow-md"
+              >
+                  {loading ? "Saving..." : isEditMode ? "Update Income" : "Save Income"}
+              </button>
+              <button
+                  type="button"
+                  onClick={onCancel}
+                  className="w-full bg-gray-200 text-gray-800 py-2 rounded-lg hover:bg-gray-300 transition shadow-sm"
+              >
+                  Cancel
+              </button>
+          </div>
+      </form>
+
   );
 };
 
