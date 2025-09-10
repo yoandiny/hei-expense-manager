@@ -8,10 +8,11 @@ if (!JWT_SECRET) throw new Error("JWT_SECRET is not defined in .env");
 
 export interface JwtPayload {
     userId: string;
+    email?:string;
 }
 
 export function signToken(userId: string | number): string {
-    return jwt.sign({ userId }, JWT_SECRET!, { expiresIn: "1d" });
+    return jwt.sign({ userId }, JWT_SECRET!, { expiresIn: "7d" });
 }
 
 export function verifyToken(token: string): JwtPayload {

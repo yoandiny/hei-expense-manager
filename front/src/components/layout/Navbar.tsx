@@ -1,125 +1,78 @@
-import { Link } from 'react-router-dom'
-import { useState } from 'react'
+import { Link, Outlet } from 'react-router-dom'
+import Logo from '../../assets/logo.png'
+import { useAuth } from '../../hooks/useAuth';
+import { useNavigate } from "react-router-dom";
 
 export default function Navbar() {
-  const [isOpen, setIsOpen] = useState(false)
+    const {logout} = useAuth();
+    const navigate = useNavigate();
+    const handleLogout = () => {
+        logout();
+        navigate("/login");
+    }
 
-  return (
-    <nav className="bg-gray-800">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16">
-          <div className="flex items-center">
-            <div className="flex-shrink-0">
-              <Link to="/">
-                <img
-                  className="h-8 w-auto"
-                  src="https://tailwindui.com/img/logos/workflow-mark-indigo-500.svg"
-                  alt="Workflow"
-                />
-              </Link>
-            </div>
-            <div className="hidden md:block">
-              <div className="ml-10 flex items-baseline space-x-4">
-                <Link
-                  to="/dashboard"
-                  className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
-                >
-                  Tableau de bord
-                </Link>
+    return (
+        <div className='flex flex-col'>
+            <div>
+                <nav className="bg-gray-700 h-26 flex items-center flex-row justify-between ">
+          <span className='items-start ml-3'>
+            <img src={Logo} alt="Logo" className='w-30 h-30 cursor-pointer' />
+          </span>
+                    <div className='items-end mr-3'>
+                        <section className='flex gap-4 align-middle'>
+                            <Link to="/profile" className='text-white'>
+                            <i className='bx bxs-user-circle text-7xl hover:text-gray-400'></i>
+                        </Link>
+                        <button className='text-white hover:text-gray-400' onClick={()=>{handleLogout()}}>
+                            <i className='text-5xl cursor-pointer bx bx-log-out'></i>
+                        </button>
+                        </section>
+                    </div>
+                </nav>
 
-                <Link
-                  to="/categories"
-                  className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
-                >
-                  Catégories
-                </Link>
+                <div className='flex '>
+                    <nav className='w-80 h-full mr-10'>
+                        <div className="bg-gray-100 p-4 h-150 flex flex-col ">
 
-                <Link
-                  to="/transactions"
-                  className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
-                >
-                  Transactions
-                </Link>
-              </div>
+                            <Link
+                                to=""   // équivaut à /dashboard
+                                className=" mb-1.5 text-black hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-2xl font-medium"
+                            >
+                                <i className='bx bxs-dashboard'></i>
+                                Tableau de bord
+                            </Link>
+
+                            <Link
+                                to="categories"
+                                className="mb-1.5 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-2xl font-medium"
+                            >
+                                <i className='bx bxs-category'></i>
+                                Catégories
+                            </Link>
+
+                            <Link
+                                to="incomes"
+                                className="mb-1.5 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-2xl font-medium"
+                            >
+                                <i className='bx bxs-wallet'></i>
+                                Revenus
+                            </Link>
+
+                            <Link
+                                to="expenses"
+                                className="mb-1.5 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-2xl font-medium"
+                            >
+                                <i className='bx bx-money-withdraw'></i>
+                                Dépenses
+                            </Link>
+                        </div>
+                    </nav>
+
+                    <main>
+                        <Outlet />
+                    </main>
+                </div>
             </div>
-          </div>
-          <div className="hidden md:block">
-            <div className="ml-4 flex items-center md:ml-6">
-              <button
-                className="bg-gray-800 p-1 rounded-full text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white"
-                aria-haspopup="true"
-                onClick={() => setIsOpen(!isOpen)}
-              >
-                <span className="sr-only">Open main menu</span>
-                <svg
-                  className="h-6 w-6"
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                  aria-hidden="true"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    d="M4 6h16M4 12h16M4 18h16"
-                  />
-                </svg>
-              </button>
-            </div>
-          </div>
-          <div className="-mr-2 flex md:hidden">
-            <button
-              className="bg-gray-800 p-2 rounded-md text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white"
-              aria-haspopup="true"
-              onClick={() => setIsOpen(!isOpen)}
-            >
-              <span className="sr-only">Open main menu</span>
-              <svg
-                className="h-6 w-6"
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-                aria-hidden="true"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="M4 6h16M4 12h16M4 18h16"
-                />
-              </svg>
-            </button>
-          </div>
         </div>
-      </div>
-
-      <div className={isOpen ? 'block' : 'hidden'}>
-        <div className="px-2 pt-2 pb-3 space-y-1">
-          <Link
-            to="/dashboard"
-            className="block px-3 py-2 rounded-md text-base font-medium text-white bg-gray-900"
-          >
-            Tableau de bord
-          </Link>
-
-          <Link
-            to="/categories"
-            className="block px-3 py-2 rounded-md text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white"
-          >
-            Catégories
-          </Link>
-
-          <Link
-            to="/transactions"
-            className="block px-3 py-2 rounded-md text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white"
-          >
-            Transactions
-          </Link>
-        </div>
-      </div>
-    </nav>
-  )
+    )
 }

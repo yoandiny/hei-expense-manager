@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { getSummary } from '../../services/summaryService';
+import { formatCurrency } from '../../utils/formaCurrency';
 
 interface Summary {
     totalExpenses: number;
@@ -43,7 +44,7 @@ const Summary: React.FC = () => {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
                     <div className="bg-blue-100 text-blue-800 p-6 rounded-lg text-center">
                         <h3 className="text-lg font-semibold mb-2">Total des dépenses</h3>
-                        <p className="text-2xl font-bold">{summary.totalExpenses.toFixed(2)} €</p>
+                        <p className="text-2xl font-bold">{formatCurrency(summary.totalExpenses)}</p>
                     </div>
                     <div className="bg-green-100 text-green-800 p-6 rounded-lg text-center">
                         <h3 className="text-lg font-semibold mb-2">Nombre de catégories</h3>
@@ -64,7 +65,7 @@ const Summary: React.FC = () => {
                         {summary.expensesByCategory.map(cat => (
                             <tr key={cat.categoryId} className="border-b hover:bg-gray-50 transition">
                                 <td className="py-4 px-6">{cat.categoryName}</td>
-                                <td className="py-4 px-6">{cat.total.toFixed(2)} €</td>
+                                <td className="py-4 px-6">{formatCurrency(cat.total)}</td>
                             </tr>
                         ))}
                         </tbody>

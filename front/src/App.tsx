@@ -1,18 +1,55 @@
 import './App.css'
-import IncomeForm from './components/forms/IncomeForm';
-import Category from "./pages/dashboard/Categories";
+import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
+import { AuthProvider, useAuthContext } from "./context/AuthContext";
+
+// Pages Auth
+import Login from "./pages/auth/Login";
+import Signup from "./pages/auth/Signup";
+
+// Pages Dashboard
 import Summary from "./pages/dashboard/Dashboard";
-import Incomes from './pages/dashboard/Incomes';
+import Category from "./pages/dashboard/Categories";
+import type { JSX } from "react";
+import Navbar from './components/layout/Navbar';
+import Expenses from './pages/dashboard/Expenses';
+import NotFound from './pages/NotFound';
+
+const ProtectedRoute = ({ children }: { children: JSX.Element }) => {
+    const {token} = useAuthContext();
+    return token ? children : <Navigate to="/login" />;
+}
 
 function App() {
     return (
-        <div className="min-h-screen flex flex-col justify-center items-center bg-gray-100 p-6 gap-12">
-                {/* <Summary />
-                <Category /> */}
-                {/*<IncomeForm/>*/}
-                <Incomes/>
-        </div>
-    )
+        <AuthProvider>
+            <Router>
+                <Routes>
+                    {/* Pages publiques */}
+                    <Route path="/login" element={<Login />} />
+                    <Route path="/signup" element={<Signup />} />
+
+                    {/* Pages protégées */}
+                    <Route
+                        path="/"
+                        element={
+                            <ProtectedRoute>
+                                <Navbar />
+                            </ProtectedRoute>
+                        }
+                    >
+                        <Route index path='dashboard' element={<Summary />} />
+                        <Route path="categories" element={<Category />} />
+                        <Route path="expenses" element={<Expenses />} />
+                       
+                    </Route>
+
+                   
+                    <Route path="*" element={<NotFound />} />
+                </Routes>
+            </Router>
+        </AuthProvider>
+    );
 }
+
 
 export default App;

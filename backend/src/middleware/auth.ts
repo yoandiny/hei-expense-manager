@@ -12,7 +12,10 @@ export function authMiddleware(req: Request, res: Response, next: NextFunction){
         const token = header.split(" ")[1];
         const payload = verifyToken(token)
 
-        req.user = payload.userId;
+        req.user = {
+            id: payload.userId,
+            email: payload.email
+        }
         req.tokenPayload = payload;
         next();
     } catch (error){
