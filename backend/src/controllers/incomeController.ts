@@ -1,9 +1,15 @@
+///<reference path="../types/express.d.ts" />
 import { Request, Response } from "express";
 import prisma from "../PrismaClient";
 
 export const createIncome = async (req: Request, res: Response) => {
   try {
     const { amount, date, source, description } = req.body;
+    const userId =(req as any).user?.id; // ← Déjà number, grâce à authMiddleware
+
+    if (!userId) {
+      return res.status(401).json({ error: "Utilisateur non authentifié" });
+    }
 
     if (!amount || !date || !source) {
       return res.status(400).json({ error: "Amount, date, and source are required" });
@@ -11,11 +17,11 @@ export const createIncome = async (req: Request, res: Response) => {
 
     const income = await prisma.income.create({
       data: {
-        amount,
+        amount: parseFloat(amount),
         date: new Date(date),
         source,
         description,
-        userId: (req as any).user.id,
+        userId,
       },
     });
 
@@ -26,11 +32,15 @@ export const createIncome = async (req: Request, res: Response) => {
   }
 };
 
-
 export const getIncomes = async (req: Request, res: Response) => {
   try {
+    const userId = (req as any).user?.id;
+    if (!userId) {
+      return res.status(401).json({ error: "Utilisateur non authentifié" });
+    }
+
     const incomes = await prisma.income.findMany({
-      where: { userId: (req as any).user.id},
+      where: { userId },
       orderBy: { date: "desc" },
     });
 
@@ -44,9 +54,14 @@ export const getIncomes = async (req: Request, res: Response) => {
 export const getIncomeById = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
+    const userId = (req as any).user?.id;
+
+    if (!userId) {
+      return res.status(401).json({ error: "Utilisateur non authentifié" });
+    }
 
     const income = await prisma.income.findFirst({
-      where: { id: Number(id), userId: (req as any).user.id},
+      where: { id: Number(id), userId },
     });
 
     if (!income) {
@@ -60,40 +75,45 @@ export const getIncomeById = async (req: Request, res: Response) => {
   }
 };
 
-
 export const updateIncome = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
     const { amount, date, source, description } = req.body;
+    const userId = (req as any).user?.id;
 
-    const income = await prisma.income.updateMany({
-      where: { id: Number(id), userId: (req as any).user.id},
-      data: { amount, date: date ? new Date(date) : undefined, source, description },
-    });
-
-    if (income.count === 0) {
-      return res.status(404).json({ error: "Income not found" });
+    if (!userId) {
+      return res.status(401).json({ error: "Utilisateur non authentifié" });
     }
 
-    res.json({ message: "Income updated successfully" });
+    const income = await prisma.income.update({
+      where: { id: Number(id), userId },
+      data: {
+        amount: amount ? parseFloat(amount) : undefined,
+        date: date ? new Date(date) : undefined,
+        source: source || undefined,
+        description: description || undefined,
+      },
+    });
+
+    res.json(income);
   } catch (error) {
     console.error("❌ Error updating income:", error);
     res.status(500).json({ error: "Internal server error" });
   }
 };
 
-
 export const deleteIncome = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
+    const userId = (req as any).user?.id;
 
-    const income = await prisma.income.deleteMany({
-      where: { id: Number(id), userId: (req as any).user.id},
-    });
-
-    if (income.count === 0) {
-      return res.status(404).json({ error: "Income not found" });
+    if (!userId) {
+      return res.status(401).json({ error: "Utilisateur non authentifié" });
     }
+
+    const income = await prisma.income.delete({
+      where: { id: Number(id), userId },
+    });
 
     res.json({ message: "Income deleted successfully" });
   } catch (error) {
