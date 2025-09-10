@@ -12,66 +12,63 @@ export default function Navbar() {
     }
 
     return (
-        <div className='flex flex-col'>
-            <div>
-                <nav className="bg-gray-700 h-26 flex items-center flex-row justify-between ">
-          <span className='items-start ml-3'>
-            <img src={Logo} alt="Logo" className='w-30 h-30 cursor-pointer' />
-          </span>
-                    <div className='items-end mr-3'>
-                        <section className='flex gap-4 align-middle'>
-                            <Link to="/profile" className='text-white'>
-                            <i className='bx bxs-user-circle text-7xl hover:text-gray-400'></i>
-                        </Link>
-                        <button className='text-white hover:text-gray-400' onClick={()=>{handleLogout()}}>
-                            <i className='text-5xl cursor-pointer bx bx-log-out'></i>
-                        </button>
-                        </section>
-                    </div>
-                </nav>
-
-                <div className='flex '>
-                    <nav className='w-80 h-full mr-10'>
-                        <div className="bg-gray-100 p-4 h-150 flex flex-col ">
-
-                            <Link
-                                to=""   // équivaut à /dashboard
-                                className=" mb-1.5 text-black hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-2xl font-medium"
-                            >
-                                <i className='bx bxs-dashboard'></i>
-                                Tableau de bord
-                            </Link>
-
-                            <Link
-                                to="categories"
-                                className="mb-1.5 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-2xl font-medium"
-                            >
-                                <i className='bx bxs-category'></i>
-                                Catégories
-                            </Link>
-
-                            <Link
-                                to="incomes"
-                                className="mb-1.5 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-2xl font-medium"
-                            >
-                                <i className='bx bxs-wallet'></i>
-                                Revenus
-                            </Link>
-
-                            <Link
-                                to="expenses"
-                                className="mb-1.5 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-2xl font-medium"
-                            >
-                                <i className='bx bx-money-withdraw'></i>
-                                Dépenses
-                            </Link>
-                        </div>
-                    </nav>
-
-                    <main>
-                        <Outlet />
-                    </main>
+        <div className="flex flex-col min-h-screen bg-green-50">
+            <nav className="bg-green-700 h-20 flex items-center justify-between px-6 shadow-lg">
+                <span className="flex items-center cursor-pointer">
+                    <img src={Logo} alt="Logo" className="w-16 h-16 object-contain"/>
+                </span>
+                <div className="flex items-center gap-6">
+                    <Link to="/profile" className="text-white hover:text-yellow-400">
+                        <i className="bx bxs-user-circle text-5xl"></i>
+                    </Link>
+                    <button
+                        onClick={handleLogout}
+                        className="text-white hover:text-yellow-400 transition-colors"
+                    >
+                        <i className="bx bx-log-out text-4xl"></i>
+                    </button>
                 </div>
+            </nav>
+            <div className="flex flex-1">
+                <aside className="w-72 bg-white border-r border-green-200 shadow-md p-6">
+                    <div className="flex flex-col gap-3">
+                        <Link
+                            to=""
+                            className="flex items-center gap-3 px-4 py-2 text-green-800 rounded-lg hover:bg-yellow-400 hover:text-green-900 transition-colors text-lg font-semibold"
+                        >
+                            <i className="bx bxs-dashboard text-xl"></i>
+                            Tableau de bord
+                        </Link>
+
+                        <Link
+                            to="categories"
+                            className="flex items-center gap-3 px-4 py-2 text-green-800 rounded-lg hover:bg-yellow-400 hover:text-green-900 transition-colors text-lg font-semibold"
+                        >
+                            <i className="bx bxs-category text-xl"></i>
+                            Catégories
+                        </Link>
+
+                        <Link
+                            to="incomes"
+                            className="flex items-center gap-3 px-4 py-2 text-green-800 rounded-lg hover:bg-yellow-400 hover:text-green-900 transition-colors text-lg font-semibold"
+                        >
+                            <i className="bx bxs-wallet text-xl"></i>
+                            Revenus
+                        </Link>
+
+                        <Link
+                            to="expenses"
+                            className="flex items-center gap-3 px-4 py-2 text-green-800 rounded-lg hover:bg-yellow-400 hover:text-green-900 transition-colors text-lg font-semibold"
+                        >
+                            <i className="bx bx-money-withdraw text-xl"></i>
+                            Dépenses
+                        </Link>
+                    </div>
+                </aside>
+
+                <main className="flex-1 p-8">
+                    <Outlet />
+                </main>
             </div>
         </div>
     )
