@@ -85,35 +85,35 @@ const Expenses: React.FC = () => {
   };
 
   return (
-    <div className="container mx-auto p-4 relative">
+    <div className="container mx-auto p-6 relative bg-green-50 min-h-screen">
       {showForm && (
         <div className="fixed inset-0 bg-black/50 z-10" onClick={() => setShowForm(false)} />
       )}
 
       <div className={`transition-opacity duration-300 ${showForm ? "opacity-50" : "opacity-100"}`}>
-        <div className="flex justify-between items-center mb-6">
-          <h1 className="text-2xl font-bold text-gray-800">Expenses</h1>
+        <div className="flex justify-between items-center mb-8">
+          <h1 className="text-3xl font-bold text-green-800">💸Expenses</h1>
           <button
             onClick={() => {
               setEditingExpense(null);
               setShowForm(true);
             }}
-            className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700"
+            className="bg-yellow-400 text-green-900 px-5 py-2 rounded-lg  font-semibold shadow hover:bg-yellow-500 transition-colors"
           >
-            Add Expense
+           + Add Expense
           </button>
         </div>
 
         {loading && (
           <div className="flex justify-center items-center py-8">
-            <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-blue-500"></div>
+            <div className="animate-spin rounded-full h-10 w-10 border-4 border-yellow-400 border-t-transparent"></div>
           </div>
         )}
 
-        {error && <p className="text-red-500 mb-4">{error}</p>}
+        {error && <p className="text-red-500 mb-4 font-medium">{error}</p>}
 
         {expenses.length === 0 && !loading && !error && (
-          <p className="text-gray-600">No expenses found.</p>
+          <p className="text-green-700">No expenses found.</p>
         )}
 
         {expenses.length > 0 && (
@@ -121,14 +121,14 @@ const Expenses: React.FC = () => {
             {expenses.map((expense) => (
               <div
                 key={expense.id}
-                className="bg-white p-4 rounded-lg shadow-md flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4"
+                className="bg-white p-5 rounded-xl shadow-md flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border border-green-100 hover:shadow-lg transition"
               >
                 <div>
-                  <p className="text-lg font-semibold">
+                  <p className="text-lg font-bold text-green-800">
                     {expense.type === "ONE_TIME" ? "One-time" : "Recurring"} —{" "}
                     {formatCurrency(expense.amount)}
                   </p>
-                  <p className="text-sm text-gray-600">
+                  <p className="text-sm text-green-700">
                     {expense.type === "ONE_TIME" ? (
                       <>Date: {formatDate(expense.date)}</>
                     ) : (
@@ -141,24 +141,24 @@ const Expenses: React.FC = () => {
                     )}
                   </p>
                   {expense.description && (
-                    <p className="text-sm text-gray-600 mt-1">
+                    <p className="text-sm text-green-700 mt-1 italic">
                       Description: {expense.description}
                     </p>
                   )}
                   {expense.receiptPath && (
-                    <div className="mt-2 flex flex-wrap gap-2">
+                    <div className="mt-3 flex flex-wrap gap-3">
                       {/* ✅ Utilise getReceiptViewUrl */}
                       <a
                         href={getReceiptViewUrl(expense.id!)}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="text-blue-500 hover:underline text-sm"
+                        className="text-yellow-500 font-medium hover:underline text-sm"
                       >
                         👁️ View Receipt
                       </a>
                       <button
                         onClick={() => expense.id && downloadReceipt(expense.id)}
-                        className="text-green-500 hover:underline text-sm"
+                        className="text-green-700 font-medium hover:underline text-sm"
                       >
                         📥 Download
                       </button>
@@ -167,13 +167,13 @@ const Expenses: React.FC = () => {
                 </div>
                 <div className="flex space-x-2">
                   <button
-                    className="bg-yellow-500 text-white px-3 py-1 rounded text-sm hover:bg-yellow-600 transition"
-                    onClick={() => handleEdit(expense)}
+                      className="bg-yellow-400 text-green-900 px-4 py-1.5 rounded-lg text-sm font-semibold hover:bg-yellow-500 transition"
+                      onClick={() => handleEdit(expense)}
                   >
                     Edit
                   </button>
                   <button
-                    className="bg-red-500 text-white px-3 py-1 rounded text-sm hover:bg-red-600 transition"
+                    className="bg-red-500 text-white px-4 py-1.5 rounded-lg text-sm font-semibold hover:bg-red-600 transition"
                     onClick={() => expense.id && handleDelete(expense.id)}
                   >
                     Delete
@@ -191,7 +191,7 @@ const Expenses: React.FC = () => {
           onClick={(e) => e.stopPropagation()}
         >
           <div
-            className="bg-white p-6 rounded-lg shadow-xl max-w-md w-full mx-4"
+            className="bg-white p-6 rounded-xl shadow-2xl max-w-md w-full mx-4 border-green-200"
             onClick={(e) => e.stopPropagation()}
           >
             <ExpenseForm
