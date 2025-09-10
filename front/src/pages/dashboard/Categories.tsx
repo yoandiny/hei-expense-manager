@@ -78,9 +78,9 @@ const Categories: React.FC = () => {
             <div className="mb-6">
                 <button
                     onClick={() => setShowForm(true)}
-                    className="bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700 transition font-semibold"
+                    className=" gap-2 bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700 shadow-md transition font-semibold"
                 >
-                    Nouvelle catégorie
+                    <span className="text-xl">+</span> Nouvelle catégorie
                 </button>
             </div>
 
@@ -93,12 +93,12 @@ const Categories: React.FC = () => {
             )}
 
             <div className="bg-white rounded-lg shadow-lg overflow-x-auto mt-6">
-                <table className="min-w-full table-auto text-center">
+                <table className="min-w-full table-auto text-center border-collapse rounded-lg overflow-hidden shadow-sm">
                     <thead>
-                    <tr className="bg-gray-200 text-gray-700 uppercase text-sm">
-                        <th className="py-3 px-6 text-left text-gray-800">Nom</th>
-                        <th className="py-3 px-6 text-left text-gray-800">Date de création</th>
-                        <th className="py-3 px-6 text-gray-800">Actions</th>
+                    <tr className="bg-green-100 text-green-800 uppercase text-sm font-semibold">
+                        <th className="py-3 px-6 text-left">Nom</th>
+                        <th className="py-3 px-6 text-left">Date de création</th>
+                        <th className="py-3 px-6">Actions</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -106,25 +106,27 @@ const Categories: React.FC = () => {
                         <tr
                             key={category.id}
                             className={`border-b transition ${
-                                index % 2 === 0 ? 'bg-gray-50' : 'bg-white'
+                                index % 2 === 0 ? "bg-gray-50" : "bg-white"
                             } hover:bg-gray-100`}
                         >
                             <td className="py-4 px-6 text-left text-gray-800">{category.name}</td>
                             <td className="py-4 px-6 text-left text-gray-800">
-                                {new Date(category.createdAt).toLocaleDateString('fr-FR')}
+                                {new Date(category.createdAt).toLocaleDateString("fr-FR")}
                             </td>
                             <td className="py-4 px-6">
                                 {!category.isDefault && (
                                     <div className="flex justify-center space-x-3">
                                         <button
                                             onClick={() => handleEditCategory(category)}
-                                            className="bg-yellow-500 text-white px-4 py-2 rounded-lg hover:bg-yellow-600 transition"
+                                            className="flex items-center gap-1 bg-yellow-500 text-white px-3 py-2 rounded-lg
+                                 hover:bg-yellow-600 transition text-sm shadow-sm"
                                         >
                                             Modifier
                                         </button>
                                         <button
                                             onClick={() => handleDeleteCategory(category.id)}
-                                            className="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition"
+                                            className="flex items-center gap-1 bg-red-500 text-white px-3 py-2 rounded-lg
+                                 hover:bg-red-600 transition text-sm shadow-sm"
                                         >
                                             Supprimer
                                         </button>
@@ -136,8 +138,14 @@ const Categories: React.FC = () => {
                     </tbody>
                 </table>
             </div>
+            {categories.length === 0 && (
+                <div className="p-6 mt-4 text-gray-600 italic bg-gray-50 rounded-lg shadow-sm">
+                    Aucune catégorie disponible. Ajoutez-en une !
+                </div>
+            )}
         </div>
     );
+
 };
 
 export default Categories;
