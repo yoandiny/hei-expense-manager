@@ -1,24 +1,24 @@
-import {Request, Response, NextFunction} from 'express';
-import { verifyToken} from "../utils/jwt.js";
+import { Request, Response, NextFunction } from 'express';
+import { verifyToken } from "../utils/jwt.js";
 
-export function authMiddleware(req: Request, res: Response, next: NextFunction){
-    try{
+export function authMiddleware(req: Request, res: Response, next: NextFunction) {
+    try {
         const header = req.headers.authorization;
 
-        if(!header || !header.startsWith("Bearer ")){
-            return res.status(401).json({message: "No token provided"})
+        if (!header || !header.startsWith("Bearer ")) {
+            return res.status(401).json({ message: "No token provided" });
         }
 
         const token = header.split(" ")[1];
-        const payload = verifyToken(token)
+        const payload = verifyToken(token);
 
         req.user = {
-            id: payload.userId,
+            id: Number(payload.userId), // ✅ Conversion explicite en number
             email: payload.email
-        }
+        };
         req.tokenPayload = payload;
         next();
-    } catch (error){
-        res.status(401).json({message: "Invalid Token"})
+    } catch (error) {
+        res.status(401).json({ message: "Invalid Token" });
     }
 }
