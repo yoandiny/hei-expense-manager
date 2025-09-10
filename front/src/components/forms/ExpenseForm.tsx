@@ -150,140 +150,141 @@ const ExpenseForm: React.FC<ExpenseFormProps> = ({ onSuccess, onCancel, initialD
   };
 
   return (
-    <form
-      onSubmit={handleSubmit}
-      className="max-w-md mx-auto bg-white p-6 rounded-2xl shadow-md space-y-4"
-    >
-      <h2 className="text-xl font-bold text-gray-800">
-        {isEditMode ? "Edit Expense" : "Add Expense"}
-      </h2>
+      <form
+          onSubmit={handleSubmit}
+          className="max-w-md mx-auto bg-white p-6 rounded-2xl shadow-lg space-y-5"
+      >
+            <h2 className="text-xl font-bold text-green-700 text-center">
+                {isEditMode ? "Modifier Dépense" : "Nouvelle Dépense"}
+            </h2>
 
-      <div>
-        <label className="block text-sm font-medium">Amount</label>
-        <input
-          type="number"
-          value={amount || ""}
-          onChange={(e) => setAmount(e.target.value ? parseFloat(e.target.value) : 0)}
-          className="w-full border rounded-lg px-3 py-2"
-          required
-          min="0.01"
-          step="0.01"
-        />
-      </div>
+            <div>
+                <label className="block text-sm font-medium text-gray-700">Montant</label>
+                <input
+                    type="number"
+                    value={amount || ""}
+                    onChange={(e) => setAmount(e.target.value ? parseFloat(e.target.value) : 0)}
+                    className="w-full border border-green-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-yellow-400 transition"
+                    required
+                    min="0.01"
+                    step="0.01"
+                />
+            </div>
 
-      <div>
-        <label className="block text-sm font-medium">Type</label>
-        <select
-          value={type}
-          onChange={(e) => setType(e.target.value as ExpenseTypeUI)}
-          className="w-full border rounded-lg px-3 py-2"
-        >
-          <option value="One-time">One-time</option>
-          <option value="Recurring">Recurring</option>
-        </select>
-      </div>
+            {/* Type */}
+            <div>
+                <label className="block text-sm font-medium text-gray-700">Type</label>
+                <select
+                    value={type}
+                    onChange={(e) => setType(e.target.value as ExpenseTypeUI)}
+                    className="w-full border border-green-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-yellow-400 transition"
+                >
+                    <option value="One-time">One-time</option>
+                    <option value="Recurring">Recurring</option>
+                </select>
+            </div>
 
-      {type === "One-time" && (
-        <div>
-          <label className="block text-sm font-medium">Date</label>
-          <input
-            type="date"
-            value={date}
-            onChange={(e) => setDate(e.target.value)}
-            className="w-full border rounded-lg px-3 py-2"
-            required
-          />
-        </div>
-      )}
+            {type === "One-time" && (
+                <div>
+                    <label className="block text-sm font-medium text-gray-700">Date</label>
+                    <input
+                        type="date"
+                        value={date}
+                        onChange={(e) => setDate(e.target.value)}
+                        className="w-full border border-green-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-yellow-400 transition"
+                        required
+                    />
+                </div>
+            )}
 
-      {type === "Recurring" && (
-        <>
-          <div>
-            <label className="block text-sm font-medium">Start Date</label>
-            <input
-              type="date"
-              value={startDate}
-              onChange={(e) => setStartDate(e.target.value)}
-              className="w-full border rounded-lg px-3 py-2"
-              required
-            />
-          </div>
-          <div>
-            <label className="block text-sm font-medium">End Date (Optional)</label>
-            <input
-              type="date"
-              value={endDate}
-              onChange={(e) => setEndDate(e.target.value)}
-              className="w-full border rounded-lg px-3 py-2"
-            />
-          </div>
-        </>
-      )}
+            {type === "Recurring" && (
+                <>
+                    <div>
+                        <label className="block text-sm font-medium text-gray-700">Start Date</label>
+                        <input
+                            type="date"
+                            value={startDate}
+                            onChange={(e) => setStartDate(e.target.value)}
+                            className="w-full border border-green-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-yellow-400 transition"
+                            required
+                        />
+                    </div>
+                    <div>
+                        <label className="block text-sm font-medium text-gray-700">End Date (Optional)</label>
+                        <input
+                            type="date"
+                            value={endDate}
+                            onChange={(e) => setEndDate(e.target.value)}
+                            className="w-full border border-green-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-yellow-400 transition"
+                        />
+                    </div>
+                </>
+            )}
 
-      <div>
-        <label className="block text-sm font-medium">Category</label>
-        {loadingCategories ? (
-          <p className="text-gray-500">Chargement...</p>
-        ) : (
-          <select
-            value={categoryId}
-            onChange={(e) => setCategoryId(e.target.value)}
-            className="w-full border rounded-lg px-3 py-2"
-            required
-          >
-            <option value="">-- Sélectionnez une catégorie --</option>
-            {categories.map((category) => (
-              <option key={category.id} value={category.id}>
-                {category.name}
-              </option>
-            ))}
-          </select>
-        )}
-      </div>
+            <div>
+                <label className="block text-sm font-medium text-gray-700">Catégorie</label>
+                {loadingCategories ? (
+                    <p className="text-gray-500">Chargement...</p>
+                ) : (
+                    <select
+                        value={categoryId}
+                        onChange={(e) => setCategoryId(e.target.value)}
+                        className="w-full border border-green-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-yellow-400 transition"
+                        required
+                    >
+                        <option value="">-- Sélectionnez une catégorie --</option>
+                        {categories.map((category) => (
+                            <option key={category.id} value={category.id}>
+                                {category.name}
+                            </option>
+                        ))}
+                    </select>
+                )}
+            </div>
 
-      <div>
-        <label className="block text-sm font-medium">Description</label>
-        <textarea
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
-          className="w-full border rounded-lg px-3 py-2"
-          placeholder="Optional"
-        />
-      </div>
+            <div>
+                <label className="block text-sm font-medium text-gray-700">Description</label>
+                <textarea
+                    value={description}
+                    onChange={(e) => setDescription(e.target.value)}
+                    className="w-full border border-green-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-yellow-400 transition"
+                    placeholder="Optional"
+                />
+            </div>
 
-      {/* ✅ Champ d'upload de reçu */}
-      <div>
-        <label className="block text-sm font-medium">
-          Receipt (JPG, PNG, PDF, max 5MB) — Optional
-        </label>
-        <input
-          type="file"
-          accept=".jpg,.jpeg,.png,.pdf"
-          onChange={(e) => setReceiptFile(e.target.files?.[0] || null)}
-          className="w-full border rounded-lg px-3 py-2"
-        />
-        {receiptFile && (
-          <p className="text-sm text-gray-600 mt-1">Selected: {receiptFile.name}</p>
-        )}
-      </div>
+            {/* ✅  Champ d'upload de reçu */}
+            <div>
+                <label className="block text-sm font-medium text-gray-700">
+                    Receipt (JPG, PNG, PDF, max 5MB) — Optional
+                </label>
+                <input
+                    type="file"
+                    accept=".jpg,.jpeg,.png,.pdf"
+                    onChange={(e) => setReceiptFile(e.target.files?.[0] || null)}
+                    className="w-full border border-green-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-yellow-400 transition"
+                />
+                {receiptFile && (
+                    <p className="text-sm text-gray-600 mt-1">Selected: {receiptFile.name}</p>
+                )}
+            </div>
 
-      <div className="flex space-x-4">
-        <button
-          type="submit"
-          disabled={loading}
-          className="w-full bg-blue-600 text-white rounded-lg py-2 hover:bg-blue-700 disabled:bg-gray-400"
-        >
-          {loading ? "Saving..." : isEditMode ? "Update Expense" : "Save Expense"}
-        </button>
-        <button
-          type="button"
-          onClick={onCancel}
-          className="w-full bg-gray-300 text-gray-800 rounded-lg py-2 hover:bg-gray-400"
-        >
-          Cancel
-        </button>
-      </div>
-    </form>
+            <div className="flex space-x-4">
+                <button
+                    type="submit"
+                    disabled={loading}
+                    className="w-full bg-yellow-400 text-green-900 rounded-lg py-2 hover:bg-yellow-500 disabled:bg-gray-400 font-semibold transition shadow-sm"
+                >
+                    {loading ? "Saving..." : isEditMode ? "Update Expense" : "Save Expense"}
+                </button>
+                <button
+                    type="button"
+                    onClick={onCancel}
+                    className="w-full bg-gray-300 text-gray-700 rounded-lg py-2 hover:bg-gray-400 font-semibold transition shadow-sm"
+                >
+                    Cancel
+                </button>
+            </div>
+        </form>
   );
 };
 
