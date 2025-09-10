@@ -44,7 +44,6 @@ const getAuthHeaders = (): Record<string, string> => {
 // 📥 Récupérer toutes les dépenses — ✅ URL RELATIVE
 export async function getExpenses(): Promise<Expense[]> {
   const response = await fetch("/api/expenses", {
-    method: "GET",
     headers: getAuthHeaders(),
   });
 

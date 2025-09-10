@@ -125,8 +125,18 @@ const Expenses: React.FC = () => {
                     {expense.type === "ONE_TIME" ? "One-time" : "Recurring"} — $
                     {expense.amount.toFixed(2)}
                   </p>
+                  {/* ✅ Affichage amélioré pour les dépenses récurrentes */}
                   <p className="text-sm text-gray-600">
-                    Date: {formatDate(expense.date || expense.startDate)}
+                    {expense.type === "ONE_TIME" ? (
+                      <>Date: {formatDate(expense.date)}</>
+                    ) : (
+                      <>
+                        Période: du {formatDate(expense.startDate)}{" "}
+                        {expense.endDate
+                          ? `au ${formatDate(expense.endDate)}`
+                          : "(sans fin)"}
+                      </>
+                    )}
                   </p>
                   {expense.description && (
                     <p className="text-sm text-gray-600 mt-1">
@@ -178,5 +188,4 @@ const Expenses: React.FC = () => {
   );
 };
 
-// ✅ ✅ ✅ N'OUBLIE PAS CETTE LIGNE — INDISPENSABLE ✅ ✅ ✅
 export default Expenses;

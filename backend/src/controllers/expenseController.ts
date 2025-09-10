@@ -48,8 +48,8 @@ export const createExpense = async (req: Request, res: Response) => {
  * 📌 Récupérer toutes les dépenses de l’utilisateur connecté
  */
 export const getExpenses = async (req: Request, res: Response) => {
+  const userId = (req as any).user?.id;
   try {
-    const userId = (req as any).user?.id;
     if (!userId) {
       return res.status(401).json({ error: "Utilisateur non authentifié" });
     }

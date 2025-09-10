@@ -1,15 +1,15 @@
 import React, { useState, useEffect } from "react";
 import { createExpense, updateExpense } from "../../services/expenseService";
+import { getCategories } from "../../services/ccategoryService"; // ✅ Import ajouté
 import type { CreateExpenseDTO, ExpenseTypeUI, Expense } from "../../services/expenseService";
 
 type ExpenseFormProps = {
   onSuccess?: () => void;
   onCancel?: () => void;
-  initialData?: Expense | null; // ✅ Pour l'édition
+  initialData?: Expense | null;
 };
 
 const ExpenseForm: React.FC<ExpenseFormProps> = ({ onSuccess, onCancel, initialData }) => {
-  // ✅ Initialisation des états avec les valeurs de initialData si présent
   const [amount, setAmount] = useState<number>(initialData?.amount || 0);
   const [date, setDate] = useState<string>(initialData?.date || "");
   const [categoryId, setCategoryId] = useState<string>(
@@ -22,9 +22,30 @@ const ExpenseForm: React.FC<ExpenseFormProps> = ({ onSuccess, onCancel, initialD
   const [startDate, setStartDate] = useState<string>(initialData?.startDate || "");
   const [endDate, setEndDate] = useState<string>(initialData?.endDate || "");
   const [loading, setLoading] = useState(false);
-  const [isEditMode, setIsEditMode] = useState<boolean>(!!initialData?.id); // ✅ Détection mode édition
+  const [isEditMode, setIsEditMode] = useState<boolean>(!!initialData?.id);
 
-  // ✅ Si initialData change (ex: on passe d'ajout à édition), synchroniser les états
+  // ✅ États pour les catégories
+  const [categories, setCategories] = useState<{ id: number; name: string }[]>([]);
+  const [loadingCategories, setLoadingCategories] = useState(true);
+
+  // ✅ Charger les catégories au montage
+  useEffect(() => {
+    const loadCategories = async () => {
+      try {
+        const data = await getCategories();
+        setCategories(data);
+      } catch (err) {
+        console.error("❌ Failed to load categories:", err);
+        alert("Impossible de charger les catégories. Veuillez réessayer.");
+      } finally {
+        setLoadingCategories(false);
+      }
+    };
+
+    loadCategories();
+  }, []);
+
+  // ✅ Synchroniser avec initialData
   useEffect(() => {
     if (initialData) {
       setAmount(initialData.amount);
@@ -36,7 +57,6 @@ const ExpenseForm: React.FC<ExpenseFormProps> = ({ onSuccess, onCancel, initialD
       setEndDate(initialData.endDate || "");
       setIsEditMode(!!initialData.id);
     } else {
-      // ✅ Réinitialiser si on passe en mode création
       setAmount(0);
       setDate("");
       setCategoryId("");
@@ -53,7 +73,6 @@ const ExpenseForm: React.FC<ExpenseFormProps> = ({ onSuccess, onCancel, initialD
     setLoading(true);
 
     try {
-      // ✅ Validation côté frontend (optionnel mais utile)
       if (type === "One-time" && !date) {
         alert("Please select a date for one-time expense.");
         setLoading(false);
@@ -67,7 +86,7 @@ const ExpenseForm: React.FC<ExpenseFormProps> = ({ onSuccess, onCancel, initialD
       }
 
       if (!categoryId || isNaN(parseInt(categoryId, 10))) {
-        alert("Please enter a valid category ID.");
+        alert("Please select a valid category.");
         setLoading(false);
         return;
       }
@@ -85,19 +104,16 @@ const ExpenseForm: React.FC<ExpenseFormProps> = ({ onSuccess, onCancel, initialD
       console.log("📤 Sending expense:", expenseData);
 
       if (isEditMode && initialData?.id) {
-        // ✅ Mode édition
         await updateExpense(initialData.id, {
           ...expenseData,
-          type: expenseData.type === "One-time" ? "ONE_TIME" : "RECURRING", // Conversion côté service
+          type: expenseData.type === "One-time" ? "ONE_TIME" : "RECURRING",
         });
         alert("✅ Expense updated!");
       } else {
-        // ✅ Mode création
         await createExpense(expenseData);
         alert("✅ Expense added!");
       }
 
-      // ✅ Reset seulement en mode création
       if (!isEditMode) {
         setAmount(0);
         setDate("");
@@ -192,17 +208,26 @@ const ExpenseForm: React.FC<ExpenseFormProps> = ({ onSuccess, onCancel, initialD
         </>
       )}
 
+      {/* ✅ Select avec noms des catégories */}
       <div>
-        <label className="block text-sm font-medium">Category ID</label>
-        <input
-          type="number"
-          value={categoryId}
-          onChange={(e) => setCategoryId(e.target.value)}
-          className="w-full border rounded-lg px-3 py-2"
-          placeholder="Enter category ID"
-          required
-          min="1"
-        />
+        <label className="block text-sm font-medium">Category</label>
+        {loadingCategories ? (
+          <p className="text-gray-500">Chargement...</p>
+        ) : (
+          <select
+            value={categoryId}
+            onChange={(e) => setCategoryId(e.target.value)}
+            className="w-full border rounded-lg px-3 py-2"
+            required
+          >
+            <option value="">-- Sélectionnez une catégorie --</option>
+            {categories.map((category) => (
+              <option key={category.id} value={category.id}>
+                {category.name}
+              </option>
+            ))}
+          </select>
+        )}
       </div>
 
       <div>
