@@ -1,12 +1,5 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
-  output   = "../generated/prisma"
 }
 
 datasource db {
@@ -15,69 +8,54 @@ datasource db {
 }
 
 model User {
-  id        Int       @id @default(autoincrement())
-  email     String    @unique
-  password  String
-  expenses  Expense[]
-  incomes   Income[]
-  categories Category[] 
-  createdAt DateTime  @default(now())
+  id         Int        @id @default(autoincrement())
+  email      String     @unique
+  password   String
+  createdAt  DateTime   @default(now())
+  categories Category[]
+  expenses   Expense[]
+  incomes    Income[]
 }
 
 model Expense {
-  id          Int       @id @default(autoincrement())
+  id          Int         @id @default(autoincrement())
   amount      Float
-  description String?   // optionnel
+  description String?
   type        ExpenseType @default(ONE_TIME)
-  date        DateTime? // utilisé si One-time
-  startDate   DateTime? // utilisé si Recurring
-  endDate     DateTime? // optionnel pour Recurring
-  receiptUrl  String?   // chemin/fichier uploadé
-  createdAt   DateTime  @default(now())
-
-  // Relations
-  userId   Int
-  user     User        @relation(fields: [userId], references: [id])
-  categoryId Int
-  receipts    Receipt[]
-  category Category    @relation(fields: [categoryId], references: [id])
-}
-
-enum ExpenseType {
-  ONE_TIME
-  RECURRING
+  date        DateTime?
+  startDate   DateTime?
+  endDate     DateTime?
+  receiptUrl  String?
+  createdAt   DateTime    @default(now())
+  
+  userId      Int
+  categoryId  Int
+  category    Category    @relation(fields: [categoryId], references: [id])
+  user        User        @relation(fields: [userId], references: [id])
 }
 
 model Income {
-  id          Int       @id @default(autoincrement())
+  id          Int      @id @default(autoincrement())
   amount      Float
   date        DateTime
   source      String
-  description String?   // optionnel
-  createdAt   DateTime  @default(now())
-
-  // Relation avec User
-  userId Int
-  user   User @relation(fields: [userId], references: [id])
-}
-
-model Receipt {
-  id        Int      @id @default(autoincrement())
-  url       String   // chemin/URL du fichier stocké
-  createdAt DateTime @default(now())
-
-  expenseId Int
-  expense   Expense  @relation(fields: [expenseId], references: [id])
+  description String?
+  createdAt   DateTime @default(now())
+  userId      Int
+  user        User     @relation(fields: [userId], references: [id])
 }
 
 model Category {
   id        Int       @id @default(autoincrement())
   name      String
-  isDefault Boolean   @default(false) // pour savoir si c’est une catégorie système
+  isDefault Boolean   @default(false)
   createdAt DateTime  @default(now())
+  userId    Int?
+  user      User?     @relation(fields: [userId], references: [id])
+  expenses  Expense[]
+}
 
-  // Relations
-  userId   Int?       // null = catégorie par défaut globale
-  user     User?      @relation(fields: [userId], references: [id])
-  expenses Expense[]
+enum ExpenseType {
+  ONE_TIME
+  RECURRING
 }

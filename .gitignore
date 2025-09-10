@@ -5,4 +5,9 @@
 # Environments
 *.env
 
-node_modules
+node_modules/
+<<<<<<< HEAD
+
+=======
+.gitignore
+>>>>>>> feature/signup

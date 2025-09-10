@@ -1,26 +1,54 @@
-import {BrowserRouter as Router, Route, Routes} from 'react-router-dom'
 import './App.css'
-import Signup from './pages/auth/Signup'
-import Login from './pages/auth/Login'
-import Dashboard from './pages/dashboard/Dashboard'
+import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
+import { AuthProvider, useAuthContext } from "./context/AuthContext";
 
-function App() {
- 
+import Login from "./pages/auth/Login";
+import Signup from "./pages/auth/Signup";
 
-  return (
-    <Router>
-      <Routes>
-        <Route path="/" element={<Signup />}>
-        <Route index element={<Dashboard />} />
-        <Route path="/" element={<Signup />}/>
-        <Route path="/" element={<Login />}/>
+import Summary from "./pages/dashboard/Dashboard";
+import Category from "./pages/dashboard/Categories";
+import type { JSX } from "react";
+import Navbar from './components/layout/Navbar';
+import Expenses from './pages/dashboard/Expenses';
+import NotFound from './pages/NotFound';
+import Incomes from './pages/dashboard/Incomes';
 
-        </Route>
-
-      </Routes>
-      
-    </Router>
-  )
+const ProtectedRoute = ({ children }: { children: JSX.Element }) => {
+    const {token} = useAuthContext();
+    return token ? children : <Navigate to="/login" />;
 }
 
-export default App
+function App() {
+    return (
+        <AuthProvider>
+            <Router>
+                <Routes>
+                    <Route path="/login" element={<Login />} />
+                    <Route path="/signup" element={<Signup />} />
+
+                    <Route
+                        path='/'
+                        element={
+                            <ProtectedRoute>
+                                <Navbar />
+                            </ProtectedRoute>
+                        }
+                    >
+                        <Route index element={<Summary />} />
+                        <Route path="dashboard" element={<Summary />} />
+                        <Route path="categories" element={<Category />} />
+                        <Route path="expenses" element={<Expenses />} />
+                        <Route path="incomes" element={<Incomes/>}/>
+                       
+                    </Route>
+
+                   
+                    <Route path="*" element={<NotFound />} />
+                </Routes>
+            </Router>
+        </AuthProvider>
+    );
+}
+
+
+export default App;
