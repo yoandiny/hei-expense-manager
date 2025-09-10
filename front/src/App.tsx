@@ -2,11 +2,9 @@ import './App.css'
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import { AuthProvider, useAuthContext } from "./context/AuthContext";
 
-// Pages Auth
 import Login from "./pages/auth/Login";
 import Signup from "./pages/auth/Signup";
 
-// Pages Dashboard
 import Summary from "./pages/dashboard/Dashboard";
 import Category from "./pages/dashboard/Categories";
 import type { JSX } from "react";
@@ -24,11 +22,9 @@ function App() {
         <AuthProvider>
             <Router>
                 <Routes>
-                    {/* Pages publiques */}
                     <Route path="/login" element={<Login />} />
                     <Route path="/signup" element={<Signup />} />
 
-                    {/* Pages protégées */}
                     <Route
                         path='/'
                         element={
