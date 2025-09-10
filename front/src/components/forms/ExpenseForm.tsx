@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { createExpense, updateExpense } from "../../services/expenseService";
-import { getCategories } from "../../services/ccategoryService"; // ✅ Import ajouté
+import { getCategories } from "../../services/ccategoryService";
+import { uploadReceipt } from "../../services/receiptService"; // ✅ Import du service reçu
 import type { CreateExpenseDTO, ExpenseTypeUI, Expense } from "../../services/expenseService";
 
 type ExpenseFormProps = {
@@ -21,6 +22,7 @@ const ExpenseForm: React.FC<ExpenseFormProps> = ({ onSuccess, onCancel, initialD
   );
   const [startDate, setStartDate] = useState<string>(initialData?.startDate || "");
   const [endDate, setEndDate] = useState<string>(initialData?.endDate || "");
+  const [receiptFile, setReceiptFile] = useState<File | null>(null); // ✅ État pour le fichier
   const [loading, setLoading] = useState(false);
   const [isEditMode, setIsEditMode] = useState<boolean>(!!initialData?.id);
 
@@ -53,6 +55,7 @@ const ExpenseForm: React.FC<ExpenseFormProps> = ({ onSuccess, onCancel, initialD
       setStartDate(initialData.startDate || "");
       setEndDate(initialData.endDate || "");
       setIsEditMode(!!initialData.id);
+      // On ne réinitialise pas receiptFile — l'utilisateur peut en uploader un nouveau
     } else {
       setAmount(0);
       setDate("");
@@ -61,6 +64,7 @@ const ExpenseForm: React.FC<ExpenseFormProps> = ({ onSuccess, onCancel, initialD
       setType("One-time");
       setStartDate("");
       setEndDate("");
+      setReceiptFile(null); // ✅ Réinitialise le fichier
       setIsEditMode(false);
     }
   }, [initialData]);
@@ -98,17 +102,27 @@ const ExpenseForm: React.FC<ExpenseFormProps> = ({ onSuccess, onCancel, initialD
         description,
       };
 
-      console.log("📤 Sending expense:", expenseData);
+      let expense;
 
       if (isEditMode && initialData?.id) {
-        await updateExpense(initialData.id, {
+        expense = await updateExpense(initialData.id, {
           ...expenseData,
           type: expenseData.type === "One-time" ? "ONE_TIME" : "RECURRING",
         });
         alert("✅ Expense updated!");
       } else {
-        await createExpense(expenseData);
+        expense = await createExpense(expenseData);
         alert("✅ Expense added!");
+      }
+
+      // ✅ Upload du reçu si un fichier est sélectionné
+      if (receiptFile && expense?.id) {
+        try {
+          await uploadReceipt(expense.id, receiptFile);
+          alert("✅ Receipt uploaded!");
+        } catch (uploadError) {
+          alert("❌ Failed to upload receipt: " + (uploadError instanceof Error ? uploadError.message : "Unknown error"));
+        }
       }
 
       if (!isEditMode) {
@@ -119,6 +133,7 @@ const ExpenseForm: React.FC<ExpenseFormProps> = ({ onSuccess, onCancel, initialD
         setType("One-time");
         setStartDate("");
         setEndDate("");
+        setReceiptFile(null);
       }
 
       onSuccess?.();
@@ -234,6 +249,22 @@ const ExpenseForm: React.FC<ExpenseFormProps> = ({ onSuccess, onCancel, initialD
           className="w-full border rounded-lg px-3 py-2"
           placeholder="Optional"
         />
+      </div>
+
+      {/* ✅ Champ d'upload de reçu */}
+      <div>
+        <label className="block text-sm font-medium">
+          Receipt (JPG, PNG, PDF, max 5MB) — Optional
+        </label>
+        <input
+          type="file"
+          accept=".jpg,.jpeg,.png,.pdf"
+          onChange={(e) => setReceiptFile(e.target.files?.[0] || null)}
+          className="w-full border rounded-lg px-3 py-2"
+        />
+        {receiptFile && (
+          <p className="text-sm text-gray-600 mt-1">Selected: {receiptFile.name}</p>
+        )}
       </div>
 
       <div className="flex space-x-4">

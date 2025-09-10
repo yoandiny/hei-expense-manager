@@ -3,6 +3,7 @@ import { getExpenses, deleteExpense } from "../../services/expenseService";
 import ExpenseForm from "../../components/forms/ExpenseForm";
 import { formatDate } from "../../utils/formatDate";
 import { formatCurrency } from "../../utils/formatCurrency";
+import { downloadReceipt, getReceiptViewUrl } from "../../services/receiptService"; // ✅ Import ajouté
 
 interface Expense {
   id?: number;
@@ -13,6 +14,7 @@ interface Expense {
   categoryId: number;
   description?: string;
   type: "ONE_TIME" | "RECURRING";
+  receiptPath?: string;
   createdAt?: string;
 }
 
@@ -142,6 +144,25 @@ const Expenses: React.FC = () => {
                     <p className="text-sm text-gray-600 mt-1">
                       Description: {expense.description}
                     </p>
+                  )}
+                  {expense.receiptPath && (
+                    <div className="mt-2 flex flex-wrap gap-2">
+                      {/* ✅ Utilise getReceiptViewUrl */}
+                      <a
+                        href={getReceiptViewUrl(expense.id!)}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-blue-500 hover:underline text-sm"
+                      >
+                        👁️ View Receipt
+                      </a>
+                      <button
+                        onClick={() => expense.id && downloadReceipt(expense.id)}
+                        className="text-green-500 hover:underline text-sm"
+                      >
+                        📥 Download
+                      </button>
+                    </div>
                   )}
                 </div>
                 <div className="flex space-x-2">

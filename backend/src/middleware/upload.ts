@@ -1,37 +1,30 @@
-import multer, { FileFilterCallback } from "multer";
-import { Request } from "express";
+import multer from "multer";
 import path from "path";
 
-const MAX_FILE_SIZE = 5 * 1024 * 1024;
-
-const uploadDir = path.join(__dirname, "..", "uploads");
-
-const fileFilter = (
-  req: Request,
-  file: Express.Multer.File,
-  cb: FileFilterCallback
-): void => {
-  const allowedTypes = ["image/jpeg", "image/png", "application/pdf"];
-
-  if (allowedTypes.includes(file.mimetype)) {
-    cb(null, true);
-  } else {
-    cb(new Error("Format non supporté. Formats acceptés: JPG, PNG, PDF."));
-  }
-};
-
+// Dossier de stockage
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, uploadDir);
+    cb(null, "uploads/receipts/"); // ← Crée ce dossier à la racine du backend
   },
   filename: (req, file, cb) => {
-    const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
-    cb(null, uniqueSuffix + path.extname(file.originalname));
+    const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1E9);
+    cb(null, file.fieldname + "-" + uniqueSuffix + path.extname(file.originalname));
   },
 });
 
+// Filtre les fichiers
+const fileFilter = (req: Express.Request, file: Express.Multer.File, cb: any) => {
+  if (file.mimetype === "image/jpeg" || file.mimetype === "image/png" || file.mimetype === "application/pdf") {
+    cb(null, true);
+  } else {
+    cb(new Error("Only JPG, PNG, and PDF files are allowed!"), false);
+  }
+};
+
 export const upload = multer({
   storage,
-  limits: { fileSize: MAX_FILE_SIZE },
+  limits: {
+    fileSize: 5 * 1024 * 1024, // 5MB
+  },
   fileFilter,
 });
