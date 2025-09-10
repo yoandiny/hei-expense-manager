@@ -5,7 +5,7 @@ import prisma from "../PrismaClient";
 export const createIncome = async (req: Request, res: Response) => {
   try {
     const { amount, date, source, description } = req.body;
-    const userId =(req as any).user?.id; // ← Déjà number, grâce à authMiddleware
+    const userId =(req as any).user?.id;
 
     if (!userId) {
       return res.status(401).json({ error: "Utilisateur non authentifié" });

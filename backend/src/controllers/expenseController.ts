@@ -3,9 +3,6 @@ import { Request, Response } from "express";
 
 const prisma = new PrismaClient();
 
-/**
- * 📌 Créer une dépense
- */
 export const createExpense = async (req: Request, res: Response) => {
   try {
     const { amount, type, date, categoryId, description, startDate, endDate } = req.body;
@@ -15,7 +12,6 @@ export const createExpense = async (req: Request, res: Response) => {
       return res.status(401).json({ error: "Utilisateur non authentifié" });
     }
 
-    // Validation logique
     if (type === "ONE_TIME" && !date) {
       return res.status(400).json({ error: "Date est obligatoire pour une dépense ponctuelle" });
     }
@@ -44,9 +40,6 @@ export const createExpense = async (req: Request, res: Response) => {
   }
 };
 
-/**
- * 📌 Récupérer toutes les dépenses de l’utilisateur connecté
- */
 export const getExpenses = async (req: Request, res: Response) => {
   const userId = (req as any).user?.id;
   try {
@@ -66,9 +59,6 @@ export const getExpenses = async (req: Request, res: Response) => {
   }
 };
 
-/**
- * 📌 Récupérer une dépense par ID
- */
 export const getExpenseById = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
@@ -94,9 +84,6 @@ export const getExpenseById = async (req: Request, res: Response) => {
   }
 };
 
-/**
- * 📌 Mettre à jour une dépense
- */
 export const updateExpense = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
@@ -152,9 +139,6 @@ export const updateExpense = async (req: Request, res: Response) => {
   }
 };
 
-/**
- * 📌 Supprimer une dépense
- */
 export const deleteExpense = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
