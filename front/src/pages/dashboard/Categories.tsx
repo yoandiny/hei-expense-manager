@@ -66,83 +66,89 @@ const Categories: React.FC = () => {
     };
 
     return (
-        <div className="p-6 bg-white rounded-lg shadow-lg w-full max-w-2xl text-center">
-            <h2 className="text-3xl font-bold text-gray-800 mb-6">Gestion des Catégories</h2>
+        <div className="flex min-h-screen bg-green-50">
+            <main className="flex-1 p-6 flex justify-center">
+                <div className="w-full max-w-2xl">
+                    <div className="p-6 bg-white rounded-lg shadow-lg w-full max-w-3xl text-center">
+                        <h2 className="text-3xl font-bold text-gray-800 mb-6">Gestion des Catégories</h2>
 
-            {error && (
-                <p className="text-red-700 bg-red-50 border border-red-200 rounded p-3 mb-6">
-                    {error}
-                </p>
-            )}
+                        {error && (
+                            <p className="text-red-700 bg-red-50 border border-red-200 rounded p-3 mb-6">
+                                {error}
+                            </p>
+                        )}
 
-            <div className="mb-6">
-                <button
-                    onClick={() => setShowForm(true)}
-                    className=" gap-2 bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700 shadow-md transition font-semibold"
-                >
-                    <span className="text-xl">+</span> Nouvelle catégorie
-                </button>
-            </div>
+                        <div className="mb-6">
+                            <button
+                                onClick={() => setShowForm(true)}
+                                className=" gap-2 bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700 shadow-md transition font-semibold"
+                            >
+                                <span className="text-xl">+</span> Nouvelle catégorie
+                            </button>
+                        </div>
 
-            {showForm && (
-                <CategoryForm
-                    category={editingCategory}
-                    onSubmit={handleFormSubmit}
-                    onCancel={handleCancel}
-                />
-            )}
+                        {showForm && (
+                            <CategoryForm
+                                category={editingCategory}
+                                onSubmit={handleFormSubmit}
+                                onCancel={handleCancel}
+                            />
+                        )}
 
-            <div className="bg-white rounded-lg shadow-lg overflow-x-auto mt-6">
-                <table className="min-w-full table-auto text-center border-collapse rounded-lg overflow-hidden shadow-sm">
-                    <thead>
-                    <tr className="bg-green-100 text-green-800 uppercase text-sm font-semibold">
-                        <th className="py-3 px-6 text-left">Nom</th>
-                        <th className="py-3 px-6 text-left">Date de création</th>
-                        <th className="py-3 px-6">Actions</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    {categories.map((category, index) => (
-                        <tr
-                            key={category.id}
-                            className={`border-b transition ${
-                                index % 2 === 0 ? "bg-gray-50" : "bg-white"
-                            } hover:bg-gray-100`}
-                        >
-                            <td className="py-4 px-6 text-left text-gray-800">{category.name}</td>
-                            <td className="py-4 px-6 text-left text-gray-800">
-                                {new Date(category.createdAt).toLocaleDateString("fr-FR")}
-                            </td>
-                            <td className="py-4 px-6">
-                                {!category.isDefault && (
-                                    <div className="flex justify-center space-x-3">
-                                        <button
-                                            onClick={() => handleEditCategory(category)}
-                                            className="flex items-center gap-1 bg-yellow-500 text-white px-3 py-2 rounded-lg
-                                 hover:bg-yellow-600 transition text-sm shadow-sm"
-                                        >
-                                            Modifier
-                                        </button>
-                                        <button
-                                            onClick={() => handleDeleteCategory(category.id)}
-                                            className="flex items-center gap-1 bg-red-500 text-white px-3 py-2 rounded-lg
-                                 hover:bg-red-600 transition text-sm shadow-sm"
-                                        >
-                                            Supprimer
-                                        </button>
-                                    </div>
-                                )}
-                            </td>
-                        </tr>
-                    ))}
-                    </tbody>
-                </table>
-            </div>
-            {categories.length === 0 && (
-                <div className="p-6 mt-4 text-gray-600 italic bg-gray-50 rounded-lg shadow-sm">
-                    Aucune catégorie disponible. Ajoutez-en une !
+                        <div className="bg-white rounded-lg shadow-lg overflow-x-auto mt-6">
+                            <table className="min-w-full table-auto text-center border-collapse rounded-lg overflow-hidden shadow-sm">
+                                <thead>
+                                <tr className="bg-green-100 text-green-800 uppercase text-sm font-semibold">
+                                    <th className="py-3 px-6 text-left">Nom</th>
+                                    <th className="py-3 px-6 text-left">Date de création</th>
+                                    <th className="py-3 px-6">Actions</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {categories.map((category, index) => (
+                                    <tr
+                                        key={category.id}
+                                        className={`border-b transition ${
+                                            index % 2 === 0 ? "bg-gray-50" : "bg-white"
+                                        } hover:bg-gray-100`}
+                                    >
+                                        <td className="py-4 px-6 text-left text-gray-800">{category.name}</td>
+                                        <td className="py-4 px-6 text-left text-gray-800">
+                                            {new Date(category.createdAt).toLocaleDateString("fr-FR")}
+                                        </td>
+                                        <td className="py-4 px-6">
+                                            {!category.isDefault && (
+                                                <div className="flex justify-center space-x-3">
+                                                    <button
+                                                        onClick={() => handleEditCategory(category)}
+                                                        className="flex items-center gap-1 bg-yellow-500 text-white px-3 py-2 rounded-lg
+                                             hover:bg-yellow-600 transition text-sm shadow-sm"
+                                                    >
+                                                        Modifier
+                                                    </button>
+                                                    <button
+                                                        onClick={() => handleDeleteCategory(category.id)}
+                                                        className="flex items-center gap-1 bg-red-500 text-white px-3 py-2 rounded-lg
+                                             hover:bg-red-600 transition text-sm shadow-sm"
+                                                    >
+                                                        Supprimer
+                                                    </button>
+                                                </div>
+                                            )}
+                                        </td>
+                                    </tr>
+                                ))}
+                                </tbody>
+                            </table>
+                        </div>
+                        {categories.length === 0 && (
+                            <div className="p-6 mt-4 text-gray-600 italic bg-gray-50 rounded-lg shadow-sm">
+                                Aucune catégorie disponible. Ajoutez-en une !
+                            </div>
+                        )}
+                    </div>
                 </div>
-            )}
+            </main>
         </div>
     );
 
