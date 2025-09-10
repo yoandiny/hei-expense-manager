@@ -93,7 +93,7 @@ const Incomes: React.FC = () => {
             }}
             className="bg-yellow-400 text-green-900 px-5 py-2 rounded-lg font-semibold shadow hover:bg-yellow-500 transition-colors"
           >
-            Add Income
+              + Add Income
           </button>
         </div>
 
