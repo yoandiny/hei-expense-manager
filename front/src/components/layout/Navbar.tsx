@@ -15,7 +15,7 @@ export default function Navbar() {
         <div className="flex flex-col min-h-screen bg-green-50">
             <nav className="bg-green-700 h-20 flex items-center justify-between px-6 shadow-lg">
                 <span className="flex items-center cursor-pointer">
-                    <img src={Logo} alt="Logo" className="w-16 h-16 object-contain"/>
+                    <img src={Logo} alt="Logo" className="w-20 h-20 object-contain"/>
                 </span>
                 <div className="flex items-center gap-6">
                     <Link to="/profile" className="text-white hover:text-yellow-400">
