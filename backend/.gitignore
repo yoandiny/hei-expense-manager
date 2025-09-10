@@ -11,4 +11,4 @@ backend/dist/
 /generated/prisma
 upload/
 
-.env
+*.env
