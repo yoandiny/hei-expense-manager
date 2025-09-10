@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { getIncomes, deleteIncome } from "../../services/incomeService";
 import IncomeForm from "../../components/forms/IncomeForm";
 import { formatDate } from "../../utils/formatDate";
+import { formatCurrency } from "../../utils/formatCurrency"; // ✅ Import ajouté
 
 interface Income {
   id: number;
@@ -117,7 +118,7 @@ const Incomes: React.FC = () => {
               >
                 <div>
                   <p className="text-lg font-semibold">
-                    {income.source} — {income.amount.toFixed(2).replace('.', ',')} €
+                    {income.source} — {formatCurrency(income.amount)} {/* ✅ Utilisation de formatCurrency */}
                   </p>
                   <p className="text-sm text-gray-600">
                     Date: {formatDate(income.date)}
