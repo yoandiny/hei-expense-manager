@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { getExpenses, deleteExpense } from "../../services/expenseService";
 import ExpenseForm from "../../components/forms/ExpenseForm";
 import { formatDate } from "../../utils/formatDate";
+import { formatCurrency } from "../../utils/formatCurrency";
 
 interface Expense {
   id?: number;
@@ -122,8 +123,8 @@ const Expenses: React.FC = () => {
               >
                 <div>
                   <p className="text-lg font-semibold">
-                    {expense.type === "ONE_TIME" ? "One-time" : "Recurring"} — 
-                    {expense.amount.toFixed(2).replace('.', ',')} €
+                    {expense.type === "ONE_TIME" ? "One-time" : "Recurring"} —{" "}
+                    {formatCurrency(expense.amount)}
                   </p>
                   <p className="text-sm text-gray-600">
                     {expense.type === "ONE_TIME" ? (
