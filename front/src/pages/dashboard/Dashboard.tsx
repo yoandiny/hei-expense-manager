@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { getSummary } from '../../services/summaryService';
-import { formatCurrency } from '../../utils/formaCurrency';
+import { formatCurrency } from '../../utils/formatCurrency';
 
 interface Summary {
     totalExpenses: number;
