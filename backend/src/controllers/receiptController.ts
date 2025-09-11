@@ -98,34 +98,49 @@ export const downloadReceipt = async (req: Request, res: Response) => {
 export const viewReceipt = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
-    let userId: number | undefined;
-
-    const authHeader = req.headers.authorization;
     const tokenFromQuery = req.query.token as string | undefined;
 
-    if (authHeader && authHeader.startsWith("Bearer ")) {
-      const token = authHeader.split(" ")[1];
-      const decoded = jwt.verify(token, process.env.JWT_SECRET!) as { id: number };
-      userId = decoded.id;
-    } else if (tokenFromQuery) {
-      const decoded = jwt.verify(tokenFromQuery, process.env.JWT_SECRET!) as { id: number };
-      userId = decoded.id;
-    } else {
+    // ✅ LOG POUR DEBUG
+    console.log("🔍 Token reçu en query :", tokenFromQuery);
+
+    // ❌ Si pas de token en query → 401
+    if (!tokenFromQuery) {
+      console.log("❌ Aucun token fourni en query");
       return res.status(401).json({ message: "No token provided" });
     }
 
+    // ✅ Vérifie et décode le token
+    let userId: number;
+    try {
+      const decoded = jwt.verify(tokenFromQuery, process.env.JWT_SECRET!) as { userId: number };
+      userId = decoded.userId;
+      console.log("✅ Token valide — userId :", userId);
+    } catch (err) {
+      console.log("❌ Token invalide :", err);
+      return res.status(401).json({ message: "Invalid token" });
+    }
+
+    // ✅ Vérifie que la dépense existe et appartient à l'utilisateur
     const expense = await prisma.expense.findFirst({
       where: { id: Number(id), userId },
       select: { receiptPath: true },
     });
 
     if (!expense || !expense.receiptPath) {
+      console.log("❌ Reçu non trouvé pour l'ID :", id);
       return res.status(404).json({ error: "Receipt not found" });
     }
 
+    // ✅ Vérifie que le fichier existe
     const filePath = path.resolve(expense.receiptPath);
-    await fs.access(filePath);
+    try {
+      await fs.access(filePath);
+    } catch (err) {
+      console.log("❌ Fichier non trouvé :", filePath);
+      return res.status(404).json({ error: "File not found on server" });
+    }
 
+    // ✅ Détermine le Content-Type
     let contentType = "application/octet-stream";
     if (filePath.endsWith(".jpg") || filePath.endsWith(".jpeg")) {
       contentType = "image/jpeg";
@@ -135,10 +150,11 @@ export const viewReceipt = async (req: Request, res: Response) => {
       contentType = "application/pdf";
     }
 
+    // ✅ Envoie le fichier
     res.setHeader("Content-Type", contentType);
     res.sendFile(filePath);
   } catch (error) {
-    console.error("❌ View receipt error:", error);
+    console.error("❌ Erreur serveur viewReceipt :", error);
     res.status(500).json({ error: "Failed to view receipt" });
   }
 };
