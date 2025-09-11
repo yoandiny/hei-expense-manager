@@ -12,6 +12,7 @@ import Navbar from './components/layout/Navbar';
 import Expenses from './pages/dashboard/Expenses';
 import NotFound from './pages/NotFound';
 import Incomes from './pages/dashboard/Incomes';
+import Profiles from './pages/dashboard/Profiles';
 
 const ProtectedRoute = ({ children }: { children: JSX.Element }) => {
     const {token} = useAuthContext();
@@ -39,6 +40,7 @@ function App() {
                         <Route path="categories" element={<Category />} />
                         <Route path="expenses" element={<Expenses />} />
                         <Route path="incomes" element={<Incomes/>}/>
+                        <Route path="profile" element={<Profiles/>}/>
                        
                     </Route>
 
