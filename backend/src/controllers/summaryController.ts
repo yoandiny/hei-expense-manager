@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 import prisma from '../PrismaClient'; // Assure-toi que tu as exporté PrismaClient depuis ce fichier
+import { getBudgetAlert } from '../services/budgetAlertService';
 
 // ------------------- Typages -------------------
 interface ExpensesByCategory {
@@ -129,37 +130,58 @@ export const getMonthlySummary = async (req: Request, res: Response<MonthlySumma
 };
 
 // ------------------- getBudgetAlerts -------------------
+
+/**
+ * 🚨 NOUVELLE VERSION : utilise budgetAlertService pour inclure les dépenses récurrentes
+ */
 export const getBudgetAlerts = async (req: Request, res: Response<BudgetAlertResponse | { error: string }>) => {
     try {
         const user = req.user;
         if (!user) return res.status(401).json({ error: 'Utilisateur non authentifié' });
         const userId = user.id;
 
-        const startDate = new Date(new Date().getFullYear(), new Date().getMonth(), 1);
-        const endDate = new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0);
+        const now = new Date();
+        const year = now.getFullYear();
+        const month = now.getMonth() + 1; // getMonth() est 0-indexé → janvier = 0
 
-        const expenseFilter = { userId, date: { gte: startDate, lte: endDate } };
-        const incomeFilter = { userId, date: { gte: startDate, lte: endDate } };
-
-        const totalExpenses = await prisma.expense.aggregate({
-            where: expenseFilter,
-            _sum: { amount: true },
-        });
-
-        const totalIncomes = await prisma.income.aggregate({
-            where: incomeFilter,
-            _sum: { amount: true },
-        });
-
-        const totalExpensesAmount = totalExpenses._sum.amount || 0;
-        const totalIncomesAmount = totalIncomes._sum.amount || 0;
-        const alert = totalExpensesAmount > totalIncomesAmount;
+        // Appelle ton service qui gère correctement les dépenses récurrentes
+        const alertData = await getBudgetAlert(userId, year, month);
 
         res.status(200).json({
-            alert,
-            message: alert
-                ? `Vous avez dépassé votre budget ce mois-ci de $${(totalExpensesAmount - totalIncomesAmount).toFixed(2)}`
+            alert: alertData.isOverBudget,
+            message: alertData.isOverBudget
+                ? `Vous avez dépassé votre budget ce mois-ci de ${alertData.overAmount.toFixed(2)} €`
                 : 'Votre budget est respecté ce mois-ci',
+        });
+    } catch (error) {
+        console.error("Erreur dans getBudgetAlerts:", error);
+        res.status(500).json({ error: 'Erreur serveur' });
+    }
+};
+
+export const getTotalIncome = async (req: Request, res: Response) => {
+    try {
+        const user = req.user;
+        if (!user) return res.status(401).json({ error: 'Utilisateur non authentifié' });
+        const userId = user.id;
+
+        const now = new Date();
+        const startDate = new Date(now.getFullYear(), now.getMonth(), 1);
+        const endDate = new Date(now.getFullYear(), now.getMonth() + 1, 0);
+
+        const totalIncomes = await prisma.income.aggregate({
+            where: {
+                userId,
+                date: {
+                    gte: startDate,
+                    lte: endDate,
+                },
+            },
+            _sum: { amount: true },
+        });
+
+        res.status(200).json({
+            totalIncome: totalIncomes._sum.amount || 0,
         });
     } catch (error) {
         console.error(error);
