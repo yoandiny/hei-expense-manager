@@ -3,30 +3,29 @@ import prisma from "../PrismaClient.js"
 import bcrypt from "bcrypt"
 
 
-// GET /api/user/profile
 export async  function getProfile(req: Request, res: Response) {
-    const userId = (req as any).user;
+    const user = (req as any).user;
 
-    if(!userId){
+    if(!user?.id){
         return res.status(404).json({message:"User not found"});
     }
     try{
-        const user = await prisma.user.findUnique({
-            where: {id: Number(userId)},
+        const userData = await prisma.user.findUnique({
+            where: {id: user.id},
             include: {expenses: true, incomes: true, categories: true}
         });
-        res.json(user)
+        res.json(userData)
     }catch (error){
+        console.log("Erreur getProfile:", error)
         res.status(500).json({error: "Internal server error"})
     }
 }
 
-//PUT /apit/user/profile
 export async function updateProfile(req: Request, res: Response){
-    const userId = (req as any).user;
+    const user = (req as any).user;
     const {email, password} = req.body;
 
-    if(!userId){
+    if(!user?.id){
         return res.status(404).json({message:"User not found"});
     }
 
@@ -34,17 +33,17 @@ export async function updateProfile(req: Request, res: Response){
         const data: any = {};
 
         if(email) data.email = email;
-        if(password) data.password = await bcrypt.hash(password, data.password);
+        if(password) data.password = await bcrypt.hash(password, 10);
 
         const updatedUser = await prisma.user.update({
-            where: {id: Number(userId)},
+            where: {id: user.id},
             data,
             include: { expenses: true, incomes: true, categories: true}
         })
 
         res.json(updatedUser);
     }catch (error: any){
-        console.error(error)
+        console.error("Erreur updateProfile:",error)
         res.status(500).json({error: error.message})
     }
 }
