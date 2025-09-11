@@ -14,7 +14,7 @@ export default function Navbar() {
     return (
         <div className="flex flex-col min-h-screen bg-green-50">
             <nav className="bg-green-700 h-20 flex items-center justify-between px-6 shadow-lg">
-                <span className="flex items-center cursor-pointer">
+                <span onClick={() => navigate("/dashboard")} className="flex items-center cursor-pointer">
                     <img src={Logo} alt="Logo" className="w-20 h-20 object-contain"/>
                 </span>
                 <div className="flex items-center gap-6">
@@ -23,7 +23,7 @@ export default function Navbar() {
                     </Link>
                     <button
                         onClick={handleLogout}
-                        className="text-white hover:text-yellow-400 transition-colors"
+                        className="text-white hover:text-yellow-400 transition-colors cursor-pointer"
                     >
                         <i className="bx bx-log-out text-4xl"></i>
                     </button>
