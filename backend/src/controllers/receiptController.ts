@@ -87,6 +87,8 @@ export const downloadReceipt = async (req: Request, res: Response) => {
 
     res.setHeader("Content-Type", contentType);
     res.setHeader("Content-Disposition", `attachment; filename="${path.basename(filePath)}"`);
+    console.log("📄 Envoi du fichier :", filePath);
+    console.log("📄 Content-Type :", contentType);
     res.sendFile(filePath);
   } catch (error) {
     console.error("❌ Download receipt error:", error);

@@ -2,7 +2,9 @@ import React, { useState, useEffect } from "react";
 import { getIncomes, deleteIncome } from "../../services/incomeService";
 import IncomeForm from "../../components/forms/IncomeForm";
 import { formatDate } from "../../utils/formatDate";
-import { formatCurrency } from "../../utils/formatCurrency"; // ✅ Import ajouté
+import { formatCurrency } from "../../utils/formatCurrency";
+import { ToastContainer, toast } from "react-toastify"; // ✅ Importé
+import "react-toastify/dist/ReactToastify.css"; // ✅ CSS importé
 
 interface Income {
   id: number;
@@ -35,8 +37,13 @@ const Incomes: React.FC = () => {
         }
         if (err.message.includes("401")) {
           localStorage.removeItem("token");
-          alert("Votre session a expiré. Veuillez vous reconnecter.");
-          window.location.href = "/login";
+          toast.error("Votre session a expiré. Veuillez vous reconnecter.", { // ✅ Remplacé alert par toast
+            position: "top-center",
+            autoClose: 3000,
+          });
+          setTimeout(() => {
+            window.location.href = "/login";
+          }, 3000);
           return;
         }
         setError(err.message);
@@ -56,6 +63,10 @@ const Incomes: React.FC = () => {
     loadIncomes();
     setShowForm(false);
     setEditingIncome(null);
+    toast.success("✅ Revenu sauvegardé !", { // ✅ Ajouté
+      position: "top-right",
+      autoClose: 2000,
+    });
   };
 
   const handleDelete = async (id: number) => {
@@ -64,11 +75,17 @@ const Incomes: React.FC = () => {
     try {
       await deleteIncome(id);
       loadIncomes();
-      alert("✅ Income deleted!");
+      toast.success("✅ Revenu supprimé !", { // ✅ Remplacé alert par toast
+        position: "top-right",
+        autoClose: 2000,
+      });
     } catch (err: unknown) {
       let message = "Failed to delete income.";
       if (err instanceof Error) message = err.message;
-      alert(`❌ ${message}`);
+      toast.error(`❌ ${message}`, { // ✅ Remplacé alert par toast
+        position: "top-right",
+        autoClose: 4000,
+      });
     }
   };
 
@@ -78,7 +95,7 @@ const Incomes: React.FC = () => {
   };
 
   return (
-      <div className="container mx-auto p-6 relative bg-green-50 min-h-screen">
+    <div className="container mx-auto p-6 relative bg-green-50 min-h-screen">
       {showForm && (
         <div className="fixed inset-0 bg-black/50 z-10" onClick={() => setShowForm(false)} />
       )}
@@ -93,7 +110,7 @@ const Incomes: React.FC = () => {
             }}
             className="bg-yellow-400 text-green-900 px-5 py-2 rounded-lg font-semibold shadow hover:bg-yellow-500 transition-colors"
           >
-              + Add Income
+            + Add Income
           </button>
         </div>
 
@@ -118,7 +135,7 @@ const Incomes: React.FC = () => {
               >
                 <div>
                   <p className="text-lg font-bold text-green-800">
-                    {income.source} — {formatCurrency(income.amount)} {/* ✅ Utilisation de formatCurrency */}
+                    {income.source} — {formatCurrency(income.amount)}
                   </p>
                   <p className="text-sm text-green-700">
                     Date: {formatDate(income.date)}
@@ -169,6 +186,20 @@ const Incomes: React.FC = () => {
           </div>
         </div>
       )}
+
+      {/* ✅ ToastContainer — indispensable */}
+      <ToastContainer
+        position="top-right"
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+      />
     </div>
   );
 };

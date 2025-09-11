@@ -3,7 +3,9 @@ import { getExpenses, deleteExpense } from "../../services/expenseService";
 import ExpenseForm from "../../components/forms/ExpenseForm";
 import { formatDate } from "../../utils/formatDate";
 import { formatCurrency } from "../../utils/formatCurrency";
-import { downloadReceipt, getReceiptViewUrl } from "../../services/receiptService"; // ✅ Import ajouté
+import { downloadReceipt, getReceiptViewUrl } from "../../services/receiptService";
+import { ToastContainer, toast } from "react-toastify"; // ✅ Importé
+import "react-toastify/dist/ReactToastify.css"; // ✅ CSS importé
 
 interface Expense {
   id?: number;
@@ -41,8 +43,13 @@ const Expenses: React.FC = () => {
 
         if (err.message.includes("401")) {
           localStorage.removeItem("token");
-          alert("Votre session a expiré. Veuillez vous reconnecter.");
-          window.location.href = "/login";
+          toast.error("Votre session a expiré. Veuillez vous reconnecter.", { // ✅ Remplacé alert par toast
+            position: "top-center",
+            autoClose: 3000,
+          });
+          setTimeout(() => {
+            window.location.href = "/login";
+          }, 3000);
           return;
         }
 
@@ -63,6 +70,10 @@ const Expenses: React.FC = () => {
     loadExpenses();
     setShowForm(false);
     setEditingExpense(null);
+    toast.success("✅ Dépense sauvegardée !", { // ✅ Ajouté
+      position: "top-right",
+      autoClose: 2000,
+    });
   };
 
   const handleDelete = async (id: number) => {
@@ -71,11 +82,17 @@ const Expenses: React.FC = () => {
     try {
       await deleteExpense(id);
       loadExpenses();
-      alert("✅ Expense deleted!");
+      toast.success("✅ Dépense supprimée !", { // ✅ Remplacé alert par toast
+        position: "top-right",
+        autoClose: 2000,
+      });
     } catch (err: unknown) {
       let message = "Failed to delete expense.";
       if (err instanceof Error) message = err.message;
-      alert(`❌ ${message}`);
+      toast.error(`❌ ${message}`, { // ✅ Remplacé alert par toast
+        position: "top-right",
+        autoClose: 4000,
+      });
     }
   };
 
@@ -147,7 +164,6 @@ const Expenses: React.FC = () => {
                   )}
                   {expense.receiptPath && (
                     <div className="mt-3 flex flex-wrap gap-3">
-                      {/* ✅ Utilise getReceiptViewUrl */}
                       <a
                         href={getReceiptViewUrl(expense.id!)}
                         target="_blank"
@@ -167,8 +183,8 @@ const Expenses: React.FC = () => {
                 </div>
                 <div className="flex space-x-2">
                   <button
-                      className="bg-yellow-400 text-green-900 px-4 py-1.5 rounded-lg text-sm font-semibold hover:bg-yellow-500 transition"
-                      onClick={() => handleEdit(expense)}
+                    className="bg-yellow-400 text-green-900 px-4 py-1.5 rounded-lg text-sm font-semibold hover:bg-yellow-500 transition"
+                    onClick={() => handleEdit(expense)}
                   >
                     Edit
                   </button>
@@ -205,6 +221,20 @@ const Expenses: React.FC = () => {
           </div>
         </div>
       )}
+
+      {/* ✅ ToastContainer — indispensable pour afficher les notifications */}
+      <ToastContainer
+        position="top-right"
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+      />
     </div>
   );
 };
