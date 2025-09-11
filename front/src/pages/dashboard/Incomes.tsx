@@ -3,8 +3,8 @@ import { getIncomes, deleteIncome } from "../../services/incomeService";
 import IncomeForm from "../../components/forms/IncomeForm";
 import { formatDate } from "../../utils/formatDate";
 import { formatCurrency } from "../../utils/formatCurrency";
-import { ToastContainer, toast } from "react-toastify"; // ✅ Importé
-import "react-toastify/dist/ReactToastify.css"; // ✅ CSS importé
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 interface Income {
   id: number;
@@ -37,7 +37,7 @@ const Incomes: React.FC = () => {
         }
         if (err.message.includes("401")) {
           localStorage.removeItem("token");
-          toast.error("Votre session a expiré. Veuillez vous reconnecter.", { // ✅ Remplacé alert par toast
+          toast.error("Votre session a expiré. Veuillez vous reconnecter.", {
             position: "top-center",
             autoClose: 3000,
           });
@@ -63,7 +63,7 @@ const Incomes: React.FC = () => {
     loadIncomes();
     setShowForm(false);
     setEditingIncome(null);
-    toast.success("✅ Revenu sauvegardé !", { // ✅ Ajouté
+    toast.success("✅ Revenu sauvegardé !", {
       position: "top-right",
       autoClose: 2000,
     });
@@ -75,14 +75,14 @@ const Incomes: React.FC = () => {
     try {
       await deleteIncome(id);
       loadIncomes();
-      toast.success("✅ Revenu supprimé !", { // ✅ Remplacé alert par toast
+      toast.success("✅ Revenu supprimé !", {
         position: "top-right",
         autoClose: 2000,
       });
     } catch (err: unknown) {
       let message = "Failed to delete income.";
       if (err instanceof Error) message = err.message;
-      toast.error(`❌ ${message}`, { // ✅ Remplacé alert par toast
+      toast.error(`❌ ${message}`, { 
         position: "top-right",
         autoClose: 4000,
       });
@@ -187,7 +187,6 @@ const Incomes: React.FC = () => {
         </div>
       )}
 
-      {/* ✅ ToastContainer — indispensable */}
       <ToastContainer
         position="top-right"
         autoClose={3000}

@@ -70,7 +70,7 @@ const Expenses: React.FC = () => {
     loadExpenses();
     setShowForm(false);
     setEditingExpense(null);
-    toast.success("✅ Dépense sauvegardée !", { // ✅ Ajouté
+    toast.success("✅ Dépense sauvegardée !", {
       position: "top-right",
       autoClose: 2000,
     });
@@ -82,14 +82,14 @@ const Expenses: React.FC = () => {
     try {
       await deleteExpense(id);
       loadExpenses();
-      toast.success("✅ Dépense supprimée !", { // ✅ Remplacé alert par toast
+      toast.success("✅ Dépense supprimée !", {
         position: "top-right",
         autoClose: 2000,
       });
     } catch (err: unknown) {
       let message = "Failed to delete expense.";
       if (err instanceof Error) message = err.message;
-      toast.error(`❌ ${message}`, { // ✅ Remplacé alert par toast
+      toast.error(`❌ ${message}`, {
         position: "top-right",
         autoClose: 4000,
       });
@@ -222,7 +222,6 @@ const Expenses: React.FC = () => {
         </div>
       )}
 
-      {/* ✅ ToastContainer — indispensable pour afficher les notifications */}
       <ToastContainer
         position="top-right"
         autoClose={3000}

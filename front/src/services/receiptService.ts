@@ -6,7 +6,6 @@ const getAuthHeaders = (): Record<string, string> => {
   };
 };
 
-// Upload d'un reçu
 export const uploadReceipt = async (expenseId: number, file: File): Promise<void> => {
   const formData = new FormData();
   formData.append("receipt", file);
@@ -23,7 +22,6 @@ export const uploadReceipt = async (expenseId: number, file: File): Promise<void
   }
 };
 
-// Télécharger un reçu
 export const downloadReceipt = async (expenseId: number): Promise<void> => {
   const token = localStorage.getItem("token");
   if (!token) throw new Error("NO_TOKEN");
@@ -47,13 +45,12 @@ export const downloadReceipt = async (expenseId: number): Promise<void> => {
   document.body.removeChild(a);
 };
 
-// ✅ Obtenir l'URL pour afficher le reçu (avec token en query)
 export const getReceiptViewUrl = (expenseId: number): string => {
   const token = localStorage.getItem("token");
   if (!token) {
     throw new Error("NO_TOKEN");
   }
   const url = `/api/receipts/${expenseId}/view?token=${encodeURIComponent(token)}`;
-  console.log("🔗 URL générée :", url); // ← AJOUTE CETTE LIGNE
+  console.log("🔗 URL générée :", url);
   return url;
 };

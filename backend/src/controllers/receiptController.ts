@@ -2,9 +2,8 @@ import { Request, Response } from "express";
 import path from "path";
 import fs from "fs/promises";
 import prisma from "../PrismaClient";
-import jwt from "jsonwebtoken"; // ← Ajouté pour vérifier le token
+import jwt from "jsonwebtoken";
 
-// Upload d'un reçu
 export const uploadReceipt = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
@@ -43,13 +42,11 @@ export const uploadReceipt = async (req: Request, res: Response) => {
   }
 };
 
-// Télécharger un reçu — ✅ Accepte token en query
 export const downloadReceipt = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
     let userId: number | undefined;
 
-    // Récupère le token du header OU de la query
     const authHeader = req.headers.authorization;
     const tokenFromQuery = req.query.token as string | undefined;
 
@@ -96,22 +93,16 @@ export const downloadReceipt = async (req: Request, res: Response) => {
   }
 };
 
-// Voir un reçu — ✅ Accepte token en query
 export const viewReceipt = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
     const tokenFromQuery = req.query.token as string | undefined;
 
-    // ✅ LOG POUR DEBUG
-    console.log("🔍 Token reçu en query :", tokenFromQuery);
-
-    // ❌ Si pas de token en query → 401
     if (!tokenFromQuery) {
       console.log("❌ Aucun token fourni en query");
       return res.status(401).json({ message: "No token provided" });
     }
 
-    // ✅ Vérifie et décode le token
     let userId: number;
     try {
       const decoded = jwt.verify(tokenFromQuery, process.env.JWT_SECRET!) as { userId: number };
@@ -122,7 +113,6 @@ export const viewReceipt = async (req: Request, res: Response) => {
       return res.status(401).json({ message: "Invalid token" });
     }
 
-    // ✅ Vérifie que la dépense existe et appartient à l'utilisateur
     const expense = await prisma.expense.findFirst({
       where: { id: Number(id), userId },
       select: { receiptPath: true },
@@ -133,7 +123,6 @@ export const viewReceipt = async (req: Request, res: Response) => {
       return res.status(404).json({ error: "Receipt not found" });
     }
 
-    // ✅ Vérifie que le fichier existe
     const filePath = path.resolve(expense.receiptPath);
     try {
       await fs.access(filePath);
@@ -142,7 +131,6 @@ export const viewReceipt = async (req: Request, res: Response) => {
       return res.status(404).json({ error: "File not found on server" });
     }
 
-    // ✅ Détermine le Content-Type
     let contentType = "application/octet-stream";
     if (filePath.endsWith(".jpg") || filePath.endsWith(".jpeg")) {
       contentType = "image/jpeg";
@@ -152,7 +140,6 @@ export const viewReceipt = async (req: Request, res: Response) => {
       contentType = "application/pdf";
     }
 
-    // ✅ Envoie le fichier
     res.setHeader("Content-Type", contentType);
     res.sendFile(filePath);
   } catch (error) {
