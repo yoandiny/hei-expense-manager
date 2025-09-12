@@ -13,7 +13,7 @@ export default function Navbar() {
     };
 
     return (
-        <div className="flex flex-col min-h-screen bg-gray-50 ">
+        <div className="flex flex-col min-h-screen bg-gray-50">
             <nav className="bg-gray-800 h-20 flex items-center justify-between px-6 shadow-lg sticky top-0 z-50">
             <span onClick={() => navigate("/dashboard")} className="flex items-center cursor-pointer">
                 <img src={Logo} alt="Logo" className="w-20 h-20 object-contain" />
@@ -72,7 +72,7 @@ export default function Navbar() {
                 </aside>
 
                 {/* Contenu principal */}
-                <main className="flex-1 p-8 overflow-y-auto h-screen dark:bg-slate-900">
+                <main className="flex-1 p-8 overflow-y-auto h-screen">
                     <Outlet />
                 </main>
             </div>
