@@ -158,7 +158,7 @@ const ExpenseForm: React.FC<ExpenseFormProps> = ({ onSuccess, onCancel, initialD
             </h2>
 
             <div>
-                <label className="block text-sm font-medium text-gray-700">Montant</label>
+                <label className="block text-sm font-medium text-gray-700">Amount</label>
                 <input
                     type="number"
                     value={amount || ""}
@@ -220,9 +220,9 @@ const ExpenseForm: React.FC<ExpenseFormProps> = ({ onSuccess, onCancel, initialD
             )}
 
             <div>
-                <label className="block text-sm font-medium text-gray-700">Catégorie</label>
+                <label className="block text-sm font-medium text-gray-700">Category</label>
                 {loadingCategories ? (
-                    <p className="text-gray-500">Chargement...</p>
+                    <p className="text-gray-500">Loading...</p>
                 ) : (
                     <select
                         value={categoryId}
@@ -230,7 +230,7 @@ const ExpenseForm: React.FC<ExpenseFormProps> = ({ onSuccess, onCancel, initialD
                         className="w-full border border-green-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-yellow-400 transition"
                         required
                     >
-                        <option value="">-- Sélectionnez une catégorie --</option>
+                        <option value="">-- Select a category --</option>
                         {categories.map((category) => (
                             <option key={category.id} value={category.id}>
                                 {category.name}
