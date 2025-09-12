@@ -60,7 +60,7 @@ useEffect(()=>{
     getProfile();
 })
     return (
-        <div className="min-h-screen p-8 bg-gray-50  flex justify-center items-start">
+        <div className="min-h-screen p-8 bg-gray-50 dark:bg-slate-900 flex justify-center items-start">
             <div className="w-full max-w-2xl bg-white dark:bg-slate-700 p-8 rounded-2xl shadow-lg">
                 <section className="text-center mb-10">
                     <h2 className="text-3xl font-bold text-green-800 dark:text-slate-100 dark:border-slate-600 mb-4">My Profile</h2>
