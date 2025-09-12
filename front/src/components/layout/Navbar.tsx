@@ -13,7 +13,7 @@ export default function Navbar() {
     };
 
     return (
-        <div className="flex flex-col min-h-screen bg-gray-50">
+        <div className="flex flex-col min-h-screen bg-gray-50 ">
             <nav className="bg-gray-800 h-20 flex items-center justify-between px-6 shadow-lg sticky top-0 z-50">
             <span onClick={() => navigate("/dashboard")} className="flex items-center cursor-pointer">
                 <img src={Logo} alt="Logo" className="w-20 h-20 object-contain" />
@@ -34,11 +34,12 @@ export default function Navbar() {
             
             <div className="flex flex-1">
                 <aside className="w-72 bg-white border-r border-gray-200
-                 shadow-md p-6 sticky top-20 h-screen overflow-y-auto">
+                 shadow-md p-6 sticky top-20 h-screen overflow-y-auto
+                 dark:bg-slate-800 dark:border-slate-700 ">
                     <div className="flex flex-col gap-3">
                         <Link
                             to=""
-                            className="flex items-center gap-3 px-4 py-2 text-gray-800 rounded-lg hover:bg-blue-100 hover:text-gray-900 transition-colors text-lg font-semibold"
+                            className="flex items-center gap-3 px-4 py-2 text-gray-800 dark:text-white rounded-lg hover:bg-blue-100 hover:text-gray-900 transition-colors text-lg font-semibold"
                         >
                             <i className="bx bxs-dashboard text-xl"></i>
                             Dashboard
@@ -46,7 +47,7 @@ export default function Navbar() {
 
                         <Link
                             to="categories"
-                            className="flex items-center gap-3 px-4 py-2 text-gray-800 rounded-lg hover:bg-amber-100 hover:text-gray-900 transition-colors text-lg font-semibold"
+                            className="flex items-center gap-3 px-4 py-2 text-gray-800 dark:text-white rounded-lg hover:bg-amber-100 hover:text-gray-900 transition-colors text-lg font-semibold"
                         >
                             <i className="bx bxs-category text-xl"></i>
                             Categories
@@ -54,7 +55,7 @@ export default function Navbar() {
 
                         <Link
                             to="incomes"
-                            className="flex items-center gap-3 px-4 py-2 text-gray-800 rounded-lg hover:bg-blue-100 hover:text-gray-900 transition-colors text-lg font-semibold"
+                            className="flex items-center gap-3 px-4 py-2 text-gray-800 dark:text-white rounded-lg hover:bg-blue-100 hover:text-gray-900 transition-colors text-lg font-semibold"
                         >
                             <i className="bx bxs-wallet text-xl"></i>
                             Incomes
@@ -62,7 +63,7 @@ export default function Navbar() {
 
                         <Link
                             to="expenses"
-                            className="flex items-center gap-3 px-4 py-2 text-gray-800 rounded-lg hover:bg-amber-100 hover:text-gray-900 transition-colors text-lg font-semibold"
+                            className="flex items-center gap-3 px-4 py-2 text-gray-800 dark:text-white rounded-lg hover:bg-amber-100 hover:text-gray-900 transition-colors text-lg font-semibold"
                         >
                             <i className="bx bx-money-withdraw text-xl"></i>
                             Expenses
@@ -71,7 +72,7 @@ export default function Navbar() {
                 </aside>
 
                 {/* Contenu principal */}
-                <main className="flex-1 p-8 overflow-y-auto h-[calc(100vh-5rem)]">
+                <main className="flex-1 p-8 overflow-y-auto h-screen dark:bg-slate-900">
                     <Outlet />
                 </main>
             </div>
