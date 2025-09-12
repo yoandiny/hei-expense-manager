@@ -1,8 +1,7 @@
 import { Request, Response } from 'express';
-import prisma from '../PrismaClient'; // Assure-toi que tu as exporté PrismaClient depuis ce fichier
+import prisma from '../PrismaClient';
 import { getBudgetAlert } from '../services/budgetAlertService';
 
-// ------------------- Typages -------------------
 interface ExpensesByCategory {
     categoryId: number;
     categoryName: string;
@@ -28,10 +27,8 @@ interface BudgetAlertResponse {
     message: string;
 }
 
-// ------------------- getSummary -------------------
 export const getSummary = async (req: Request, res: Response<SummaryResponse | { error: string }>) => {
     try {
-        // 🔹 Récupérer l'utilisateur connecté depuis req.user (à configurer avec ton auth middleware)
         const user = req.user;
         if (!user) return res.status(401).json({ error: 'Utilisateur non authentifié' });
         const userId = user.id;
@@ -43,32 +40,27 @@ export const getSummary = async (req: Request, res: Response<SummaryResponse | {
             expenseFilter.date = { gte: new Date(startDate as string), lte: new Date(endDate as string) };
         }
 
-        // Total des dépenses
         const totalExpenses = await prisma.expense.aggregate({
             where: expenseFilter,
             _sum: { amount: true },
         });
 
-        // Dépenses groupées par catégorie
         const expensesByCategory = await prisma.expense.groupBy({
             by: ['categoryId'],
             where: expenseFilter,
             _sum: { amount: true },
         });
 
-        // Récupérer les noms des catégories
         const categories = await prisma.category.findMany({
             where: { id: { in: expensesByCategory.map(e => e.categoryId) } },
         });
 
-        // Fusionner id + nom + total
         const expensesWithCategory: ExpensesByCategory[] = expensesByCategory.map(e => ({
             categoryId: e.categoryId,
             categoryName: categories.find(c => c.id === e.categoryId)?.name || 'Inconnu',
             total: e._sum.amount || 0,
         }));
 
-        // Nombre de catégories réellement utilisées
         const categoryCount = expensesByCategory.length;
 
         res.status(200).json({
@@ -83,7 +75,6 @@ export const getSummary = async (req: Request, res: Response<SummaryResponse | {
     }
 };
 
-// ------------------- getMonthlySummary -------------------
 export const getMonthlySummary = async (req: Request, res: Response<MonthlySummaryResponse | { error: string }>) => {
     try {
         const user = req.user;
@@ -108,7 +99,6 @@ export const getMonthlySummary = async (req: Request, res: Response<MonthlySumma
             _sum: { amount: true },
         });
 
-        // Dépenses par catégorie
         const expensesByCategory = await prisma.expense.groupBy({
             by: ['categoryId'],
             where: expenseFilter,
@@ -129,11 +119,6 @@ export const getMonthlySummary = async (req: Request, res: Response<MonthlySumma
     }
 };
 
-// ------------------- getBudgetAlerts -------------------
-
-/**
- * 🚨 NOUVELLE VERSION : utilise budgetAlertService pour inclure les dépenses récurrentes
- */
 export const getBudgetAlerts = async (req: Request, res: Response<BudgetAlertResponse | { error: string }>) => {
     try {
         const user = req.user;
@@ -142,9 +127,8 @@ export const getBudgetAlerts = async (req: Request, res: Response<BudgetAlertRes
 
         const now = new Date();
         const year = now.getFullYear();
-        const month = now.getMonth() + 1; // getMonth() est 0-indexé → janvier = 0
+        const month = now.getMonth() + 1;
 
-        // Appelle ton service qui gère correctement les dépenses récurrentes
         const alertData = await getBudgetAlert(userId, year, month);
 
         res.status(200).json({
