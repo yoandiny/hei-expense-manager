@@ -47,7 +47,7 @@ const CategoryForm: React.FC<CategoryFormProps> = ({ category, onSubmit, onCance
 
     return (
         <div className="w-full bg-white p-6 rounded-lg shadow-lg">
-            <h3 className="text-xl font-semibold text-green-700 mb-4 text-center">
+            <h3 className="text-xl font-semibold text-gray-800 mb-4 text-center">
                 {category?.id ? 'Modifier la catégorie' : 'Nouvelle catégorie'}
             </h3>
             {error && (
@@ -61,13 +61,13 @@ const CategoryForm: React.FC<CategoryFormProps> = ({ category, onSubmit, onCance
                     value={name}
                     onChange={e => setName(e.target.value)}
                     placeholder="Nom de la catégorie"
-                    className="w-full p-3 border border-green-300 rounded-lg text-black focus:outline-none focus:ring-2 focus:ring-yellow-400 transition"
+                    className="w-full p-3 border border-gray-200 rounded-lg text-black focus:outline-none focus:ring-2 focus:ring-amber-400 transition"
                 />
 
                 <div className="flex justify-end space-x-3">
                     <button
                         onClick={handleSubmit}
-                        className="bg-yellow-400 text-green-900 px-5 py-2 rounded-lg hover:bg-yellow-500 transition font-semibold shadow-sm"
+                        className="bg-blue-500 text-white px-5 py-2 rounded-lg hover:bg-blue-600 transition font-semibold shadow-sm"
                     >
                         {category?.id ? 'Enregistrer' : 'Ajouter'}
                     </button>

@@ -66,10 +66,10 @@ const Categories: React.FC = () => {
     };
 
     return (
-        <div className="flex min-h-screen bg-green-50">
+        <div className="flex min-h-screen bg-gray-50">
             <main className="flex-1 p-6 flex justify-center">
                 <div className="w-full max-w-2xl">
-                    <div className="p-6 bg-white rounded-lg shadow-lg w-full max-w-3xl text-center">
+                    <div className="p-6 bg-white rounded-2xl shadow-lg w-full text-center">
                         <h2 className="text-3xl font-bold text-gray-800 mb-6">Gestion des Catégories</h2>
 
                         {error && (
@@ -81,7 +81,7 @@ const Categories: React.FC = () => {
                         <div className="mb-6">
                             <button
                                 onClick={() => setShowForm(true)}
-                                className=" gap-2 bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700 shadow-md transition font-semibold"
+                                className="gap-2 bg-blue-500 text-white px-6 py-3 rounded-lg hover:bg-blue-600 shadow-md transition font-semibold"
                             >
                                 <span className="text-xl">+</span> Nouvelle catégorie
                             </button>
@@ -98,7 +98,7 @@ const Categories: React.FC = () => {
                         <div className="bg-white rounded-lg shadow-lg overflow-x-auto mt-6">
                             <table className="min-w-full table-auto text-center border-collapse rounded-lg overflow-hidden shadow-sm">
                                 <thead>
-                                <tr className="bg-green-100 text-green-800 uppercase text-sm font-semibold">
+                                <tr className="bg-gray-200 text-gray-800 uppercase text-sm font-semibold">
                                     <th className="py-3 px-6 text-left">Nom</th>
                                     <th className="py-3 px-6 text-left">Date de création</th>
                                     <th className="py-3 px-6">Actions</th>
@@ -121,15 +121,15 @@ const Categories: React.FC = () => {
                                                 <div className="flex justify-center space-x-3">
                                                     <button
                                                         onClick={() => handleEditCategory(category)}
-                                                        className="flex items-center gap-1 bg-yellow-500 text-white px-3 py-2 rounded-lg
-                                             hover:bg-yellow-600 transition text-sm shadow-sm"
+                                                        className="flex items-center gap-1 bg-amber-500 text-white px-3 py-2 rounded-lg
+                                             hover:bg-amber-600 transition text-sm shadow-sm"
                                                     >
                                                         Modifier
                                                     </button>
                                                     <button
                                                         onClick={() => handleDeleteCategory(category.id)}
                                                         className="flex items-center gap-1 bg-red-500 text-white px-3 py-2 rounded-lg
-                                             hover:bg-red-600 transition text-sm shadow-sm"
+                                              hover:bg-red-600 transition text-sm shadow-sm"
                                                     >
                                                         Supprimer
                                                     </button>
