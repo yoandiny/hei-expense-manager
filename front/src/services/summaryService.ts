@@ -1,5 +1,3 @@
-// services/summaryService.ts
-
 interface Summary {
     totalExpenses: number;
     categoryCount: number;
@@ -12,7 +10,6 @@ interface BudgetAlert {
     message: string;
 }
 
-// Ajoute ce type si tu veux (optionnel)
 interface IncomeSummary {
     totalIncome: number;
 }
@@ -44,7 +41,6 @@ export const getBudgetAlert = async (): Promise<BudgetAlert> => {
     return response.json();
 };
 
-// Ajoute cette fonction
 export const getTotalIncome = async (): Promise<IncomeSummary> => {
     const response = await fetch('/api/summary/income', {
         headers: getAuthHeaders(),

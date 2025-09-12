@@ -1,4 +1,3 @@
-// categoryService.ts
 interface Category {
     id: number;
     name: string;
@@ -28,7 +27,7 @@ export const createCategory = async (name: string): Promise<Category> => {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
-            ...getAuthHeaders(), // ← Ajout crucial
+            ...getAuthHeaders(),
         },
         body: JSON.stringify({ name }),
     });
@@ -45,7 +44,7 @@ export const updateCategory = async (id: number, name: string): Promise<Category
         method: 'PUT',
         headers: {
             'Content-Type': 'application/json',
-            ...getAuthHeaders(), // ← Ajout crucial
+            ...getAuthHeaders(),
         },
         body: JSON.stringify({ name }),
     });
@@ -60,7 +59,7 @@ export const updateCategory = async (id: number, name: string): Promise<Category
 export const deleteCategory = async (id: number): Promise<void> => {
     const response = await fetch(`/api/categories/${id}`, {
         method: 'DELETE',
-        headers: getAuthHeaders(), // ← Ajout crucial
+        headers: getAuthHeaders(),
     });
     if (!response.ok) {
         if (response.status === 400) throw new Error('Impossible de supprimer une catégorie associée à des dépenses');

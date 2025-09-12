@@ -3,11 +3,10 @@ import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
 export const getBudgetAlert = async (userId: number, year: number, month: number) => {
-    // 🗓️ Début et fin du mois
+
     const monthStart = new Date(year, month - 1, 1);
     const monthEnd = new Date(year, month, 0);
 
-    // 💰 1. Somme des revenus du mois
     const incomes = await prisma.income.findMany({
         where: {
             userId,
@@ -20,7 +19,6 @@ export const getBudgetAlert = async (userId: number, year: number, month: number
 
     const totalIncome = incomes.reduce((sum, inc) => sum + inc.amount, 0);
 
-    // 🛒 2. Somme des dépenses ponctuelles du mois
     const oneTimeExpenses = await prisma.expense.findMany({
         where: {
             userId,
@@ -32,7 +30,6 @@ export const getBudgetAlert = async (userId: number, year: number, month: number
         },
     });
 
-    // 🔄 3. Somme des dépenses récurrentes ACTIVES ce mois-ci
     const recurringExpenses = await prisma.expense.findMany({
         where: {
             userId,
@@ -49,7 +46,6 @@ export const getBudgetAlert = async (userId: number, year: number, month: number
         oneTimeExpenses.reduce((sum, exp) => sum + exp.amount, 0) +
         recurringExpenses.reduce((sum, exp) => sum + exp.amount, 0);
 
-    // ⚠️ 4. Calcul de l'alerte
     const isOverBudget = totalExpenses > totalIncome;
     const overAmount = isOverBudget ? totalExpenses - totalIncome : 0;
 
