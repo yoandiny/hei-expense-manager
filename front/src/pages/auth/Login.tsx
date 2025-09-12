@@ -4,7 +4,7 @@ import { useAuthContext } from "../../context/AuthContext";
 import { login } from "../../services/authService";
 import { loginSchema } from "../../utils/validators";
 
-const Login: React.FC = () => {
+const Login = () => {
     const navigate = useNavigate();
     const { login: setToken } = useAuthContext();
     const [email, setEmail] = useState("");

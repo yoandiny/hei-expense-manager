@@ -13,7 +13,7 @@ export function authMiddleware(req: Request, res: Response, next: NextFunction) 
         const payload = verifyToken(token);
 
         req.user = {
-            id: Number(payload.userId), // ✅ Conversion explicite en number
+            id: Number(payload.userId),
             email: payload.email
         };
         req.tokenPayload = payload;
