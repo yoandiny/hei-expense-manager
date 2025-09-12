@@ -23,7 +23,6 @@ const ExpenseForm: React.FC<ExpenseFormProps> = ({ onSuccess, onCancel, initialD
   const [startDate, setStartDate] = useState<string>(initialData?.startDate || "");
   const [endDate, setEndDate] = useState<string>(initialData?.endDate || "");
   const [receiptFile, setReceiptFile] = useState<File | null>(null);
-  const [receiptFile, setReceiptFile] = useState<File | null>(null);
   const [loading, setLoading] = useState(false);
   const [isEditMode, setIsEditMode] = useState<boolean>(!!initialData?.id);
 
@@ -64,7 +63,6 @@ const ExpenseForm: React.FC<ExpenseFormProps> = ({ onSuccess, onCancel, initialD
       setType("One-time");
       setStartDate("");
       setEndDate("");
-      setReceiptFile(null);
       setReceiptFile(null);
       setIsEditMode(false);
     }
@@ -174,7 +172,7 @@ const ExpenseForm: React.FC<ExpenseFormProps> = ({ onSuccess, onCancel, initialD
         />
       </div>
 
-      {/* Type */}
+
       <div>
         <label className="block text-sm font-medium text-gray-700 dark:text-slate-300">Type</label>
         <select
@@ -255,7 +253,7 @@ const ExpenseForm: React.FC<ExpenseFormProps> = ({ onSuccess, onCancel, initialD
         />
       </div>
 
-      {/* ✅ Upload reçu */}
+
       <div>
         <label className="block text-sm font-medium text-gray-700 dark:text-slate-300">
           Receipt (JPG, PNG, PDF, max 5MB) — Optional
@@ -294,3 +292,4 @@ const ExpenseForm: React.FC<ExpenseFormProps> = ({ onSuccess, onCancel, initialD
 };
 
 export default ExpenseForm;
+

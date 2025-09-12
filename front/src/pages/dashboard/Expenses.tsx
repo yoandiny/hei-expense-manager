@@ -6,8 +6,6 @@ import { formatCurrency } from "../../utils/formatCurrency";
 import { downloadReceipt, getReceiptViewUrl } from "../../services/receiptService";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
 
 interface Expense {
   id?: number;
@@ -45,7 +43,7 @@ const Expenses: React.FC = () => {
 
         if (err.message.includes("401")) {
           localStorage.removeItem("token");
-          toast.error("Votre session a expiré. Veuillez vous reconnecter.", {
+          toast.error("Your session has expired. Please log in again.", {
             position: "top-center",
             autoClose: 3000,
           });
@@ -72,7 +70,7 @@ const Expenses: React.FC = () => {
     loadExpenses();
     setShowForm(false);
     setEditingExpense(null);
-    toast.success("✅ Expense saved!", {
+    toast.success("Expense saved!", {
       position: "top-right",
       autoClose: 2000,
     });
@@ -84,14 +82,14 @@ const Expenses: React.FC = () => {
     try {
       await deleteExpense(id);
       loadExpenses();
-      toast.success("✅ Expense deleted!", {
+      toast.success("Expense deleted!", {
         position: "top-right",
         autoClose: 2000,
       });
     } catch (err: unknown) {
       let message = "Failed to delete expense.";
       if (err instanceof Error) message = err.message;
-      toast.error(`❌ ${message}`, {
+      toast.error(`Error: ${message}`, {
         position: "top-right",
         autoClose: 4000,
       });
@@ -103,7 +101,7 @@ const Expenses: React.FC = () => {
     setShowForm(true);
   };
 
-  // ✅ Générateur de classes Dark Mode pour les cartes
+  // Generate classes Dark Mode for the cards
   const getExpenseClasses = (expense: Expense) => {
     if (expense.type === "ONE_TIME") {
       return "dark:bg-sky-900/40 dark:text-sky-400";
@@ -115,18 +113,18 @@ const Expenses: React.FC = () => {
   return (
     <div className="container mx-auto p-6 relative bg-gray-50 dark:bg-slate-900 min-h-screen transition-colors">
       {showForm && (
-        <div className="fixed inset-0 bg-black/50 z-10" onClick={() => setShowForm(false)} />
+        <div className="fixed inset-0 bg-black/50 z-10" onClick={(e) => e.stopPropagation()} />
       )}
 
       <div className={`transition-opacity duration-300 ${showForm ? "opacity-50" : "opacity-100"}`}>
         <div className="flex justify-between items-center mb-8">
-          <h1 className="text-3xl font-bold text-gray-800 dark:text-slate-100">💸 Expenses</h1>
+          <h1 className="text-3xl font-bold text-gray-800 dark:text-slate-100">Expenses</h1>
           <button
             onClick={() => {
               setEditingExpense(null);
               setShowForm(true);
             }}
-            className="bg-blue-500 text-white px-5 py-2 rounded-lg font-semibold shadow hover:bg-blue-600 transition-colors dark:bg-blue-600 dark:hover:bg-blue-700"
+            className="bg-blue-500 text-white px-5 py-2 rounded-lg font-semibold shadow hover:bg-blue-600 transition dark:bg-blue-600 dark:hover:bg-blue-700"
           >
             + Add Expense
           </button>
@@ -137,13 +135,9 @@ const Expenses: React.FC = () => {
             <div className="animate-spin rounded-full h-10 w-10 border-4 border-blue-500 border-t-transparent"></div>
           </div>
         )}
-        {loading && (
-          <div className="flex justify-center items-center py-8">
-            <div className="animate-spin rounded-full h-10 w-10 border-4 border-blue-500 border-t-transparent"></div>
-          </div>
+        {error && (
+          <p className="text-red-500 mb-4 font-medium">{error}</p>
         )}
-
-        {error && <p className="text-red-500 mb-4 font-medium">{error}</p>}
         {error && <p className="text-red-500 mb-4 font-medium">{error}</p>}
 
         {expenses.length === 0 && !loading && !error && (
@@ -155,9 +149,7 @@ const Expenses: React.FC = () => {
             {expenses.map((expense) => (
               <div
                 key={expense.id}
-                className={`bg-white dark:border-slate-600 p-5 rounded-xl shadow-md flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border border-gray-200 hover:shadow-lg transition dark:hover:shadow-slate-800 ${getExpenseClasses(
-                  expense
-                )}`}
+                className={`bg-white dark:bg-slate-800 dark:text-slate-100 p-5 rounded-xl shadow-md flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border border-gray-200 hover:shadow-lg transition dark:hover:shadow-slate-800 ${getExpenseClasses(expense)}`}
               >
                 <div>
                   <p className="text-lg font-bold text-gray-800 dark:text-inherit">
@@ -187,7 +179,7 @@ const Expenses: React.FC = () => {
                         rel="noopener noreferrer"
                         className="text-blue-500 dark:text-blue-400 font-medium hover:underline text-sm"
                       >
-                        👁️ View Receipt
+                        👀️ View Receipt
                       </a>
                       <button
                         onClick={() => expense.id && downloadReceipt(expense.id)}
@@ -256,3 +248,4 @@ const Expenses: React.FC = () => {
 };
 
 export default Expenses;
+

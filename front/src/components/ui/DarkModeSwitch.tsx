@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 export const DarkModeSwitch = () => {
   const [isChecked, setIsChecked] = useState(false);
 
-  // Charger la préférence enregistrée ou détecter la préférence système
+
   useEffect(() => {
     const savedTheme = localStorage.getItem('theme');
     
@@ -14,7 +14,7 @@ export const DarkModeSwitch = () => {
       setIsChecked(false);
       document.documentElement.classList.remove('dark');
     } else {
-      // Si aucune préférence sauvegardée, utiliser la préférence système
+
       const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
       setIsChecked(prefersDark);
       if (prefersDark) {
@@ -59,7 +59,7 @@ export const DarkModeSwitch = () => {
             isChecked ? 'translate-x-6' : 'translate-x-0'
           }`}
         >
-          {/* Icônes à l'intérieur du toggle */}
+
           <div className="flex items-center justify-center h-full w-full text-xs">
             {isChecked ? (
               <svg className="w-4 h-4 text-blue-600" fill="currentColor" viewBox="0 0 20 20">
@@ -80,7 +80,7 @@ export const DarkModeSwitch = () => {
   );
 };
 
-// Hook personnalisé pour utiliser le thème ailleurs dans l'app
+
 export const useDarkMode = () => {
   const [isDark, setIsDark] = useState(() => {
     const saved = localStorage.getItem('theme');
