@@ -9,15 +9,15 @@ export const createExpense = async (req: Request, res: Response) => {
     const userId = (req as any).user?.id;
 
     if (!userId) {
-      return res.status(401).json({ error: "Utilisateur non authentifié" });
+      return res.status(401).json({ error: "User not authenticated" });
     }
 
     if (type === "ONE_TIME" && !date) {
-      return res.status(400).json({ error: "Date est obligatoire pour une dépense ponctuelle" });
+      return res.status(400).json({ error: "Date is required for a one-time expense" });
     }
 
     if (type === "RECURRING" && !startDate) {
-      return res.status(400).json({ error: "StartDate est obligatoire pour une dépense récurrente" });
+      return res.status(400).json({ error: "Start date is required for a recurring expense" });
     }
 
     const expense = await prisma.expense.create({
@@ -35,8 +35,8 @@ export const createExpense = async (req: Request, res: Response) => {
 
     res.status(201).json(expense);
   } catch (error) {
-    console.error("❌ Erreur createExpense:", error);
-    res.status(500).json({ error: "Erreur lors de la création de la dépense" });
+    console.error("❌ Error in createExpense:", error);
+    res.status(500).json({ error: "Failed to create expense" });
   }
 };
 
@@ -44,7 +44,7 @@ export const getExpenses = async (req: Request, res: Response) => {
   const userId = (req as any).user?.id;
   try {
     if (!userId) {
-      return res.status(401).json({ error: "Utilisateur non authentifié" });
+      return res.status(401).json({ error: "User not authenticated" });
     }
 
     const expenses = await prisma.expense.findMany({
@@ -54,8 +54,8 @@ export const getExpenses = async (req: Request, res: Response) => {
 
     res.json(expenses);
   } catch (error) {
-    console.error("❌ Erreur getExpenses:", error);
-    res.status(500).json({ error: "Erreur lors de la récupération des dépenses" });
+    console.error("❌ Error in getExpenses:", error);
+    res.status(500).json({ error: "Failed to fetch expenses" });
   }
 };
 
@@ -65,7 +65,7 @@ export const getExpenseById = async (req: Request, res: Response) => {
     const userId = (req as any).user?.id;
 
     if (!userId) {
-      return res.status(401).json({ error: "Utilisateur non authentifié" });
+      return res.status(401).json({ error: "User not authenticated" });
     }
 
     const expense = await prisma.expense.findFirst({
@@ -74,13 +74,13 @@ export const getExpenseById = async (req: Request, res: Response) => {
     });
 
     if (!expense) {
-      return res.status(404).json({ error: "Dépense non trouvée" });
+      return res.status(404).json({ error: "Expense not found" });
     }
 
     res.json(expense);
   } catch (error) {
-    console.error("❌ Erreur getExpenseById:", error);
-    res.status(500).json({ error: "Erreur lors de la récupération de la dépense" });
+    console.error("❌ Error in getExpenseById:", error);
+    res.status(500).json({ error: "Failed to fetch expense" });
   }
 };
 
@@ -91,7 +91,7 @@ export const updateExpense = async (req: Request, res: Response) => {
     const userId = (req as any).user?.id;
 
     if (!userId) {
-      return res.status(401).json({ error: "Utilisateur non authentifié" });
+      return res.status(401).json({ error: "User not authenticated" });
     }
 
     const existing = await prisma.expense.findFirst({
@@ -99,7 +99,7 @@ export const updateExpense = async (req: Request, res: Response) => {
     });
 
     if (!existing) {
-      return res.status(404).json({ error: "Dépense non trouvée" });
+      return res.status(404).json({ error: "Expense not found" });
     }
 
     let updateData: any = {
@@ -111,7 +111,7 @@ export const updateExpense = async (req: Request, res: Response) => {
 
     if (type === "ONE_TIME") {
       if (!date) {
-        return res.status(400).json({ error: "Date requise pour une dépense ponctuelle" });
+        return res.status(400).json({ error: "Date is required for a one-time expense" });
       }
       updateData.date = new Date(date);
       updateData.startDate = null;
@@ -120,7 +120,7 @@ export const updateExpense = async (req: Request, res: Response) => {
 
     if (type === "RECURRING") {
       if (!startDate) {
-        return res.status(400).json({ error: "StartDate requis pour une dépense récurrente" });
+        return res.status(400).json({ error: "Start date is required for a recurring expense" });
       }
       updateData.date = null;
       updateData.startDate = new Date(startDate);
@@ -134,8 +134,8 @@ export const updateExpense = async (req: Request, res: Response) => {
 
     res.json(expense);
   } catch (error) {
-    console.error("❌ Erreur updateExpense:", error);
-    res.status(500).json({ error: "Erreur lors de la mise à jour de la dépense" });
+    console.error("❌ Error in updateExpense:", error);
+    res.status(500).json({ error: "Failed to update expense" });
   }
 };
 
@@ -145,7 +145,7 @@ export const deleteExpense = async (req: Request, res: Response) => {
     const userId = (req as any).user?.id;
 
     if (!userId) {
-      return res.status(401).json({ error: "Utilisateur non authentifié" });
+      return res.status(401).json({ error: "User not authenticated" });
     }
 
     const existing = await prisma.expense.findFirst({
@@ -153,14 +153,14 @@ export const deleteExpense = async (req: Request, res: Response) => {
     });
 
     if (!existing) {
-      return res.status(404).json({ error: "Dépense non trouvée" });
+      return res.status(404).json({ error: "Expense not found" });
     }
 
     await prisma.expense.delete({ where: { id: parseInt(id, 10) } });
 
-    res.json({ message: "✅ Dépense supprimée avec succès" });
+    res.json({ message: "✅ Expense deleted successfully" });
   } catch (error) {
-    console.error("❌ Erreur deleteExpense:", error);
-    res.status(500).json({ error: "Erreur lors de la suppression de la dépense" });
+    console.error("❌ Error in deleteExpense:", error);
+    res.status(500).json({ error: "Failed to delete expense" });
   }
 };

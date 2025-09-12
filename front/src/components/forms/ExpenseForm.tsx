@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { createExpense, updateExpense } from "../../services/expenseService";
 import { getCategories } from "../../services/ccategoryService";
-import { uploadReceipt } from "../../services/receiptService"; // ✅ Import du service reçu
+import { uploadReceipt } from "../../services/receiptService";
 import type { CreateExpenseDTO, ExpenseTypeUI, Expense } from "../../services/expenseService";
 
 type ExpenseFormProps = {
@@ -22,7 +22,7 @@ const ExpenseForm: React.FC<ExpenseFormProps> = ({ onSuccess, onCancel, initialD
   );
   const [startDate, setStartDate] = useState<string>(initialData?.startDate || "");
   const [endDate, setEndDate] = useState<string>(initialData?.endDate || "");
-  const [receiptFile, setReceiptFile] = useState<File | null>(null); // ✅ État pour le fichier
+  const [receiptFile, setReceiptFile] = useState<File | null>(null);
   const [loading, setLoading] = useState(false);
   const [isEditMode, setIsEditMode] = useState<boolean>(!!initialData?.id);
 
@@ -55,7 +55,7 @@ const ExpenseForm: React.FC<ExpenseFormProps> = ({ onSuccess, onCancel, initialD
       setStartDate(initialData.startDate || "");
       setEndDate(initialData.endDate || "");
       setIsEditMode(!!initialData.id);
-      // On ne réinitialise pas receiptFile — l'utilisateur peut en uploader un nouveau
+
     } else {
       setAmount(0);
       setDate("");
@@ -64,7 +64,7 @@ const ExpenseForm: React.FC<ExpenseFormProps> = ({ onSuccess, onCancel, initialD
       setType("One-time");
       setStartDate("");
       setEndDate("");
-      setReceiptFile(null); // ✅ Réinitialise le fichier
+      setReceiptFile(null);
       setIsEditMode(false);
     }
   }, [initialData]);
@@ -115,7 +115,6 @@ const ExpenseForm: React.FC<ExpenseFormProps> = ({ onSuccess, onCancel, initialD
         alert("✅ Expense added!");
       }
 
-      // ✅ Upload du reçu si un fichier est sélectionné
       if (receiptFile && expense?.id) {
         try {
           await uploadReceipt(expense.id, receiptFile);
@@ -159,7 +158,7 @@ const ExpenseForm: React.FC<ExpenseFormProps> = ({ onSuccess, onCancel, initialD
             </h2>
 
             <div>
-                <label className="block text-sm font-medium text-gray-700">Montant</label>
+                <label className="block text-sm font-medium text-gray-700">Amount</label>
                 <input
                     type="number"
                     value={amount || ""}
@@ -171,7 +170,6 @@ const ExpenseForm: React.FC<ExpenseFormProps> = ({ onSuccess, onCancel, initialD
                 />
             </div>
 
-            {/* Type */}
             <div>
                 <label className="block text-sm font-medium text-gray-700">Type</label>
                 <select
@@ -222,9 +220,9 @@ const ExpenseForm: React.FC<ExpenseFormProps> = ({ onSuccess, onCancel, initialD
             )}
 
             <div>
-                <label className="block text-sm font-medium text-gray-700">Catégorie</label>
+                <label className="block text-sm font-medium text-gray-700">Category</label>
                 {loadingCategories ? (
-                    <p className="text-gray-500">Chargement...</p>
+                    <p className="text-gray-500">Loading...</p>
                 ) : (
                     <select
                         value={categoryId}
@@ -232,7 +230,7 @@ const ExpenseForm: React.FC<ExpenseFormProps> = ({ onSuccess, onCancel, initialD
                         className="w-full border border-green-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-yellow-400 transition"
                         required
                     >
-                        <option value="">-- Sélectionnez une catégorie --</option>
+                        <option value="">-- Select a category --</option>
                         {categories.map((category) => (
                             <option key={category.id} value={category.id}>
                                 {category.name}
@@ -252,7 +250,6 @@ const ExpenseForm: React.FC<ExpenseFormProps> = ({ onSuccess, onCancel, initialD
                 />
             </div>
 
-            {/* ✅  Champ d'upload de reçu */}
             <div>
                 <label className="block text-sm font-medium text-gray-700">
                     Receipt (JPG, PNG, PDF, max 5MB) — Optional
