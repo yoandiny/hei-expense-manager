@@ -8,6 +8,7 @@ import { toast, ToastContainer } from 'react-toastify';
 const Profiles = () => {
     const [user, setUser] = useState<any>({});
     const token = useState<string>(localStorage.getItem("token")|| "");
+    const [isEditing, setIsEditing] = useState(false);
 
     const getProfile = async() =>{
         try {
@@ -25,6 +26,8 @@ const Profiles = () => {
         }
     }
 
+    const changeProfile = () =>{}
+
 useEffect(()=>{
     getProfile();
 })
@@ -36,7 +39,7 @@ useEffect(()=>{
                     <img src={ProfilePic} alt="Profile picture" className='w-32 h-32 rounded-full mx-auto' />
                 </section>
                 <section>
-                    <h3 className="text-xl font-semibold text-green-700 mb-4">Informations Personnelles</h3>
+                    <h3 className="text-xl font-semibold text-green-700 mb-4">Personal Information :</h3>
                     <div className="space-y-4">
                         <div className="flex justify-between border-b border-green-200 pb-2">
                             <span className="text-gray-600">Email Address:</span>
@@ -47,13 +50,23 @@ useEffect(()=>{
                             <span className="text-gray-600">Password:</span>
                             <span className="font-semibold">**********</span>
                         </div>
-                        <div className="flex justify-center border-b border-green-200 pb-2">
+                        
+                    </div>
+                </section>
+                <section>
+                    <h3 className="text-xl font-semibold text-green-700 mb-4">Features :</h3>
+
+                    <div className="flex justify-between border-b border-green-200 pb-2">
+                            <span className="text-gray-600">Enable Dark Mode:</span>
+                            
+                        </div>
+
+                    <div className="flex justify-center border-b border-green-200 pb-2">
                             <button className='ml-1 mr-1 bg-green-500 text-white
                              hover:bg-green-600 transition-colors px-4 py-2 rounded cursor-pointer'>Modification</button>
                             <button className='ml-1 mr-1 bg-red-500
                              hover:bg-red-600 transition-colors text-white px-4 py-2 rounded cursor-pointer'>Delete the account</button>
                         </div>
-                    </div>
                 </section>
 
             </div>
