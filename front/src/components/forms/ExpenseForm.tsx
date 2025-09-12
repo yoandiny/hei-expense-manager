@@ -23,6 +23,7 @@ const ExpenseForm: React.FC<ExpenseFormProps> = ({ onSuccess, onCancel, initialD
   const [startDate, setStartDate] = useState<string>(initialData?.startDate || "");
   const [endDate, setEndDate] = useState<string>(initialData?.endDate || "");
   const [receiptFile, setReceiptFile] = useState<File | null>(null);
+  const [receiptFile, setReceiptFile] = useState<File | null>(null);
   const [loading, setLoading] = useState(false);
   const [isEditMode, setIsEditMode] = useState<boolean>(!!initialData?.id);
 
@@ -63,6 +64,7 @@ const ExpenseForm: React.FC<ExpenseFormProps> = ({ onSuccess, onCancel, initialD
       setType("One-time");
       setStartDate("");
       setEndDate("");
+      setReceiptFile(null);
       setReceiptFile(null);
       setIsEditMode(false);
     }

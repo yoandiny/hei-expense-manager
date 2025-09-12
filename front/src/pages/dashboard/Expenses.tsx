@@ -6,6 +6,8 @@ import { formatCurrency } from "../../utils/formatCurrency";
 import { downloadReceipt, getReceiptViewUrl } from "../../services/receiptService";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 interface Expense {
   id?: number;
@@ -55,7 +57,7 @@ const Expenses: React.FC = () => {
 
         setError(err.message);
       } else {
-        setError("Une erreur inconnue est survenue.");
+        setError("An unknown error occurred.");
       }
     } finally {
       setLoading(false);
@@ -70,7 +72,7 @@ const Expenses: React.FC = () => {
     loadExpenses();
     setShowForm(false);
     setEditingExpense(null);
-    toast.success("✅ Dépense sauvegardée !", {
+    toast.success("✅ Expense saved!", {
       position: "top-right",
       autoClose: 2000,
     });
@@ -82,7 +84,7 @@ const Expenses: React.FC = () => {
     try {
       await deleteExpense(id);
       loadExpenses();
-      toast.success("✅ Dépense supprimée !", {
+      toast.success("✅ Expense deleted!", {
         position: "top-right",
         autoClose: 2000,
       });
@@ -135,7 +137,13 @@ const Expenses: React.FC = () => {
             <div className="animate-spin rounded-full h-10 w-10 border-4 border-blue-500 border-t-transparent"></div>
           </div>
         )}
+        {loading && (
+          <div className="flex justify-center items-center py-8">
+            <div className="animate-spin rounded-full h-10 w-10 border-4 border-blue-500 border-t-transparent"></div>
+          </div>
+        )}
 
+        {error && <p className="text-red-500 mb-4 font-medium">{error}</p>}
         {error && <p className="text-red-500 mb-4 font-medium">{error}</p>}
 
         {expenses.length === 0 && !loading && !error && (

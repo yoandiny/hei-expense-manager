@@ -37,7 +37,7 @@ const Incomes: React.FC = () => {
         }
         if (err.message.includes("401")) {
           localStorage.removeItem("token");
-          toast.error("Votre session a expiré. Veuillez vous reconnecter.", {
+          toast.error("Your session has expired. Please log in again.", {
             position: "top-center",
             autoClose: 3000,
           });
@@ -48,7 +48,7 @@ const Incomes: React.FC = () => {
         }
         setError(err.message);
       } else {
-        setError("Une erreur inconnue est survenue.");
+        setError("An unknown error occurred.");
       }
     } finally {
       setLoading(false);
@@ -63,7 +63,7 @@ const Incomes: React.FC = () => {
     loadIncomes();
     setShowForm(false);
     setEditingIncome(null);
-    toast.success("✅ Revenu sauvegardé !", {
+    toast.success("✅ Income saved!", {
       position: "top-right",
       autoClose: 2000,
     });
@@ -75,14 +75,14 @@ const Incomes: React.FC = () => {
     try {
       await deleteIncome(id);
       loadIncomes();
-      toast.success("✅ Revenu supprimé !", {
+      toast.success("✅ Income deleted!", {
         position: "top-right",
         autoClose: 2000,
       });
     } catch (err: unknown) {
       let message = "Failed to delete income.";
       if (err instanceof Error) message = err.message;
-      toast.error(`❌ ${message}`, { 
+      toast.error(`❌ ${message}`, {
         position: "top-right",
         autoClose: 4000,
       });
@@ -187,20 +187,21 @@ const Incomes: React.FC = () => {
                 </div>
             )}
 
-            <ToastContainer
-                position="top-right"
-                autoClose={3000}
-                hideProgressBar={false}
-                newestOnTop={false}
-                closeOnClick
-                rtl={false}
-                pauseOnFocusLoss
-                draggable
-                pauseOnHover
-                theme="light"
-            />
-        </div>
-    );
+      <ToastContainer
+        position="top-right"
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+      />
+    </div>
+  );
 };
+
 
 export default Incomes;

@@ -4,10 +4,10 @@ import prisma from "../PrismaClient";
 export const createIncome = async (req: Request, res: Response) => {
   try {
     const { amount, date, source, description } = req.body;
-    const userId =(req as any).user?.id;
+    const userId = (req as any).user?.id;
 
     if (!userId) {
-      return res.status(401).json({ error: "Utilisateur non authentifié" });
+      return res.status(401).json({ error: "User not authenticated" });
     }
 
     if (!amount || !date || !source) {
@@ -35,7 +35,7 @@ export const getIncomes = async (req: Request, res: Response) => {
   try {
     const userId = (req as any).user?.id;
     if (!userId) {
-      return res.status(401).json({ error: "Utilisateur non authentifié" });
+      return res.status(401).json({ error: "User not authenticated" });
     }
 
     const incomes = await prisma.income.findMany({
@@ -56,7 +56,7 @@ export const getIncomeById = async (req: Request, res: Response) => {
     const userId = (req as any).user?.id;
 
     if (!userId) {
-      return res.status(401).json({ error: "Utilisateur non authentifié" });
+      return res.status(401).json({ error: "User not authenticated" });
     }
 
     const income = await prisma.income.findFirst({
@@ -81,7 +81,7 @@ export const updateIncome = async (req: Request, res: Response) => {
     const userId = (req as any).user?.id;
 
     if (!userId) {
-      return res.status(401).json({ error: "Utilisateur non authentifié" });
+      return res.status(401).json({ error: "User not authenticated" });
     }
 
     const income = await prisma.income.update({
@@ -107,7 +107,7 @@ export const deleteIncome = async (req: Request, res: Response) => {
     const userId = (req as any).user?.id;
 
     if (!userId) {
-      return res.status(401).json({ error: "Utilisateur non authentifié" });
+      return res.status(401).json({ error: "User not authenticated" });
     }
 
     const income = await prisma.income.delete({

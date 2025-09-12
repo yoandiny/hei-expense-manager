@@ -9,6 +9,5 @@ backend/dist/
 *.js.map
 
 /generated/prisma
-upload/
-
+uploads/receipts
 *.env
