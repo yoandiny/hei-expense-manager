@@ -4,8 +4,8 @@ import ExpenseForm from "../../components/forms/ExpenseForm";
 import { formatDate } from "../../utils/formatDate";
 import { formatCurrency } from "../../utils/formatCurrency";
 import { downloadReceipt, getReceiptViewUrl } from "../../services/receiptService";
-import { ToastContainer, toast } from "react-toastify"; // ✅ Importé
-import "react-toastify/dist/ReactToastify.css"; // ✅ CSS importé
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 interface Expense {
   id?: number;
@@ -43,7 +43,7 @@ const Expenses: React.FC = () => {
 
         if (err.message.includes("401")) {
           localStorage.removeItem("token");
-          toast.error("Votre session a expiré. Veuillez vous reconnecter.", { // ✅ Remplacé alert par toast
+          toast.error("Votre session a expiré. Veuillez vous reconnecter.", {
             position: "top-center",
             autoClose: 3000,
           });
