@@ -31,9 +31,10 @@ export default function Navbar() {
                 </div>
             </nav>
 
-            {/* Layout principal */}
+            
             <div className="flex flex-1">
-                <aside className="w-72 bg-white border-r border-gray-200 shadow-md p-6 sticky top-20 h-[calc(100vh-5rem)] overflow-y-auto">
+                <aside className="w-72 bg-white border-r border-gray-200
+                 shadow-md p-6 sticky top-20 h-screen overflow-y-auto">
                     <div className="flex flex-col gap-3">
                         <Link
                             to=""
