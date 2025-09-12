@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import ProfilePic from '../../assets/profile.png';
 import { loadProfile, updateProfile } from '../../services/profileService';
 import { toast, ToastContainer } from 'react-toastify';
+import { DarkModeSwitch } from '../../components/ui/DarkModeSwitch';
 
 
 
@@ -99,6 +100,7 @@ useEffect(()=>{
 
                     <div className="flex justify-between border-b border-green-200 pb-2">
                             <span className="text-gray-600">Enable Dark Mode:</span>
+                            <DarkModeSwitch />
                             
                         </div><br />
 
