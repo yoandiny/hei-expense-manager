@@ -46,7 +46,7 @@ const CategoryForm: React.FC<CategoryFormProps> = ({ category, onSubmit, onCance
     };
 
     return (
-        <div className="w-full bg-white p-6 rounded-lg shadow-lg">
+        <div className="w-full bg-white dark:bg-slate-700 dark:border-slate-600 p-6 rounded-lg shadow-lg">
             <h3 className="text-xl font-semibold text-gray-800 mb-4 text-center">
                 {category?.id ? 'Modifier la catégorie' : 'Nouvelle catégorie'}
             </h3>
