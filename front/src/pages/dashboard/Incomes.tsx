@@ -134,10 +134,10 @@ const Incomes: React.FC = () => {
                                 className="bg-white dark:bg-slate-700 dark:border-slate-600 p-5 rounded-xl shadow-md flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border border-gray-200 hover:shadow-lg transition"
                             >
                                 <div>
-                                    <p className="text-lg font-bold text-gray-800">
+                                    <p className="text-lg font-bold text-gray-800 dark:text-slate-400">
                                         {income.source} — {formatCurrency(income.amount)}
                                     </p>
-                                    <p className="text-sm text-gray-700">
+                                    <p className="text-sm text-gray-700 dark:text-slate-400">
                                         Date: {formatDate(income.date)}
                                     </p>
                                     {income.description && (
@@ -172,7 +172,7 @@ const Incomes: React.FC = () => {
                     onClick={(e) => e.stopPropagation()}
                 >
                     <div
-                        className="bg-white p-6 rounded-xl shadow-2xl max-w-md w-full mx-4 border border-gray-200"
+                        className="bg-white dark:bg-slate-700 dark:border-slate-600 p-6 rounded-xl shadow-2xl max-w-md w-full mx-4 border border-gray-200"
                         onClick={(e) => e.stopPropagation()}
                     >
                         <IncomeForm

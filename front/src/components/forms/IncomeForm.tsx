@@ -79,14 +79,14 @@ const IncomeForm: React.FC<IncomeFormProps> = ({ onSuccess, onCancel, initialDat
   return (
       <form
           onSubmit={handleSubmit}
-          className="max-w-md mx-auto bg-white p-6 rounded-2xl shadow-lg space-y-5"
+          className="max-w-md mx-auto bg-white dark:bg-slate-700 dark:border-slate-600 p-6 rounded-2xl shadow-lg space-y-5"
       >
-          <h2 className="text-2xl font-bold text-green-700 text-center mb-4">
+          <h2 className="text-2xl font-bold text-green-700 dark:text-slate-100 text-center mb-4">
               {isEditMode ? "Edit Income" : "Add Income"}
           </h2>
 
           <div>
-              <label className="block text-sm font-semibold text-green-700 mb-1">Amount</label>
+              <label className="block text-sm font-semibold text-green-700 dark:text-slate-400 mb-1">Amount</label>
               <input
                   type="number"
                   value={amount || ""}
@@ -99,7 +99,7 @@ const IncomeForm: React.FC<IncomeFormProps> = ({ onSuccess, onCancel, initialDat
           </div>
 
           <div>
-              <label className="block text-sm font-semibold text-green-700 mb-1">Date</label>
+              <label className="block text-sm font-semibold text-green-700 dark:text-slate-400 mb-1">Date</label>
               <input
                   type="date"
                   value={date}
@@ -110,7 +110,7 @@ const IncomeForm: React.FC<IncomeFormProps> = ({ onSuccess, onCancel, initialDat
           </div>
 
           <div>
-              <label className="block text-sm font-semibold text-green-700 mb-1">Source</label>
+              <label className="block text-sm font-semibold text-green-700 dark:text-slate-400 mb-1">Source</label>
               <input
                   type="text"
                   value={source}
@@ -122,7 +122,7 @@ const IncomeForm: React.FC<IncomeFormProps> = ({ onSuccess, onCancel, initialDat
           </div>
 
           <div>
-              <label className="block text-sm font-semibold text-green-700 mb-1">Description</label>
+              <label className="block text-sm font-semibold text-green-700 dark:text-slate-400 mb-1">Description</label>
               <textarea
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
@@ -135,14 +135,14 @@ const IncomeForm: React.FC<IncomeFormProps> = ({ onSuccess, onCancel, initialDat
               <button
                   type="submit"
                   disabled={loading}
-                  className="w-full bg-yellow-400 text-green-900 font-bold py-2 rounded-lg hover:bg-yellow-500 transition shadow-md"
+                  className="w-full cursor-pointer bg-yellow-400 text-green-900  font-bold py-2 rounded-lg hover:bg-yellow-500 transition shadow-md"
               >
                   {loading ? "Saving..." : isEditMode ? "Update Income" : "Save Income"}
               </button>
               <button
                   type="button"
                   onClick={onCancel}
-                  className="w-full bg-gray-200 text-gray-800 py-2 rounded-lg hover:bg-gray-300 transition shadow-sm"
+                  className="w-full cursor-pointer bg-gray-200 text-gray-800 py-2 rounded-lg hover:bg-gray-300 transition shadow-sm"
               >
                   Cancel
               </button>
