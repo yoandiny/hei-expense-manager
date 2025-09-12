@@ -1,10 +1,3 @@
-/**
- * Formate un nombre en devise (€ par défaut)
- * @param amount Montant à formater
- * @param currency Devise (par défaut: "EUR")
- * @param locale Locale (par défaut: "fr-FR")
- * @returns Chaîne formatée, ex: "1 234,56 €"
- */
 export const formatCurrency = (
     amount: number,
     currency: string = 'EUR',

@@ -1,4 +1,3 @@
-// components/charts/Chart.tsx
 'use client';
 
 import { Pie } from 'react-chartjs-2';
@@ -11,7 +10,6 @@ import {
 import type { ChartOptions } from 'chart.js';
 import type { FC } from 'react';
 
-// Enregistre les éléments nécessaires pour le pie chart
 ChartJS.register(ArcElement, Tooltip, Legend);
 
 interface ExpenseCategory {
