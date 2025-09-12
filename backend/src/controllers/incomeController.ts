@@ -45,8 +45,8 @@ export const getIncomes = async (req: Request, res: Response) => {
 
     res.json(incomes);
   } catch (error) {
-    console.error("❌ Error fetching incomes:", error);
-    res.status(500).json({ error: "Internal server error" });
+      console.error("❌ Error fetching incomes:", error);
+      res.status(500).json({ error: "Internal server error" });
   }
 };
 
