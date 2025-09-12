@@ -4,37 +4,42 @@ import { useAuth } from '../../hooks/useAuth';
 import { useNavigate } from "react-router-dom";
 
 export default function Navbar() {
-    const {logout} = useAuth();
+    const { logout } = useAuth();
     const navigate = useNavigate();
+
     const handleLogout = () => {
         logout();
         navigate("/login");
-    }
+    };
 
     return (
-        <div className="flex flex-col min-h-screen bg-green-50">
-            <nav className="bg-green-800 h-20 flex items-center justify-between px-6 shadow-lg sticky top-0 z-50">
-            <span onClick={() => navigate("/dashboard")} className="flex items-center cursor-pointer">
-                <img src={Logo} alt="Logo" className="w-20 h-20 object-contain" />
-            </span>
+        <div className="flex flex-col min-h-screen bg-green-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100">
+            {/* Navbar */}
+            <nav className="bg-green-800 dark:bg-gray-800 h-20 flex items-center justify-between px-6 shadow-lg sticky top-0 z-50">
+                <span onClick={() => navigate("/dashboard")} className="flex items-center cursor-pointer">
+                    <img src={Logo} alt="Logo" className="w-20 h-20 object-contain" />
+                </span>
                 <div className="flex items-center gap-6">
-                    <Link to="/profile" className="text-white hover:text-yellow-400">
+                    <Link to="/profile" className="text-white dark:text-gray-200 hover:text-yellow-400">
                         <i className="bx bxs-user-circle text-5xl"></i>
                     </Link>
                     <button
                         onClick={handleLogout}
-                        className="text-white hover:text-yellow-400 transition-colors cursor-pointer"
+                        className="text-white dark:text-gray-200 hover:text-yellow-400 transition-colors cursor-pointer"
                     >
                         <i className="bx bx-log-out text-4xl"></i>
                     </button>
                 </div>
             </nav>
+
+            {/* Layout principal */}
             <div className="flex flex-1">
-                <aside className="w-72 bg-white border-r border-green-200 shadow-md p-6 sticky top-20 h-[calc(100vh-5rem)] overflow-y-auto">
+                {/* Sidebar */}
+                <aside className="w-72 bg-white dark:bg-gray-800 border-r border-green-200 dark:border-gray-700 shadow-md p-6 sticky top-20 h-[calc(100vh-5rem)] overflow-y-auto">
                     <div className="flex flex-col gap-3">
                         <Link
                             to=""
-                            className="flex items-center gap-3 px-4 py-2 text-green-800 rounded-lg hover:bg-yellow-400 hover:text-green-900 transition-colors text-lg font-semibold"
+                            className="flex items-center gap-3 px-4 py-2 text-green-800 dark:text-green-400 rounded-lg hover:bg-yellow-400 hover:text-green-900 dark:hover:bg-yellow-500 dark:hover:text-gray-900 transition-colors text-lg font-semibold"
                         >
                             <i className="bx bxs-dashboard text-xl"></i>
                             Tableau de bord
@@ -42,7 +47,7 @@ export default function Navbar() {
 
                         <Link
                             to="categories"
-                            className="flex items-center gap-3 px-4 py-2 text-green-800 rounded-lg hover:bg-yellow-400 hover:text-green-900 transition-colors text-lg font-semibold"
+                            className="flex items-center gap-3 px-4 py-2 text-green-800 dark:text-green-400 rounded-lg hover:bg-yellow-400 hover:text-green-900 dark:hover:bg-yellow-500 dark:hover:text-gray-900 transition-colors text-lg font-semibold"
                         >
                             <i className="bx bxs-category text-xl"></i>
                             Catégories
@@ -50,7 +55,7 @@ export default function Navbar() {
 
                         <Link
                             to="incomes"
-                            className="flex items-center gap-3 px-4 py-2 text-green-800 rounded-lg hover:bg-yellow-400 hover:text-green-900 transition-colors text-lg font-semibold"
+                            className="flex items-center gap-3 px-4 py-2 text-green-800 dark:text-green-400 rounded-lg hover:bg-yellow-400 hover:text-green-900 dark:hover:bg-yellow-500 dark:hover:text-gray-900 transition-colors text-lg font-semibold"
                         >
                             <i className="bx bxs-wallet text-xl"></i>
                             Revenus
@@ -58,7 +63,7 @@ export default function Navbar() {
 
                         <Link
                             to="expenses"
-                            className="flex items-center gap-3 px-4 py-2 text-green-800 rounded-lg hover:bg-yellow-400 hover:text-green-900 transition-colors text-lg font-semibold"
+                            className="flex items-center gap-3 px-4 py-2 text-green-800 dark:text-green-400 rounded-lg hover:bg-yellow-400 hover:text-green-900 dark:hover:bg-yellow-500 dark:hover:text-gray-900 transition-colors text-lg font-semibold"
                         >
                             <i className="bx bx-money-withdraw text-xl"></i>
                             Dépenses
@@ -66,10 +71,11 @@ export default function Navbar() {
                     </div>
                 </aside>
 
+                {/* Contenu principal */}
                 <main className="flex-1 p-8 overflow-y-auto h-[calc(100vh-5rem)]">
                     <Outlet />
                 </main>
             </div>
         </div>
-    )
+    );
 }
