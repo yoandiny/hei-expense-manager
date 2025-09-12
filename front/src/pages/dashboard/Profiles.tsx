@@ -1,9 +1,33 @@
+import { useEffect, useState } from 'react';
 import ProfilePic from '../../assets/profile.png';
-//import { getProfile } from '../../services/authService';
+import { loadProfile } from '../../services/profileService';
+import { toast, ToastContainer } from 'react-toastify';
 
 
 
 const Profiles = () => {
+    const [user, setUser] = useState<any>({});
+    const token = useState<string>(localStorage.getItem("token")|| "");
+
+    const getProfile = async() =>{
+        try {
+            if(token){
+            const res = await loadProfile(token[0]);
+            if(res.status == 200){
+                setUser(res.data)
+                
+                
+            }
+        }
+        } catch (error: any) {
+            toast.error(error.response?.data?.message)
+            
+        }
+    }
+
+useEffect(()=>{
+    getProfile();
+})
     return (
         <div className="min-h-screen p-8 bg-green-50 items-center align-middle">
             <div className="w-full mx-auto bg-white p-6 rounded-lg shadow-md">
@@ -16,7 +40,7 @@ const Profiles = () => {
                     <div className="space-y-4">
                         <div className="flex justify-between border-b border-green-200 pb-2">
                             <span className="text-gray-600">Email Address:</span>
-                            <span className="font-semibold">lorem@ipsum.com</span>
+                            <span className="font-semibold">{user.email}</span>
                         </div>
 
                         <div className="flex justify-between border-b border-green-200 pb-2">
@@ -33,6 +57,7 @@ const Profiles = () => {
                 </section>
 
             </div>
+            <ToastContainer />
         </div>
     );
 };
