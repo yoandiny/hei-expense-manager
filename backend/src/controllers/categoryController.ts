@@ -1,7 +1,6 @@
 import { Request, Response } from 'express';
 import prisma from '../PrismaClient';
 
-// Récupérer toutes les catégories (perso + globales)
 export const getCategories = async (req: Request, res: Response) => {
     if (!req.user) {
         return res.status(401).json({ error: "Utilisateur non authentifié" });
@@ -13,7 +12,7 @@ export const getCategories = async (req: Request, res: Response) => {
             where: {
                 OR: [
                     { userId: userId },
-                    { userId: null }, // catégories globales
+                    { userId: null },
                 ],
             },
             orderBy: { createdAt: 'desc' },
@@ -25,7 +24,6 @@ export const getCategories = async (req: Request, res: Response) => {
     }
 };
 
-// Créer une nouvelle catégorie
 export const createCategory = async (req: Request, res: Response) => {
     if (!req.user) {
         return res.status(401).json({ error: "Utilisateur non authentifié" });
@@ -49,7 +47,6 @@ export const createCategory = async (req: Request, res: Response) => {
     }
 };
 
-// Modifier une catégorie existante
 export const updateCategory = async (req: Request, res: Response) => {
     if (!req.user) {
         return res.status(401).json({ error: "Utilisateur non authentifié" });
@@ -69,7 +66,7 @@ export const updateCategory = async (req: Request, res: Response) => {
                 id: parseInt(id),
                 OR: [
                     { userId: userId },
-                    { userId: null }, // inclut les catégories globales
+                    { userId: null },
                 ],
             },
         });
@@ -93,7 +90,6 @@ export const updateCategory = async (req: Request, res: Response) => {
     }
 };
 
-// Supprimer une catégorie
 export const deleteCategory = async (req: Request, res: Response) => {
     if (!req.user) {
         return res.status(401).json({ error: "Utilisateur non authentifié" });
@@ -108,7 +104,7 @@ export const deleteCategory = async (req: Request, res: Response) => {
                 id: parseInt(id),
                 OR: [
                     { userId: userId },
-                    { userId: null }, // inclut les catégories globales
+                    { userId: null },
                 ],
             },
         });

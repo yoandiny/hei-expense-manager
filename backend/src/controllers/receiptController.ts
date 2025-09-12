@@ -105,9 +105,9 @@ export const viewReceipt = async (req: Request, res: Response) => {
 
     let userId: number;
     try {
-      const decoded = jwt.verify(tokenFromQuery, process.env.JWT_SECRET!) as { userId: number };
-      userId = decoded.userId;
-      console.log("✅ Token valide — userId :", userId);
+        const decoded = jwt.verify(tokenFromQuery, process.env.JWT_SECRET!) as { userId: number };
+        userId = decoded.userId;
+
     } catch (err) {
       console.log("❌ Token invalide :", err);
       return res.status(401).json({ message: "Invalid token" });
@@ -141,6 +141,8 @@ export const viewReceipt = async (req: Request, res: Response) => {
     }
 
     res.setHeader("Content-Type", contentType);
+    console.log("📄 Envoi du fichier :", filePath);
+    console.log("📄 Content-Type :", contentType);
     res.sendFile(filePath);
   } catch (error) {
     console.error("❌ Erreur serveur viewReceipt :", error);
