@@ -23,7 +23,7 @@ export const createExpense = async (req: Request, res: Response) => {
     const expense = await prisma.expense.create({
       data: {
         amount: parseFloat(amount),
-        type, // "ONE_TIME" ou "RECURRING"
+        type,
         date: type === "ONE_TIME" ? new Date(date) : null,
         startDate: type === "RECURRING" ? new Date(startDate) : null,
         endDate: endDate ? new Date(endDate) : null,
