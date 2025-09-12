@@ -66,11 +66,11 @@ const Categories: React.FC = () => {
     };
 
     return (
-        <div className="flex min-h-screen bg-gray-50">
+        <div className="flex min-h-screen bg-gray-50 dark:bg-slate-900">
             <main className="flex-1 p-6 flex justify-center">
                 <div className="w-full max-w-2xl">
-                    <div className="p-6 bg-white rounded-2xl shadow-lg w-full text-center">
-                        <h2 className="text-3xl font-bold text-gray-800 mb-6">Gestion des Catégories</h2>
+                    <div className="p-6 bg-white dark:bg-slate-700 rounded-2xl shadow-lg w-full text-center">
+                        <h2 className="text-3xl font-bold text-gray-800 mb-6">Categories management</h2>
 
                         {error && (
                             <p className="text-red-700 bg-red-50 border border-red-200 rounded p-3 mb-6">

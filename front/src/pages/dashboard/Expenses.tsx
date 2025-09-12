@@ -102,7 +102,7 @@ const Expenses: React.FC = () => {
   };
 
     return (
-        <div className="container mx-auto p-6 relative bg-gray-50 min-h-screen">
+        <div className="container mx-auto p-6 relative bg-gray-50 dark:bg-slate-900 min-h-screen">
             {showForm && (
                 <div className="fixed inset-0 bg-black/50 z-10" onClick={() => setShowForm(false)} />
             )}
@@ -138,14 +138,14 @@ const Expenses: React.FC = () => {
                         {expenses.map((expense) => (
                             <div
                                 key={expense.id}
-                                className="bg-white p-5 rounded-xl shadow-md flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border border-gray-200 hover:shadow-lg transition"
+                                className="bg-white dark:bg-slate-700 dark:border-slate-600 p-5 rounded-xl shadow-md flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border border-gray-200 hover:shadow-lg transition"
                             >
                                 <div>
-                                    <p className="text-lg font-bold text-gray-800">
+                                    <p className="text-lg font-bold text-gray-800 dark:text-slate-400">
                                         {expense.type === "ONE_TIME" ? "One-time" : "Recurring"} —{" "}
                                         {formatCurrency(expense.amount)}
                                     </p>
-                                    <p className="text-sm text-gray-700">
+                                    <p className="text-sm text-gray-700 dark:text-slate-400">
                                         {expense.type === "ONE_TIME" ? (
                                             <>Date: {formatDate(expense.date)}</>
                                         ) : (
@@ -156,7 +156,7 @@ const Expenses: React.FC = () => {
                                         )}
                                     </p>
                                     {expense.description && (
-                                        <p className="text-sm text-gray-700 mt-1 italic">
+                                        <p className="text-sm text-gray-700 dark:text-slate-400 mt-1 italic">
                                             Description: {expense.description}
                                         </p>
                                     )}

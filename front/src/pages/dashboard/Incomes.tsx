@@ -95,13 +95,13 @@ const Incomes: React.FC = () => {
   };
 
     return (
-        <div className="container mx-auto p-6 relative bg-gray-50 min-h-screen">
+        <div className="container mx-auto p-6 relative bg-gray-50 dark:bg-slate-900 min-h-screen">
             {showForm && (
                 <div className="fixed inset-0 bg-black/50 z-10" onClick={() => setShowForm(false)} />
             )}
 
             <div className={`transition-opacity duration-300 ${showForm ? "opacity-50" : "opacity-100"}`}>
-                <div className="flex justify-between items-center mb-8">
+                <div className="flex justify-between items-center  mb-8">
                     <h1 className="text-3xl font-bold text-gray-800">💰 Incomes</h1>
                     <button
                         onClick={() => {
@@ -131,7 +131,7 @@ const Incomes: React.FC = () => {
                         {incomes.map((income) => (
                             <div
                                 key={income.id}
-                                className="bg-white p-5 rounded-xl shadow-md flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border border-gray-200 hover:shadow-lg transition"
+                                className="bg-white dark:bg-slate-700 dark:border-slate-600 p-5 rounded-xl shadow-md flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border border-gray-200 hover:shadow-lg transition"
                             >
                                 <div>
                                     <p className="text-lg font-bold text-gray-800">

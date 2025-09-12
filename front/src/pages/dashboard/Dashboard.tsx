@@ -67,7 +67,7 @@ const Dashboard: React.FC = () => {
     const isLowBalance = balance <= 50 && balance > 0;
 
     return (
-        <div className="min-h-screen flex items-start justify-center p-6 bg-gray-50">
+        <div className="min-h-screen flex items-start justify-center p-6 bg-gray-50 dark:bg-slate-900">
             <div className="w-full max-w-4xl space-y-8">
                 {alert && alert.alert && (
                     <div className="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 rounded-lg shadow-md">
