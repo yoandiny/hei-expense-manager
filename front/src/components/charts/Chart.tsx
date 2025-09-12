@@ -74,7 +74,7 @@ const Chart: FC<PieChartProps> = ({ data, title = "Répartition des dépenses" }
     };
 
     return (
-        <div className="bg-white p-6 rounded-lg shadow-md">
+        <div className="bg-white dark:bg-slate-700 dark:border-slate-600 p-6 rounded-lg shadow-md">
             {title && <h3 className="text-lg font-semibold text-gray-800 mb-4 text-center">{title}</h3>}
             <div className="w-full max-w-xs mx-auto">
                 <Pie data={chartData} options={options} />

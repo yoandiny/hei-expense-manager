@@ -82,7 +82,7 @@ const Dashboard: React.FC = () => {
                     </div>
                 )}
 
-                <div className="bg-white rounded-2xl shadow-xl p-8 border border-gray-200">
+                <div className="bg-white dark:bg-slate-700 dark:border-slate-600 rounded-2xl shadow-xl p-8 border border-gray-200">
                     <h2 className="text-3xl font-bold text-gray-800 mb-8 text-center">Récapitulatif Financier</h2>
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
                         <div className="bg-blue-100 text-blue-800 p-6 rounded-xl text-center shadow transition-transform hover:scale-105">
@@ -133,7 +133,7 @@ const Dashboard: React.FC = () => {
                 </div>
 
                 {summary.expensesByCategory.length > 0 && (
-                    <div className="bg-white rounded-2xl shadow-xl p-6 border border-gray-200">
+                    <div className="bg-white dark:bg-slate-700 dark:border-slate-600 rounded-2xl shadow-xl p-6 border border-gray-200">
                         <Chart data={summary.expensesByCategory} title="Répartition des dépenses par catégorie" />
                     </div>
                 )}
