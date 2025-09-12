@@ -37,7 +37,7 @@ export default function Navbar() {
                             className="flex items-center gap-3 px-4 py-2 text-green-800 rounded-lg hover:bg-yellow-400 hover:text-green-900 transition-colors text-lg font-semibold"
                         >
                             <i className="bx bxs-dashboard text-xl"></i>
-                            Tableau de bord
+                            Dashboard
                         </Link>
 
                         <Link
@@ -45,7 +45,7 @@ export default function Navbar() {
                             className="flex items-center gap-3 px-4 py-2 text-green-800 rounded-lg hover:bg-yellow-400 hover:text-green-900 transition-colors text-lg font-semibold"
                         >
                             <i className="bx bxs-category text-xl"></i>
-                            Catégories
+                            Categories
                         </Link>
 
                         <Link
@@ -53,7 +53,7 @@ export default function Navbar() {
                             className="flex items-center gap-3 px-4 py-2 text-green-800 rounded-lg hover:bg-yellow-400 hover:text-green-900 transition-colors text-lg font-semibold"
                         >
                             <i className="bx bxs-wallet text-xl"></i>
-                            Revenus
+                            Incomes
                         </Link>
 
                         <Link
@@ -61,7 +61,7 @@ export default function Navbar() {
                             className="flex items-center gap-3 px-4 py-2 text-green-800 rounded-lg hover:bg-yellow-400 hover:text-green-900 transition-colors text-lg font-semibold"
                         >
                             <i className="bx bx-money-withdraw text-xl"></i>
-                            Dépenses
+                            Expenses
                         </Link>
                     </div>
                 </aside>
