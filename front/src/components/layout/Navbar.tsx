@@ -13,10 +13,10 @@ export default function Navbar() {
 
     return (
         <div className="flex flex-col min-h-screen bg-green-50">
-            <nav className="bg-green-700 h-20 flex items-center justify-between px-6 shadow-lg">
-                <span onClick={() => navigate("/dashboard")} className="flex items-center cursor-pointer">
-                    <img src={Logo} alt="Logo" className="w-20 h-20 object-contain"/>
-                </span>
+            <nav className="bg-green-800 h-20 flex items-center justify-between px-6 shadow-lg sticky top-0 z-50">
+            <span onClick={() => navigate("/dashboard")} className="flex items-center cursor-pointer">
+                <img src={Logo} alt="Logo" className="w-20 h-20 object-contain" />
+            </span>
                 <div className="flex items-center gap-6">
                     <Link to="/profile" className="text-white hover:text-yellow-400">
                         <i className="bx bxs-user-circle text-5xl"></i>
@@ -30,7 +30,7 @@ export default function Navbar() {
                 </div>
             </nav>
             <div className="flex flex-1">
-                <aside className="w-72 bg-white border-r border-green-200 shadow-md p-6">
+                <aside className="w-72 bg-white border-r border-green-200 shadow-md p-6 sticky top-20 h-[calc(100vh-5rem)] overflow-y-auto">
                     <div className="flex flex-col gap-3">
                         <Link
                             to=""
@@ -66,7 +66,7 @@ export default function Navbar() {
                     </div>
                 </aside>
 
-                <main className="flex-1 p-8">
+                <main className="flex-1 p-8 overflow-y-auto h-[calc(100vh-5rem)]">
                     <Outlet />
                 </main>
             </div>

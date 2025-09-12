@@ -62,23 +62,19 @@ const Dashboard: React.FC = () => {
         );
     }
 
-    // ✅ Calcule le solde
     const balance = income.totalIncome - summary.totalExpenses;
 
-    // ✅ Détermine si le solde est faible (≤ 50 €)
     const isLowBalance = balance <= 50 && balance > 0;
 
     return (
         <div className="min-h-screen flex items-start justify-center p-6 bg-gradient-to-br from-green-50 to-emerald-50">
             <div className="w-full max-w-4xl space-y-8">
-                {/* 🚨 ALERTE BUDGÉTAIRE (dépenses > revenus) */}
                 {alert && alert.alert && (
                     <div className="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 rounded-lg shadow-md">
                         <p className="font-bold text-lg">⚠️ {alert.message}</p>
                     </div>
                 )}
 
-                {/* ⚠️ ALERTE SOLDE FAIBLE (≤ 50 €) */}
                 {isLowBalance && (
                     <div className="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-800 p-4 rounded-lg shadow-md">
                         <p className="font-bold text-lg">💡 Attention : votre solde est faible ({formatCurrency(balance)})</p>
@@ -86,7 +82,6 @@ const Dashboard: React.FC = () => {
                     </div>
                 )}
 
-                {/* 📊 Section Résumé */}
                 <div className="bg-white rounded-2xl shadow-xl p-8 border border-green-100">
                     <h2 className="text-3xl font-bold text-green-700 mb-8 text-center">Récapitulatif Financier</h2>
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
@@ -139,7 +134,6 @@ const Dashboard: React.FC = () => {
                     </p>
                 </div>
 
-                {/* 🥧 PIE CHART */}
                 {summary.expensesByCategory.length > 0 && (
                     <div className="bg-white rounded-2xl shadow-xl p-6 border border-green-100">
                         <Chart data={summary.expensesByCategory} title="Répartition des dépenses par catégorie" />
